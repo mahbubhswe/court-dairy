@@ -13,6 +13,20 @@ class TransactionService {
         .add(transaction.toMap());
   }
 
+  static Future<void> updateTransaction(
+      Transaction transaction, String userId) async {
+    if (transaction.docId == null) {
+      throw Exception('Transaction document ID is required for update');
+    }
+
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.transactions)
+        .doc(transaction.docId)
+        .update(transaction.toMap());
+  }
+
   static Stream<List<Transaction>> getTransactions(String userId) {
     return _firestore
         .collection(AppCollections.lawyers)
