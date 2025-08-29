@@ -74,14 +74,13 @@ class LayoutScreen extends StatelessWidget {
           }),
           Expanded(
             child: DefaultTabController(
-              length: 4,
+              length: 3,
               child: Column(
                 children: [
                   const TabBar(
                     tabs: [
                       Tab(text: AppTexts.tabParty),
-                      Tab(text: AppTexts.tabStock),
-                      Tab(text: AppTexts.tabEmployee),
+                      Tab(text: AppTexts.tabCase),
                       Tab(text: AppTexts.tabAccounts),
                     ],
                   ),
