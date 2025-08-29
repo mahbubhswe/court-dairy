@@ -11,6 +11,7 @@ class Lawyer {
   final bool isActive;
   final int subFor;
   final DateTime subStartsAt;
+  final List<String> courts; // ✅ New field
 
   Lawyer({
     this.docId,
@@ -23,6 +24,7 @@ class Lawyer {
     required this.isActive,
     required this.subFor,
     required this.subStartsAt,
+    this.courts = const [], // ✅ Default empty list
   });
 
   /// Convert to Firestore Map
@@ -37,6 +39,7 @@ class Lawyer {
       'isActive': isActive,
       'subFor': subFor,
       'subStartsAt': subStartsAt,
+      'courts': courts, // ✅ Save courts list
     };
   }
 
@@ -53,6 +56,7 @@ class Lawyer {
       isActive: map['isActive'] ?? false,
       subFor: map['subFor'] ?? 0,
       subStartsAt: (map['subStartsAt'] as Timestamp).toDate(),
+      courts: List<String>.from(map['courts'] ?? []), // ✅ Load courts safely
     );
   }
 

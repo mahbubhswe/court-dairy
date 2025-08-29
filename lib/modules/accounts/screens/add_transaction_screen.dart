@@ -6,19 +6,17 @@ import '../../../widgets/app_text_from_field.dart';
 import '../../../widgets/app_dropdown.dart';
 import '../../../utils/payment_methods.dart';
 import '../../../utils/transaction_types.dart';
-import '../controllers/edit_transaction_controller.dart';
-import '../../../models/transaction.dart';
+import '../controllers copy/add_transaction_controller.dart';
 
-class EditTransactionScreen extends StatelessWidget {
-  final Transaction transaction;
-  const EditTransactionScreen({super.key, required this.transaction});
+class AddTransactionScreen extends StatelessWidget {
+  const AddTransactionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(EditTransactionController(transaction));
+    final controller = Get.put(AddTransactionController());
     return Scaffold(
       appBar: AppBar(
-        title: const Text('লেনদেন আপডেট করুন'),
+        title: const Text('নতুন লেনদেন যুক্ত করুন'),
       ),
       body: Obx(() {
         return Stack(
@@ -32,7 +30,7 @@ class EditTransactionScreen extends StatelessWidget {
                     value: controller.type.value,
                     label: 'ধরণ',
                     hintText: 'লেনদেনের ধরণ নির্বাচন করুন',
-                    items: getTransactionTypes(isTransaction: true),
+                    items: getTransactionTypes(),
                     prefixIcon: Icons.category,
                     onChanged: (val) => controller.type.value = val,
                   ),
@@ -71,10 +69,9 @@ class EditTransactionScreen extends StatelessWidget {
         () => Padding(
           padding: const EdgeInsets.all(16),
           child: AppButton(
-            label: 'আপডেট করুন',
-            onPressed: controller.enableBtn.value
-                ? controller.updateTransaction
-                : null,
+            label: 'সেভ করুন',
+            onPressed:
+                controller.enableBtn.value ? controller.addTransaction : null,
           ),
         ),
       ),

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../models/transaction.dart';
 import '../../../services/app_firebase.dart';
-import '../services/transaction_service.dart';
+import '../services copy/transaction_service.dart';
 
 class AddTransactionController extends GetxController {
   final RxnString type = RxnString();

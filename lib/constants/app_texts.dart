@@ -13,7 +13,7 @@ class AppTexts {
   static const customerService = 'কাস্টমার সেবা';
 
   // Tabs (already Bangla in UI)
-  static const tabParty = 'Case';
-  static const tabCase = 'Party';
-  static const tabAccounts = 'Accounts';
+  static const tabParty = 'কেস';
+  static const tabCase = 'পার্টি';
+  static const tabAccounts = 'হিসাব';
 }

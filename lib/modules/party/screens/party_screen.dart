@@ -1,3 +1,4 @@
+import 'package:courtdiary/widgets/data_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +16,7 @@ class PartyScreen extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
       if (controller.parties.isEmpty) {
-        return const Center(child: Text('কোন পক্ষ পাওয়া যায়নি'));
+        return const DataNotFound(title: "Sorry", subtitle: 'No Party Found');
       }
       return ListView.builder(
         itemCount: controller.parties.length,

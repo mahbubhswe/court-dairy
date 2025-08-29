@@ -1,9 +1,9 @@
+import 'package:courtdiary/modules/accounts/services%20copy/transaction_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../models/transaction.dart';
 import '../../../services/app_firebase.dart';
-import '../services/transaction_service.dart';
 
 class EditTransactionController extends GetxController {
   final Transaction transaction;

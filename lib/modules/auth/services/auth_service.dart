@@ -1,4 +1,3 @@
-
 import 'package:courtdiary/services/firebase_export.dart';
 
 import '../../../constants/app_collections.dart';
@@ -27,16 +26,16 @@ class AuthService {
       final fcmToken = await AppFirebase().getFcmToken();
       if (fcmToken != null) {
         Lawyer newLawyer = Lawyer(
-          name: "Court Dairy",
-          address: "Dhaka, Bangladesh",
-          fcmToken: fcmToken,
-          phone: "01623131102",
-          smsBalance: 0,
-          balance: 0,
-          subFor: 0,
-          subStartsAt: DateTime.now(),
-          isActive: true,
-        );
+            name: "Court Dairy",
+            address: "Dhaka, Bangladesh",
+            fcmToken: fcmToken,
+            phone: "01623131102",
+            smsBalance: 0,
+            balance: 0,
+            subFor: 0,
+            subStartsAt: DateTime.now(),
+            isActive: true,
+            courts: []);
 
         await _firestore
             .collection(AppCollections.lawyers)

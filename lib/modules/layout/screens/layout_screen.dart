@@ -7,9 +7,9 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../screens/calculator_screen.dart';
 import '../../../screens/customer_service_screen.dart';
 import '../../../constants/app_texts.dart';
+import '../../accounts/screens/add_transaction_screen.dart';
 import '../../party/screens/add_party_screen.dart';
 import '../../party/screens/party_screen.dart';
-import '../../transaction/screens/add_transaction_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../controllers/layout_controller.dart';
 import '../widgets/dashboard.dart';
@@ -61,12 +61,16 @@ class LayoutScreen extends StatelessWidget {
                   onPressed: () {
                     final index = DefaultTabController.of(context).index;
                     if (index == 0) {
-                      Get.to(() => const AddPartyScreen(), fullscreenDialog: true);
-                    } else if (index == 2) {
-                      Get.to(() => const AddTransactionScreen(), fullscreenDialog: true);
+                      // add later
+                    } else if (index == 1) {
+                      Get.to(() => const AddPartyScreen(),
+                          fullscreenDialog: true);
+                    } else {
+                      Get.to(() => const AddTransactionScreen(),
+                          fullscreenDialog: true);
                     }
                   },
-                  child: const Icon(Icons.receipt_long_rounded),
+                  child: const Icon(Icons.add_circle),
                 ),
               ),
             );
@@ -95,8 +99,8 @@ class LayoutScreen extends StatelessWidget {
                     const Expanded(
                       child: TabBarView(
                         children: [
-                          PartyScreen(),
                           CaseScreen(),
+                          PartyScreen(),
                           AccountsScreen(),
                         ],
                       ),
