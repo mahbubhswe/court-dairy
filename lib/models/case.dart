@@ -2,6 +2,7 @@
 import '../services/firebase_export.dart';
 
 class Case {
+  String? docId;
   final String caseNumber; // Unique identifier for the case
   final String caseName; // Name of the case
   final String courtName; // Name of the court handling the case
@@ -28,6 +29,7 @@ class Case {
       notificationId; // Unique notification ID for the case (changed to int)
 
   Case({
+    this.docId,
     required this.caseNumber,
     required this.caseName,
     required this.courtName,
@@ -54,8 +56,9 @@ class Case {
 
   });
 
-  factory Case.fromMap(Map<String, dynamic> map) {
+  factory Case.fromMap(Map<String, dynamic> map, {String? docId}) {
     return Case(
+      docId: docId,
       caseNumber: map['caseNumber'] as String,
       caseName: map['caseName'] as String,
       courtName: map['courtName'] as String,
