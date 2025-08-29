@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../models/transaction.dart';
 import '../../../services/app_firebase.dart';
+import '../../../utils/activation_guard.dart';
 
 class EditTransactionController extends GetxController {
   final Transaction transaction;
@@ -39,6 +40,7 @@ class EditTransactionController extends GetxController {
 
   Future<void> updateTransaction() async {
     if (!enableBtn.value || isLoading.value) return;
+    if (!ActivationGuard.check()) return;
     try {
       isLoading.value = true;
       final user = AppFirebase().currentUser;

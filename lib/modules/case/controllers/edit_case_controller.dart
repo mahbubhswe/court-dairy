@@ -7,6 +7,7 @@ import '../../../services/app_firebase.dart';
 import '../../../services/firebase_export.dart';
 import '../../party/services/party_service.dart';
 import '../services/case_service.dart';
+import '../../../utils/activation_guard.dart';
 
 class EditCaseController extends GetxController {
   EditCaseController(this.caseData);
@@ -93,6 +94,7 @@ class EditCaseController extends GetxController {
 
   Future<void> updateCase() async {
     if (!enableBtn.value || isLoading.value) return;
+    if (!ActivationGuard.check()) return;
     final user = AppFirebase().currentUser;
     if (user == null) return;
     try {

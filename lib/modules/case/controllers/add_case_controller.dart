@@ -7,6 +7,7 @@ import '../../../services/app_firebase.dart';
 import '../../../services/firebase_export.dart';
 import '../../party/services/party_service.dart';
 import '../services/case_service.dart';
+import '../../../utils/activation_guard.dart';
 
 class AddCaseController extends GetxController {
   final caseNumber = TextEditingController();
@@ -70,6 +71,7 @@ class AddCaseController extends GetxController {
 
   Future<void> addCase() async {
     if (!enableBtn.value || isLoading.value) return;
+    if (!ActivationGuard.check()) return;
     final user = AppFirebase().currentUser;
     if (user == null) return;
     try {

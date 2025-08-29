@@ -7,6 +7,7 @@ import '../controllers/case_controller.dart';
 import 'case_list_screen.dart';
 import 'case_profile_screen.dart';
 import 'edit_case_screen.dart';
+import '../../../utils/activation_guard.dart';
 
 class CaseScreen extends StatelessWidget {
   const CaseScreen({super.key});
@@ -31,8 +32,16 @@ class CaseScreen extends StatelessWidget {
                 return CaseTile(
                   data: c,
                   onTap: () => Get.to(() => CaseProfileScreen(caseData: c)),
-                  onEdit: () => Get.to(() => EditCaseScreen(caseData: c)),
-                  onDelete: () => controller.deleteCase(c),
+                  onEdit: () {
+                    if (ActivationGuard.check()) {
+                      Get.to(() => EditCaseScreen(caseData: c));
+                    }
+                  },
+                  onDelete: () {
+                    if (ActivationGuard.check()) {
+                      controller.deleteCase(c);
+                    }
+                  },
                 );
               },
             );

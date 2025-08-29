@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../models/party.dart';
 import '../services/party_service.dart';
+import '../../../utils/activation_guard.dart';
 
 class PartyProfileController extends GetxController {
   final Party party;
@@ -12,6 +13,7 @@ class PartyProfileController extends GetxController {
 
   Future<void> deleteParty() async {
     if (isDeleting.value) return;
+    if (!ActivationGuard.check()) return;
     try {
       isDeleting.value = true;
       await PartyService.deleteParty(party);

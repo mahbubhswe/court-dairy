@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../models/case.dart';
 import '../controllers/case_controller.dart';
 import 'edit_case_screen.dart';
+import '../../../utils/activation_guard.dart';
 
 class CaseProfileScreen extends StatelessWidget {
   final Case caseData;
@@ -18,13 +19,19 @@ class CaseProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () => Get.to(() => EditCaseScreen(caseData: caseData)),
+            onPressed: () {
+              if (ActivationGuard.check()) {
+                Get.to(() => EditCaseScreen(caseData: caseData));
+              }
+            },
           ),
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              controller.deleteCase(caseData);
-              Get.back();
+              if (ActivationGuard.check()) {
+                controller.deleteCase(caseData);
+                Get.back();
+              }
             },
           ),
         ],

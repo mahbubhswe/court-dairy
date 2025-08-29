@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../models/party.dart';
 import '../../../services/app_firebase.dart';
 import '../services/party_service.dart';
+import '../../../utils/activation_guard.dart';
 
 class AddPartyController extends GetxController {
   final name = TextEditingController();
@@ -69,6 +70,7 @@ class AddPartyController extends GetxController {
 
   Future<void> addParty() async {
     if (!enableBtn.value || isLoading.value) return;
+    if (!ActivationGuard.check()) return;
     try {
       isLoading.value = true;
       final user = AppFirebase().currentUser;

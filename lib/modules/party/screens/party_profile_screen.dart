@@ -6,6 +6,7 @@ import '../../../widgets/app_button.dart';
 import '../../../widgets/app_info_row.dart';
 import '../controllers/party_profile_controller.dart';
 import 'edit_party_screen.dart';
+import '../../../utils/activation_guard.dart';
 
 class PartyProfileScreen extends StatelessWidget {
   final Party party;
@@ -45,7 +46,9 @@ class PartyProfileScreen extends StatelessWidget {
                         child: AppButton(
                           label: 'এডিট',
                           onPressed: () {
-                            Get.to(() => EditPartyScreen(party: party));
+                            if (ActivationGuard.check()) {
+                              Get.to(() => EditPartyScreen(party: party));
+                            }
                           },
                         ),
                       ),
@@ -55,7 +58,11 @@ class PartyProfileScreen extends StatelessWidget {
                           label: 'ডিলিট',
                           onPressed: controller.isDeleting.value
                               ? null
-                              : controller.deleteParty,
+                              : () {
+                                  if (ActivationGuard.check()) {
+                                    controller.deleteParty();
+                                  }
+                                },
                         ),
                       ),
                     ],
