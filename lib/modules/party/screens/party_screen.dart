@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/party_controller.dart';
+import 'party_profile_screen.dart';
 
 class PartyScreen extends StatelessWidget {
   const PartyScreen({super.key});
@@ -26,6 +27,9 @@ class PartyScreen extends StatelessWidget {
                 : const CircleAvatar(child: Icon(Icons.person)),
             title: Text(party.name),
             subtitle: Text(party.phone),
+            onTap: () {
+              Get.to(() => PartyProfileScreen(party: party));
+            },
           );
         },
       );

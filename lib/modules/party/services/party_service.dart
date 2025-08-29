@@ -16,6 +16,19 @@ class PartyService {
         .add(party.toMap());
   }
 
+  static Future<void> updateParty(Party party) async {
+    if (party.docId == null) {
+      throw Exception('Party document ID is required for update');
+    }
+
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(party.lawyerId)
+        .collection(AppCollections.parties)
+        .doc(party.docId)
+        .update(party.toMap());
+  }
+
   static Future<String> uploadPartyPhoto(File file, String userId) async {
     final path = 'party_photos/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
     final ref = _storage.ref().child(path);
