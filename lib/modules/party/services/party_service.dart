@@ -18,5 +18,15 @@ class PartyService {
     await ref.putFile(file);
     return await ref.getDownloadURL();
   }
+
+  static Stream<List<Party>> getParties(String lawyerId) {
+    return _firestore
+        .collection(AppCollections.parties)
+        .where('lawyerId', isEqualTo: lawyerId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Party.fromMap(doc.data(), docId: doc.id))
+            .toList());
+  }
 }
 
