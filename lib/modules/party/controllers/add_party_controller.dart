@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../../models/party.dart';
+import '../../../services/app_firebase.dart';
+import '../services/party_service.dart';
+
+class AddPartyController extends GetxController {
+  final name = TextEditingController();
+  final phone = TextEditingController();
+  final address = TextEditingController();
+
+  final RxBool isLoading = false.obs;
+  final RxBool enableBtn = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    name.addListener(_validate);
+    phone.addListener(_validate);
+    address.addListener(_validate);
+  }
+
+  void _validate() {
+    enableBtn.value = name.text.trim().isNotEmpty &&
+        phone.text.trim().isNotEmpty &&
+        address.text.trim().isNotEmpty;
+  }
+
+  Future<void> addParty() async {
+    if (!enableBtn.value || isLoading.value) return;
+    try {
+      isLoading.value = true;
+      final user = AppFirebase().currentUser;
+      if (user == null) {
+        throw Exception('No authenticated user');
+      }
+
+      final party = Party(
+        name: name.text.trim(),
+        phone: phone.text.trim(),
+        address: address.text.trim(),
+        lawyerId: user.uid,
+      );
+
+      await PartyService.addParty(party);
+
+      Get.back();
+      Get.snackbar(
+        'সফল হয়েছে',
+        'পক্ষ যুক্ত করা হয়েছে',
+        backgroundColor: Colors.white,
+        colorText: Colors.green,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'ত্রুটি',
+        'পক্ষ যুক্ত করতে ব্যর্থ হয়েছে',
+        backgroundColor: Colors.white,
+        colorText: Colors.red,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  @override
+  void onClose() {
+    name.dispose();
+    phone.dispose();
+    address.dispose();
+    super.onClose();
+  }
+}
+
