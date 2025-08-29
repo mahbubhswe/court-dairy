@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_from_field.dart';
+import '../../../widgets/app_dropdown.dart';
+import '../../../utils/payment_methods.dart';
+import '../../../utils/transaction_types.dart';
 import '../controllers/edit_transaction_controller.dart';
 import '../../../models/transaction.dart';
 
@@ -25,11 +28,13 @@ class EditTransactionScreen extends StatelessWidget {
               child: Column(
                 spacing: 16,
                 children: [
-                  AppTextFromField(
-                    controller: controller.type,
+                  AppDropdown(
+                    value: controller.type.value,
                     label: 'ধরণ',
-                    hintText: 'লেনদেনের ধরণ লিখুন',
+                    hintText: 'লেনদেনের ধরণ নির্বাচন করুন',
+                    items: getTransactionTypes(isTransaction: true),
                     prefixIcon: Icons.category,
+                    onChanged: (val) => controller.type.value = val,
                   ),
                   AppTextFromField(
                     controller: controller.amount,
@@ -38,11 +43,13 @@ class EditTransactionScreen extends StatelessWidget {
                     prefixIcon: Icons.money,
                     keyboardType: TextInputType.number,
                   ),
-                  AppTextFromField(
-                    controller: controller.paymentMethod,
+                  AppDropdown(
+                    value: controller.paymentMethod.value,
                     label: 'পেমেন্ট পদ্ধতি',
-                    hintText: 'পেমেন্ট পদ্ধতি লিখুন',
+                    hintText: 'পেমেন্ট পদ্ধতি নির্বাচন করুন',
+                    items: paymentMethods,
                     prefixIcon: Icons.payment,
+                    onChanged: (val) => controller.paymentMethod.value = val,
                   ),
                   AppTextFromField(
                     controller: controller.note,
@@ -51,13 +58,7 @@ class EditTransactionScreen extends StatelessWidget {
                     prefixIcon: Icons.note,
                     isMaxLines: 3,
                   ),
-                  const SizedBox(height: 20),
-                  AppButton(
-                    label: 'আপডেট করুন',
-                    onPressed: controller.enableBtn.value
-                        ? controller.updateTransaction
-                        : null,
-                  ),
+                  const SizedBox(height: 80),
                 ],
               ),
             ),
@@ -66,6 +67,17 @@ class EditTransactionScreen extends StatelessWidget {
           ],
         );
       }),
+      bottomNavigationBar: Obx(
+        () => Padding(
+          padding: const EdgeInsets.all(16),
+          child: AppButton(
+            label: 'আপডেট করুন',
+            onPressed: controller.enableBtn.value
+                ? controller.updateTransaction
+                : null,
+          ),
+        ),
+      ),
     );
   }
 }

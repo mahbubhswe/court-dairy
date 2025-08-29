@@ -9,9 +9,9 @@ class EditTransactionController extends GetxController {
   final Transaction transaction;
   EditTransactionController(this.transaction);
 
-  final type = TextEditingController();
+  final RxnString type = RxnString();
   final amount = TextEditingController();
-  final paymentMethod = TextEditingController();
+  final RxnString paymentMethod = RxnString();
   final note = TextEditingController();
 
   final RxBool isLoading = false.obs;
@@ -20,20 +20,21 @@ class EditTransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    type.text = transaction.type;
+    type.value = transaction.type;
     amount.text = transaction.amount.toString();
-    paymentMethod.text = transaction.paymentMethod;
+    paymentMethod.value = transaction.paymentMethod;
     note.text = transaction.note ?? '';
 
-    type.addListener(_validate);
     amount.addListener(_validate);
-    paymentMethod.addListener(_validate);
+    ever(type, (_) => _validate());
+    ever(paymentMethod, (_) => _validate());
   }
 
   void _validate() {
-    enableBtn.value = type.text.trim().isNotEmpty &&
+    enableBtn.value =
+        type.value != null &&
         amount.text.trim().isNotEmpty &&
-        paymentMethod.text.trim().isNotEmpty;
+        paymentMethod.value != null;
   }
 
   Future<void> updateTransaction() async {
@@ -47,10 +48,10 @@ class EditTransactionController extends GetxController {
 
       final updated = Transaction(
         docId: transaction.docId,
-        type: type.text.trim(),
+        type: type.value!,
         amount: double.tryParse(amount.text.trim()) ?? 0,
         note: note.text.trim().isEmpty ? null : note.text.trim(),
-        paymentMethod: paymentMethod.text.trim(),
+        paymentMethod: paymentMethod.value!,
         createdAt: transaction.createdAt,
         partyId: transaction.partyId,
       );
@@ -78,9 +79,7 @@ class EditTransactionController extends GetxController {
 
   @override
   void onClose() {
-    type.dispose();
     amount.dispose();
-    paymentMethod.dispose();
     note.dispose();
     super.onClose();
   }
