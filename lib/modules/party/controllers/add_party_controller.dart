@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../models/party.dart';
 import '../../../services/app_firebase.dart';
@@ -9,6 +12,9 @@ class AddPartyController extends GetxController {
   final name = TextEditingController();
   final phone = TextEditingController();
   final address = TextEditingController();
+
+  final Rx<XFile?> photo = Rx<XFile?>(null);
+  final ImagePicker _picker = ImagePicker();
 
   final RxBool isLoading = false.obs;
   final RxBool enableBtn = false.obs;
@@ -27,6 +33,40 @@ class AddPartyController extends GetxController {
         address.text.trim().isNotEmpty;
   }
 
+  void showImagePicker() {
+    Get.bottomSheet(
+      SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('গ্যালারি থেকে নির্বাচন করুন'),
+              onTap: () {
+                Get.back();
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('ক্যামেরা ব্যবহার করুন'),
+              onTap: () {
+                Get.back();
+                _pickImage(ImageSource.camera);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picked = await _picker.pickImage(source: source, imageQuality: 80);
+    if (picked != null) {
+      photo.value = picked;
+    }
+  }
+
   Future<void> addParty() async {
     if (!enableBtn.value || isLoading.value) return;
     try {
@@ -36,11 +76,17 @@ class AddPartyController extends GetxController {
         throw Exception('No authenticated user');
       }
 
+      String? photoUrl;
+      if (photo.value != null) {
+        photoUrl = await PartyService.uploadPartyPhoto(File(photo.value!.path), user.uid);
+      }
+
       final party = Party(
         name: name.text.trim(),
         phone: phone.text.trim(),
         address: address.text.trim(),
         lawyerId: user.uid,
+        photoUrl: photoUrl,
       );
 
       await PartyService.addParty(party);
@@ -69,6 +115,7 @@ class AddPartyController extends GetxController {
     name.dispose();
     phone.dispose();
     address.dispose();
+    photo.value = null;
     super.onClose();
   }
 }

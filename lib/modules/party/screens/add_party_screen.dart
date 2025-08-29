@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,6 +25,20 @@ class AddPartyScreen extends StatelessWidget {
               child: Column(
                 spacing: 16,
                 children: [
+                  GestureDetector(
+                    onTap: controller.showImagePicker,
+                    child: Obx(() {
+                      final image = controller.photo.value;
+                      return CircleAvatar(
+                        radius: 50,
+                        backgroundImage:
+                            image != null ? FileImage(File(image.path)) : null,
+                        child: image == null
+                            ? const Icon(Icons.camera_alt, size: 40)
+                            : null,
+                      );
+                    }),
+                  ),
                   AppTextFromField(
                     controller: controller.name,
                     label: 'নাম',
