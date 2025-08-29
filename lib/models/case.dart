@@ -23,7 +23,6 @@ class Case {
   final Timestamp lastUpdated; // Timestamp of the last update
   final Timestamp createdAt; // Timestamp when the case was created
   final String caseStatus; // Status (e.g., Active, Closed, Pending)
-  final Map<String, dynamic> dynamicFields; // Additional dynamic fields
   final String partyType; // Type of the party (e.g., Plaintiff, Defendant)
   final int
       notificationId; // Unique notification ID for the case (changed to int)
@@ -52,7 +51,7 @@ class Case {
     required this.caseStatus,
     required this.partyType, // Include partyType in the constructor
     required this.notificationId, // Include notificationId as int in the constructor
-    this.dynamicFields = const {}, // Defaults to an empty map
+
   });
 
   factory Case.fromMap(Map<String, dynamic> map) {
@@ -62,7 +61,6 @@ class Case {
       courtName: map['courtName'] as String,
       partyName: map['partyName'] as String,
       partyNumber: map['partyNumber'] as String,
- 
       partyId: map['partyId'] as String,
       lawyerId: map['lawyerId'] as String,
       isNotify: map['isNotify'] as bool,
@@ -81,8 +79,7 @@ class Case {
       caseStatus: map['caseStatus'] as String,
       partyType: map['partyType'] as String, // Extract partyType from map
       notificationId: map['notificationId']
-          as int, // Extract notificationId as int from map
-      dynamicFields: Map<String, dynamic>.from(map['dynamicFields'] ?? {}),
+          as int, 
     );
   }
 
@@ -114,13 +111,5 @@ class Case {
     };
   }
 
-  // Method to set a dynamic field value
-  void setDynamicField({required String key, required dynamic value}) {
-    dynamicFields[key] = value;
-  }
 
-  // Method to get a dynamic field value
-  dynamic getDynamicField({required String key}) {
-    return dynamicFields[key];
-  }
 }
