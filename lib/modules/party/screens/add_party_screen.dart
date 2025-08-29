@@ -5,8 +5,8 @@ import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_from_field.dart';
 import '../controllers/add_party_controller.dart';
 
-class PartyScreen extends StatelessWidget {
-  const PartyScreen({super.key});
+class AddPartyScreen extends StatelessWidget {
+  const AddPartyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

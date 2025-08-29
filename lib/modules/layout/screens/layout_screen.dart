@@ -7,6 +7,7 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../screens/calculator_screen.dart';
 import '../../../screens/customer_service_screen.dart';
 import '../../../constants/app_texts.dart';
+import '../../party/screens/add_party_screen.dart';
 import '../../party/screens/party_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../controllers/layout_controller.dart';
@@ -53,7 +54,7 @@ class LayoutScreen extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () => (() => AddPartyScreen()),
               child: const Icon(Icons.receipt_long_rounded),
             ),
           ),
