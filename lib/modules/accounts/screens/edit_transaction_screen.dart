@@ -7,7 +7,7 @@ import '../../../widgets/app_dropdown.dart';
 import '../../../utils/payment_methods.dart';
 import '../../../utils/transaction_types.dart';
 import '../../../models/transaction.dart';
-import '../controllers copy/edit_transaction_controller.dart';
+import '../controllers/edit_transaction_controller.dart';
 
 class EditTransactionScreen extends StatelessWidget {
   final Transaction transaction;

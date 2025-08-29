@@ -1,14 +1,11 @@
-import 'package:courtdiary/modules/accounts/services%20copy/transaction_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../models/transaction.dart';
 import '../../../services/app_firebase.dart';
+import '../services/transaction_service.dart';
 
-class EditTransactionController extends GetxController {
-  final Transaction transaction;
-  EditTransactionController(this.transaction);
-
+class AddTransactionController extends GetxController {
   final RxnString type = RxnString();
   final amount = TextEditingController();
   final RxnString paymentMethod = RxnString();
@@ -20,11 +17,6 @@ class EditTransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    type.value = transaction.type;
-    amount.text = transaction.amount.toString();
-    paymentMethod.value = transaction.paymentMethod;
-    note.text = transaction.note ?? '';
-
     amount.addListener(_validate);
     ever(type, (_) => _validate());
     ever(paymentMethod, (_) => _validate());
@@ -37,7 +29,7 @@ class EditTransactionController extends GetxController {
         paymentMethod.value != null;
   }
 
-  Future<void> updateTransaction() async {
+  Future<void> addTransaction() async {
     if (!enableBtn.value || isLoading.value) return;
     try {
       isLoading.value = true;
@@ -46,29 +38,27 @@ class EditTransactionController extends GetxController {
         throw Exception('No authenticated user');
       }
 
-      final updated = Transaction(
-        docId: transaction.docId,
+      final transaction = Transaction(
         type: type.value!,
         amount: double.tryParse(amount.text.trim()) ?? 0,
         note: note.text.trim().isEmpty ? null : note.text.trim(),
         paymentMethod: paymentMethod.value!,
-        createdAt: transaction.createdAt,
-        partyId: transaction.partyId,
+        createdAt: DateTime.now(),
       );
 
-      await TransactionService.updateTransaction(updated, user.uid);
+      await TransactionService.addTransaction(transaction, user.uid);
 
       Get.back();
       Get.snackbar(
         'সফল হয়েছে',
-        'লেনদেন আপডেট করা হয়েছে',
+        'লেনদেন যুক্ত করা হয়েছে',
         backgroundColor: Colors.white,
         colorText: Colors.green,
       );
     } catch (e) {
       Get.snackbar(
         'ত্রুটি',
-        'লেনদেন আপডেট করতে ব্যর্থ হয়েছে',
+        'লেনদেন যুক্ত করতে ব্যর্থ হয়েছে',
         backgroundColor: Colors.white,
         colorText: Colors.red,
       );

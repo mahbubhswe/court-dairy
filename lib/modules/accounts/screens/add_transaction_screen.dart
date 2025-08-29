@@ -6,7 +6,7 @@ import '../../../widgets/app_text_from_field.dart';
 import '../../../widgets/app_dropdown.dart';
 import '../../../utils/payment_methods.dart';
 import '../../../utils/transaction_types.dart';
-import '../controllers copy/add_transaction_controller.dart';
+import '../controllers/add_transaction_controller.dart';
 
 class AddTransactionScreen extends StatelessWidget {
   const AddTransactionScreen({super.key});

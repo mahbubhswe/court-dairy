@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import '../../../models/transaction.dart';
 import '../../../services/app_firebase.dart';
-import '../services copy/transaction_service.dart';
+import '../services/transaction_service.dart';
 
 class TransactionController extends GetxController {
   final RxList<Transaction> transactions = <Transaction>[].obs;

@@ -1,7 +1,7 @@
 import 'package:courtdiary/widgets/data_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers copy/transaction_controller.dart';
+import '../controllers/transaction_controller.dart';
 import 'edit_transaction_screen.dart';
 
 class AccountsScreen extends StatelessWidget {
