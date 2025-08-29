@@ -13,6 +13,7 @@ import '../../party/screens/party_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../controllers/layout_controller.dart';
 import '../widgets/dashboard.dart';
+import '../../../utils/activation_guard.dart';
 
 class LayoutScreen extends StatelessWidget {
   LayoutScreen({super.key});
@@ -59,6 +60,7 @@ class LayoutScreen extends StatelessWidget {
                 curve: Curves.easeInOut,
                 child: FloatingActionButton(
                   onPressed: () {
+                    if (!ActivationGuard.check()) return;
                     final index = DefaultTabController.of(context).index;
                     if (index == 0) {
                       // add later

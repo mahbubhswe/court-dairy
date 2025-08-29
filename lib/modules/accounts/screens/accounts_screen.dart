@@ -8,6 +8,7 @@ import '../services/transaction_service.dart';
 import '../widgets/transaction_tile.dart';
 import 'all_transactions_screen.dart';
 import 'edit_transaction_screen.dart';
+import '../../../utils/activation_guard.dart';
 
 class AccountsScreen extends StatelessWidget {
   const AccountsScreen({super.key});
@@ -51,10 +52,13 @@ class AccountsScreen extends StatelessWidget {
                       return TransactionTile(
                         transaction: transaction,
                         onEdit: () {
-                          Get.to(() =>
-                              EditTransactionScreen(transaction: transaction));
+                          if (ActivationGuard.check()) {
+                            Get.to(() =>
+                                EditTransactionScreen(transaction: transaction));
+                          }
                         },
                         onDelete: () async {
+                          if (!ActivationGuard.check()) return;
                           final user = AppFirebase().currentUser;
                           if (user != null && transaction.docId != null) {
                             await TransactionService.deleteTransaction(

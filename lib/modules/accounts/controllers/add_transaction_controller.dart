@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../models/transaction.dart';
 import '../../../services/app_firebase.dart';
 import '../services/transaction_service.dart';
+import '../../../utils/activation_guard.dart';
 
 class AddTransactionController extends GetxController {
   final RxnString type = RxnString();
@@ -31,6 +32,7 @@ class AddTransactionController extends GetxController {
 
   Future<void> addTransaction() async {
     if (!enableBtn.value || isLoading.value) return;
+    if (!ActivationGuard.check()) return;
     try {
       isLoading.value = true;
       final user = AppFirebase().currentUser;
