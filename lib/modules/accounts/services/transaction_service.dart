@@ -38,4 +38,13 @@ class TransactionService {
             .map((doc) => Transaction.fromMap(doc.data(), docId: doc.id))
             .toList());
   }
+
+  static Future<void> deleteTransaction(String docId, String userId) async {
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.transactions)
+        .doc(docId)
+        .delete();
+  }
 }
