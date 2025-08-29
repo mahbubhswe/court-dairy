@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "211588944864",
+    "project_id": "court-diary-ceadc",
+    "storage_bucket": "court-diary-ceadc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211588944864:android:622a460e11bdfe4b119185",
+        "android_client_info": {
+          "package_name": "com.appseba.courtdiary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUiuehVsBFYWvlt0t-WLwshZLiugRRQa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
