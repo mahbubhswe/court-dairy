@@ -6,9 +6,9 @@ import '../../../services/app_firebase.dart';
 import '../services/transaction_service.dart';
 
 class AddTransactionController extends GetxController {
-  final type = TextEditingController();
+  final RxnString type = RxnString();
   final amount = TextEditingController();
-  final paymentMethod = TextEditingController();
+  final RxnString paymentMethod = RxnString();
   final note = TextEditingController();
 
   final RxBool isLoading = false.obs;
@@ -17,15 +17,16 @@ class AddTransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    type.addListener(_validate);
     amount.addListener(_validate);
-    paymentMethod.addListener(_validate);
+    ever(type, (_) => _validate());
+    ever(paymentMethod, (_) => _validate());
   }
 
   void _validate() {
-    enableBtn.value = type.text.trim().isNotEmpty &&
+    enableBtn.value =
+        type.value != null &&
         amount.text.trim().isNotEmpty &&
-        paymentMethod.text.trim().isNotEmpty;
+        paymentMethod.value != null;
   }
 
   Future<void> addTransaction() async {
@@ -38,10 +39,10 @@ class AddTransactionController extends GetxController {
       }
 
       final transaction = Transaction(
-        type: type.text.trim(),
+        type: type.value!,
         amount: double.tryParse(amount.text.trim()) ?? 0,
         note: note.text.trim().isEmpty ? null : note.text.trim(),
-        paymentMethod: paymentMethod.text.trim(),
+        paymentMethod: paymentMethod.value!,
         createdAt: DateTime.now(),
       );
 
@@ -68,9 +69,7 @@ class AddTransactionController extends GetxController {
 
   @override
   void onClose() {
-    type.dispose();
     amount.dispose();
-    paymentMethod.dispose();
     note.dispose();
     super.onClose();
   }
