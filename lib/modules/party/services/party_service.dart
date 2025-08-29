@@ -9,7 +9,11 @@ class PartyService {
   static final _storage = AppFirebase().storage;
 
   static Future<void> addParty(Party party) async {
-    await _firestore.collection(AppCollections.parties).add(party.toMap());
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(party.lawyerId)
+        .collection(AppCollections.parties)
+        .add(party.toMap());
   }
 
   static Future<String> uploadPartyPhoto(File file, String userId) async {
@@ -21,8 +25,9 @@ class PartyService {
 
   static Stream<List<Party>> getParties(String lawyerId) {
     return _firestore
+        .collection(AppCollections.lawyers)
+        .doc(lawyerId)
         .collection(AppCollections.parties)
-        .where('lawyerId', isEqualTo: lawyerId)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => Party.fromMap(doc.data(), docId: doc.id))
