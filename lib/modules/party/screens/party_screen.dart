@@ -1,4 +1,5 @@
 import 'package:courtdiary/widgets/data_not_found.dart';
+import 'package:courtdiary/widgets/party_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,12 +23,8 @@ class PartyScreen extends StatelessWidget {
         itemCount: controller.parties.length,
         itemBuilder: (context, index) {
           final party = controller.parties[index];
-          return ListTile(
-            leading: party.photoUrl != null
-                ? CircleAvatar(backgroundImage: NetworkImage(party.photoUrl!))
-                : const CircleAvatar(child: Icon(Icons.person)),
-            title: Text(party.name),
-            subtitle: Text(party.phone),
+          return PartyTile(
+            party: party,
             onTap: () {
               Get.to(() => PartyProfileScreen(party: party));
             },
