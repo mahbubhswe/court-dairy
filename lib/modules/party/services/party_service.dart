@@ -46,5 +46,18 @@ class PartyService {
             .map((doc) => Party.fromMap(doc.data(), docId: doc.id))
             .toList());
   }
+
+  static Future<void> deleteParty(Party party) async {
+    if (party.docId == null) {
+      throw Exception('Party document ID is required for delete');
+    }
+
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(party.lawyerId)
+        .collection(AppCollections.parties)
+        .doc(party.docId)
+        .delete();
+  }
 }
 
