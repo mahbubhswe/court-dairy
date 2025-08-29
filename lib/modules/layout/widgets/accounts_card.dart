@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../themes/theme_controller.dart';
 
 class AccountsCard extends StatelessWidget {

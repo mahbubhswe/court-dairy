@@ -32,7 +32,7 @@ class AuthScreen extends StatelessWidget {
                       height: 150,
                     ),
                     const Text(
-                      'Welcome to Seba POS',
+                      'Welcome to Court Dairy',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

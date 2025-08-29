@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import '../../../screens/calculator_screen.dart';
-import '../../../screens/customer_service.dart';
+import '../../../screens/customer_service_screen.dart';
 import '../../../constants/app_texts.dart';
 import '../../party/screens/party_screen.dart';
 import '../widgets/app_drawer.dart';
@@ -19,14 +19,12 @@ class LayoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-       Scaffold(
-        appBar: AppBar(
-          leadingWidth: 40,
-          titleSpacing: 0,
-          title: const Text('Seba POS'),
-          actions: [
-       
+    return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 40,
+        titleSpacing: 0,
+        title: const Text('Court Dairy'),
+        actions: [
           IconButton(
             onPressed: () {
               Get.to(() => CalculatorScreen(), fullscreenDialog: true);
@@ -55,7 +53,7 @@ class LayoutScreen extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             child: FloatingActionButton(
-              onPressed: (){},
+              onPressed: () {},
               child: const Icon(Icons.receipt_long_rounded),
             ),
           ),
@@ -68,7 +66,7 @@ class LayoutScreen extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               child: layoutController.isDashboardVisible.value
-                  ?  Dashboard()
+                  ? Dashboard()
                   : const SizedBox.shrink(),
             );
           }),
@@ -86,11 +84,7 @@ class LayoutScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: TabBarView(
-                      children: [
-                        CaseScreen(),
-                        PartyScreen(),
-                        AccountsScreen()
-                      ],
+                      children: [CaseScreen(), PartyScreen(), AccountsScreen()],
                     ),
                   ),
                 ],

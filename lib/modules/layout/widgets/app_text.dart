@@ -18,7 +18,7 @@ class AppText extends StatelessWidget {
       child: AnimatedTextKit(
         animatedTexts: [
           ColorizeAnimatedText(
-            'স্টক খাতা অ্যাপ ব্যবহার খুব সহজ ও নিরাপদ',
+            'কোর্ট ডাইরি অ্যাপ ব্যবহার খুব সহজ ও নিরাপদ',
             textStyle: colorizeTextStyle,
             colors: colorizeColors,
           ),

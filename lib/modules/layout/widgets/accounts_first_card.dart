@@ -21,35 +21,35 @@ class AccountsFirstCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Obx(() => AccountsCard(
-                      title: 'কাস্টমার',
-                      amount:0,
-                    )),
-                Obx(() => AccountsCard(
-                      title: 'মোট বিক্রি',
-                      amount: 0
-                    )),
-                Obx(() => AccountsCard(
-                      title: 'মোট জমা',
-                      amount:0,
-                    )),
+                AccountsCard(
+                  title: 'মোট পার্টি',
+                  amount: 0,
+                ),
+                AccountsCard(
+                  title: 'মোট কেস',
+                  amount: 0,
+                ),
+                AccountsCard(
+                  title: 'মোট কোর্ট',
+                  amount: 0,
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Obx(() => AccountsCard(
-                      title: 'সাপ্লায়ার',
-                      amount:0,
-                    )),
-                Obx(() => AccountsCard(
-                      title: 'মোট ক্রয়',
-                      amount:0
-                    )),
-                Obx(() => AccountsCard(
-                      title: 'মোট পরিসোধ',
-                      amount:0
-                    )),
+                AccountsCard(
+                  title: 'মোট জমা',
+                  amount: 0,
+                ),
+                AccountsCard(
+                  title: 'মোট খরচ',
+                  amount: 0,
+                ),
+                AccountsCard(
+                  title: 'বর্তমান ব্যালেন্স',
+                  amount: 0,
+                ),
               ],
             )
           ],
