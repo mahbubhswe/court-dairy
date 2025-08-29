@@ -104,6 +104,7 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/sounds/
+    - assets/animations/
 
   #  - assets/sounds/
 
