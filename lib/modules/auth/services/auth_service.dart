@@ -39,7 +39,7 @@ class AuthService {
         );
 
         await _firestore
-            .collection(AppCollections.shops)
+            .collection(AppCollections.lawyers)
             .doc(user.uid)
             .set(newLawyer.toMap());
       }

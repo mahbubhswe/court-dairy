@@ -36,7 +36,7 @@ class FcmService {
 
     try {
       await _firestore
-          .collection(AppCollections.shops)
+          .collection(AppCollections.lawyers)
           .doc(uid)
           .update({"fcmToken": token});
     } catch (e) {

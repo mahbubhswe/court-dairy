@@ -18,7 +18,7 @@ class LayoutService {
     }
 
     final shopDocRef =
-        _firestore.collection(AppCollections.shops).doc(user.uid);
+        _firestore.collection(AppCollections.lawyers).doc(user.uid);
 
     return shopDocRef.snapshots().map((snapshot) {
       if (snapshot.exists) {
@@ -40,7 +40,7 @@ class LayoutService {
 
     try {
       final shopDocRef =
-          _firestore.collection(AppCollections.shops).doc(user.uid);
+          _firestore.collection(AppCollections.lawyers).doc(user.uid);
       await shopDocRef.update({
         'shopName': shopName,
         'address': address,

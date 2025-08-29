@@ -63,7 +63,7 @@ class AppSmsSender {
 
       if (responseCode == 202) {
         await _firestore
-            .collection(AppCollections.shops)
+            .collection(AppCollections.lawyers)
             .doc(user.uid)
             .update({
           'smsBalance': FieldValue.increment(-1),

@@ -15,7 +15,7 @@ class BuySmsService {
       throw Exception('No authenticated user found.');
     }
 
-    await _firestore.collection(AppCollections.shops).doc(user.uid).update({
+    await _firestore.collection(AppCollections.lawyers).doc(user.uid).update({
       'smsBalance': FieldValue.increment(count),
     });
   }
