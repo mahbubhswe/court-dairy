@@ -1,30 +1,35 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 class AppButton extends StatelessWidget {
-  final String title;
-  final Function()? onTap;
-  const AppButton({super.key, required this.title, required this.onTap});
+  final String label;
+  final Function()? onPressed;
+
+  const AppButton({super.key, required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = onPressed != null;
+
     return SimpleShadow(
+      opacity: isEnabled ? 0.3 : 0, // shadow only if enabled
       child: InkWell(
-        onTap: onTap,
+        onTap: isEnabled ? onPressed : null,
+        borderRadius: BorderRadius.circular(12),
         child: Container(
-          height: 70,
+          height: 60,
           decoration: BoxDecoration(
-              color: const Color(0xFFCB2D3C),
-              borderRadius: BorderRadius.circular(12)),
+            color: isEnabled ? const Color(0xFFCB2D3C) : Colors.grey.shade400,
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Center(
             child: Text(
-              title,
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isEnabled ? Colors.white : Colors.white70,
+              ),
             ),
           ),
         ),

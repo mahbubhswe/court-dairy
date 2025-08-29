@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'payment.dart';
+
+import '../services/firebase_export.dart';
 
 class Case {
   final String caseNumber; // Unique identifier for the case
@@ -7,7 +7,6 @@ class Case {
   final String courtName; // Name of the court handling the case
   final String partyName; // Name of the party involved
   final String partyNumber; // Contact number of the party
-  final List<Payment> payments; // List of payments related to the case
   final String partyId; // Unique identifier for the party
   final String lawyerId; // Unique identifier for the lawyer
   final bool isNotify; // Notification status
@@ -35,7 +34,6 @@ class Case {
     required this.courtName,
     required this.partyName,
     required this.partyNumber,
-    required this.payments,
     required this.partyId,
     required this.lawyerId,
     required this.isNotify,
@@ -64,9 +62,7 @@ class Case {
       courtName: map['courtName'] as String,
       partyName: map['partyName'] as String,
       partyNumber: map['partyNumber'] as String,
-      payments: (map['payments'] as List<dynamic>)
-          .map((payment) => Payment.fromMap(payment as Map<String, dynamic>))
-          .toList(),
+ 
       partyId: map['partyId'] as String,
       lawyerId: map['lawyerId'] as String,
       isNotify: map['isNotify'] as bool,
@@ -97,7 +93,6 @@ class Case {
       'courtName': courtName,
       'partyName': partyName,
       'partyNumber': partyNumber,
-      'payments': payments.map((payment) => payment.toMap()).toList(),
       'partyId': partyId,
       'lawyerId': lawyerId,
       'isNotify': isNotify,

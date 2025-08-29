@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   custom_text_form_field_plus
   firebase_auth
   firebase_core
+  firebase_storage
   permission_handler_windows
   url_launcher_windows
 )

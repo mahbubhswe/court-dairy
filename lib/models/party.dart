@@ -2,7 +2,7 @@ class Party {
   final String name;
   final String phone;
   final String address;
-  final String lawyerId; // New field added
+  final String lawyerId;
 
   // Map to hold dynamic fields
   Map<String, dynamic> _dynamicFields = {};

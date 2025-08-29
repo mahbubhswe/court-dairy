@@ -1,62 +1,58 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:courtdiary/models/cost.dart';
+import 'package:courtdiary/services/firebase_export.dart';
 
 class Lawyer {
-  final String lawyerName;
+  final String name;
+  final String address;
+  final String fcmToken;
   final String phone;
-  final String district;
-  final int subFor; // Subscription duration in days (e.g., 25 days)
-  final int smsBalance; // Subscription duration in days (e.g., 25 days)
-  final Timestamp subStart; // Subscription start timestamp
-  final List<Cost> costs; // List of Cost objects
-  final List<String> courts; // List of court names/types
+  final int smsBalance;
+  final double balance;
+  final bool isActive;
+  final int subFor;
+  final DateTime subStartsAt;
 
-  Lawyer( {
-    required this.lawyerName,
-    required this.smsBalance,
+  Lawyer({
+    required this.name,
+    required this.address,
+    required this.fcmToken,
     required this.phone,
-    required this.district,
+    required this.smsBalance,
+    required this.balance,
+    required this.isActive,
     required this.subFor,
-    required this.subStart,
-    required this.costs, // Add costs as a parameter
-    required this.courts, // Add courts as a parameter
+    required this.subStartsAt,
   });
 
-  // Convert a Lawyer instance to a map for Firestore
+  /// Convert to Firestore Map
   Map<String, dynamic> toMap() {
     return {
-      'lawyerName': lawyerName,
+      'name': name,
+      'address': address,
+      'fcmToken': fcmToken,
       'phone': phone,
-      'district': district,
+      'smsBalance': smsBalance,
+      'balance': balance,
+      'isActive': isActive,
       'subFor': subFor,
-      'smsBalance':smsBalance,
-      'subStart': subStart,
-      'costs': costs
-          .map((cost) => cost.toMap())
-          .toList(), // Convert costs list to map
-      'courts': courts, // Add courts list to map
+      'subStartsAt': subStartsAt,
     };
   }
 
-  // Create a Lawyer instance from a Firestore document
+  /// Create from Firestore Map
   factory Lawyer.fromMap(Map<String, dynamic> map) {
-    var costList = (map['costs'] as List?)
-            ?.map((costMap) => Cost.fromMap(costMap as Map<String, dynamic>))
-            .toList() ??
-        [];
-
-    var courtsList =
-        List<String>.from(map['courts'] ?? []); // Parse courts list
-
     return Lawyer(
-      lawyerName: map['lawyerName'] ?? '',
+      name: map['name'] ?? '',
+      address: map['address'] ?? '',
+      fcmToken: map['fcmToken'] ?? '',
       phone: map['phone'] ?? '',
-      district: map['district'] ?? '',
-      smsBalance: map['smsBalance'] ?? '',
+      smsBalance: map['smsBalance'] ?? 0,
+      balance: (map['balance'] ?? 0).toDouble(),
+      isActive: map['isActive'] ?? false,
       subFor: map['subFor'] ?? 0,
-      subStart: map['subStart'] ?? Timestamp.now(),
-      costs: costList, // Initialize costs list
-      courts: courtsList, // Initialize courts list
+      subStartsAt: (map['subStartsAt'] as Timestamp).toDate(),
     );
   }
+
+  /// Get subscription end date
+  DateTime get subscriptionEndsAt => subStartsAt.add(Duration(days: subFor));
 }

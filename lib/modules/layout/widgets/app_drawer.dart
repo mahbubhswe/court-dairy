@@ -1,224 +1,374 @@
-// ignore_for_file: must_be_immutable
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hugeicons/hugeicons.dart';
-import 'package:panara_dialogs/panara_dialogs.dart';
-import 'package:intl/intl.dart'; // For formatting DateTime
+import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import '../../../themes/theme_controller.dart';
+import '../../auth/controllers/auth_controller.dart';
+import '../../court_dairy/screens/buy_sms_screen.dart';
+import '../controllers/layout_controller.dart';
 
 class AppDrawer extends StatelessWidget {
-  final AsyncSnapshot<Map<String, dynamic>> documentSnapshot;
-  const AppDrawer({required this.documentSnapshot, super.key});
+  AppDrawer({super.key});
+
+  final layoutController = Get.find<LayoutController>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    UserMetadata? userMetadata = firebaseAuth.currentUser?.metadata;
+    final width = MediaQuery.of(context).size.width;
 
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Drawer(
-      width: Get.width,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Accounts & Profile'),
-          leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(CupertinoIcons.back), // iOS-style back icon
-          ),
-          actions: [
-            IconButton(
-              onPressed: () => PanaraConfirmDialog.show(
-                context,
-                message: 'অ্যাপ থেকে লগ আউট করবেন',
-                title: 'আপনি নিশ্চিত?',
-                panaraDialogType: PanaraDialogType.custom,
-                onTapCancel: () => Get.back(),
-                onTapConfirm: () async {
-                  Get.back();
-                  await firebaseAuth.signOut();
-                },
-                confirmButtonText: 'হ্যাঁ',
-                cancelButtonText: 'বাতিল',
-              ),
-              icon: const Icon(Icons.logout_sharp), // Rounded logout icon
-            )
-          ],
+      width: width,
+      backgroundColor: cs.surface,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          systemNavigationBarColor: cs.surface,
+          systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          systemNavigationBarDividerColor: Colors.transparent,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundImage: NetworkImage(
-                          firebaseAuth.currentUser!.photoURL.toString()),
+        child: Obx(() {
+        final shop = layoutController.lawyer.value;
+        final user = authController.user.value;
+
+        if (shop == null || user == null) {
+          return const Center(child: CupertinoActivityIndicator(radius: 15));
+        }
+
+        final now = DateTime.now();
+        final subscriptionEnd = shop.subscriptionEndsAt;
+        final daysLeft = subscriptionEnd.difference(now).inDays;
+
+        final lastSignIn = user.metadata.lastSignInTime;
+        final formattedSignIn = lastSignIn != null
+            ? DateFormat('dd MMM yyyy, hh:mm a').format(lastSignIn)
+            : 'অজানা';
+
+        return SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Back Button with rounded bg
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color:
+                                Theme.of(context).colorScheme.outlineVariant),
+                      ),
+                      child: Icon(
+                        CupertinoIcons.chevron_back,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      firebaseAuth.currentUser!.displayName.toString(),
-                      textScaler: const TextScaler.linear(1.5),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      firebaseAuth.currentUser!.email.toString(),
-                      textScaler: const TextScaler.linear(1.3),
-                    ),
-                    const SizedBox(height: 5),
-                    OutlinedButton(
-                      onPressed: () {
-                        Get.snackbar('Sorry', 'Under Development');
-                      },
-                      child: const Text('Update Profile'),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-              _sectionTitle('Profile'),
-              _profileCard(documentSnapshot),
-              _sectionTitle('Account'),
-              _accountCard(documentSnapshot, userMetadata!.creationTime!,
-                  userMetadata.lastSignInTime!),
-              _sectionTitle('Reset and Data Backup'),
-              _resetCard(),
-              const SizedBox(height: 25),
-              const Text('Powered by App Seba - Your Trusted Friend'),
-              const Text('Software Company',
-                  style: TextStyle(color: Colors.grey)),
-              const SizedBox(height: 25),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+                const SizedBox(height: 10),
 
-  Widget _sectionTitle(String title) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Text(
-          title,
-          textScaler: const TextScaler.linear(1.5),
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
+                // Profile Info - Column layout with photo, name, email
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircleAvatar(
+                        radius: 48,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        backgroundImage: user.photoURL != null
+                            ? CachedNetworkImageProvider(user.photoURL!)
+                            : null,
+                        child: user.photoURL == null
+                            ? Text(
+                                shop.name.isNotEmpty
+                                    ? shop.name[0].toUpperCase()
+                                    : '?',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              )
+                            : null,
+                      ),
+                      const SizedBox(height: 18),
+                      Text(
+                        user.displayName ?? shop.name,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        user.email ?? shop.phone,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 14),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(CupertinoIcons.clock, size: 16),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'সর্বশেষ লগইন: $formattedSignIn',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
 
-  Widget _profileCard(AsyncSnapshot<Map<String, dynamic>> documentSnapshot) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      elevation: 0,
-      child: Column(
-        children: [
-          _buildListTile(
-            HugeIcons.strokeRoundedNote05,
-            documentSnapshot.data!['lawyerName'] ?? 'N/A',
-            'Lawyer Name',
-          ),
-          _buildListTile(
-            HugeIcons.strokeRoundedCall02,
-            documentSnapshot.data!['phone'] ?? 'N/A',
-            'Contact Number',
-          ),
-          _buildListTile(
-            HugeIcons.strokeRoundedAddressBook,
-            documentSnapshot.data!['district'] ?? 'N/A',
-            'District',
-          ),
-        ],
-      ),
-    );
-  }
+                const SizedBox(height: 36),
 
-  Widget _accountCard(AsyncSnapshot<Map<String, dynamic>> documentSnapshot,
-      DateTime creationTimeText, DateTime lastSignInTimeText) {
-    final subStart = (documentSnapshot.data!['subStart'] as Timestamp).toDate();
-    final subEnd = subStart.add(
-      Duration(days: documentSnapshot.data!['subFor']),
-    );
+                // দোকান সম্পর্কিত তথ্য Section
+                _sectionHeader(context, 'দোকান সম্পর্কিত তথ্য'),
+                const SizedBox(height: 12),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.home,
+                  title: 'দোকানের নাম',
+                  subtitle: shop.name,
+                ),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.location,
+                  title: 'ঠিকানা',
+                  subtitle: shop.address,
+                ),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.phone_fill,
+                  title: 'ফোন নম্বর',
+                  subtitle: shop.phone,
+                ),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.chat_bubble_text_fill,
+                  title: 'এসএমএস ব্যালেন্স',
+                  subtitle: '${shop.smsBalance}',
+                  hasArrow: true,
+                  onTap: () {
+                    Get.to(() => BuySmsView());
+                  },
+                ),
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      elevation: 0,
-      child: Column(
-        children: [
-          _buildListTile(
-            HugeIcons.strokeRoundedCalendar03,
-            DateFormat('yyyy-MM-dd').format(subStart),
-            'Subcription Start Date',
-          ),
-          _buildListTile(
-            HugeIcons.strokeRoundedCalendar03,
-            DateFormat('yyyy-MM-dd').format(subEnd),
-            'Subcription End Date',
-          ),
-          _buildListTile(
-            HugeIcons.strokeRoundedTime01,
-            DateFormat('yyyy-MM-dd HH:mm').format(creationTimeText),
-            'Acount Created',
-          ),
-          _buildListTile(
-            HugeIcons.strokeRoundedTime01,
-            DateFormat('yyyy-MM-dd HH:mm').format(lastSignInTimeText),
-            'Last Sign In',
-          ),
-        ],
-      ),
-    );
-  }
+                const SizedBox(height: 36),
 
-  Widget _resetCard() {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      elevation: 0,
-      child: Column(
-        children: [
-          ListTile(
-            leading: _roundedIcon(HugeIcons.strokeRoundedSetup02),
-            title: const Text('Account Reset'),
-            subtitle: const Text('Reset Your Account'),
-            trailing: IconButton(
-              onPressed: () {
-                Get.snackbar('Sorry', 'Under Development');
-              },
-              icon: const Icon(CupertinoIcons.forward),
+                // সাবস্ক্রিপশন বিস্তারিত Section
+                _sectionHeader(context, 'সাবস্ক্রিপশন বিস্তারিত'),
+           
+        
+                const SizedBox(height: 8),
+                _infoTile(
+                  context,
+                  icon: Icons.brightness_6_rounded,
+                  title: 'থিম পরিবর্তন',
+                  subtitle: 'ডার্ক/লাইট মোড',
+                  onTap: () => Get.find<ThemeController>().toggleTheme(),
+                ),
+                const SizedBox(height: 12),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.calendar,
+                  title: 'মেয়াদ',
+                  subtitle: '${shop.subFor} দিন',
+                ),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.clock_fill,
+                  title: 'শুরু তারিখ',
+                  subtitle: DateFormat('dd MMM yyyy').format(shop.subStartsAt),
+                ),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.timer,
+                  title: 'শেষ তারিখ',
+                  subtitle: DateFormat('dd MMM yyyy').format(subscriptionEnd),
+                ),
+                _infoTile(
+                  context,
+                  icon: CupertinoIcons.hourglass,
+                  title: 'বাকি দিন',
+                  subtitle: daysLeft > 0 ? '$daysLeft দিন বাকি' : 'মেয়াদ শেষ',
+                  subtitleColor: daysLeft > 0
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.error,
+                  isBold: true,
+                ),
+
+                const SizedBox(height: 36),
+
+                // Reset Section
+                _sectionHeader(context, 'রিসেট অপশন'),
+                const SizedBox(height: 12),
+                // Removed password reset from drawer as requested
+                _infoTile(
+                  context,
+                  icon: Icons.account_balance_wallet,
+                  title: 'অ্যাকাউন্ট রিসেট',
+                  subtitle: 'আপনার সম্পূর্ণ অ্যাকাউন্ট ডেটা রিসেট করুন',
+                  onTap: () {
+                   
+                  },
+                ),
+
+                const SizedBox(height: 36),
+
+                // Logout (outlined, themed destructive style)
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: Icon(
+                      Icons.logout,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    label: Text(
+                      'লগ আউট',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final confirm = await showCupertinoDialog<bool>(
+                        context: context,
+                        builder: (ctx) => CupertinoAlertDialog(
+                          title: const Text('লগ আউট নিশ্চিত করুন'),
+                          content:
+                              const Text('আপনি কি সত্যিই লগ আউট করতে চান?'),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: const Text('বাতিল'),
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                            ),
+                            CupertinoDialogAction(
+                              isDestructiveAction: true,
+                              child: const Text('লগ আউট'),
+                              onPressed: () => Navigator.of(ctx).pop(true),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (confirm == true) {
+                        await authController.logout();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
-          ListTile(
-            leading: _roundedIcon(HugeIcons.strokeRoundedCloud),
-            title: const Text('Data Backup'),
-            subtitle: const Text('Google Cloud(Auto Backup System)'),
-            trailing: const CupertinoActivityIndicator(),
+        );
+      }),
+      ),
+    );
+  }
+
+  Widget _sectionHeader(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
           ),
-        ],
-      ),
     );
   }
 
-  Widget _buildListTile(IconData iconData, String title, String subtitle) {
-    return ListTile(
-      leading: _roundedIcon(iconData),
-      title: Text(title),
-      subtitle: Text(subtitle),
-    );
-  }
-
-  Widget _roundedIcon(IconData iconData) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
+  Widget _infoTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    Color? subtitleColor,
+    bool isBold = false,
+    bool hasArrow = false,
+    VoidCallback? onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12), // Rounded rectangle bg
+                border: Border.all(
+                    color: Theme.of(context).colorScheme.outlineVariant),
+              ),
+              child: Icon(icon, size: 20),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: subtitleColor,
+                          fontWeight:
+                              isBold ? FontWeight.bold : FontWeight.normal,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            if (hasArrow)
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: Theme.of(context).colorScheme.outlineVariant),
+                ),
+                child: const Icon(CupertinoIcons.chevron_forward, size: 18),
+              ),
+          ],
+        ),
       ),
-      child: Icon(iconData),
     );
   }
 }

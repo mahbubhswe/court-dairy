@@ -1,83 +1,146 @@
-// ignore_for_file: depend_on_referenced_packages
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:courtdiary/models/lawyer.dart';
-import 'package:courtdiary/services/firebase_services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
+import 'package:courtdiary/services/firebase_export.dart';
+import 'dart:io' show Platform;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import '../../../constants/app_collections.dart';
+import '../../../utils/new_user_dailog.dart';
+import '../../layout/screens/layout_screen.dart';
+import '../screens/auth_view.dart';
+import '../services/auth_service.dart';
 
 class AuthController extends GetxController {
+  final _authService = AuthService();
   final email = TextEditingController();
   final password = TextEditingController();
-  DateTime date = DateTime.now();
+  final Rxn<User> user = Rxn<User>();
+  final RxBool isLoading = false.obs;
+  final RxBool isNewUser = false.obs;
+  final RxString error = ''.obs;
+  RxBool enableBtn = false.obs;
 
-  Future<dynamic> signInWithGoogle() async {
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
-    final credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken, idToken: gAuth.idToken);
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    if (userCredential.additionalUserInfo!.isNewUser) {
-      createUser();
-    }
-    return userCredential;
+  @override
+  void onInit() {
+    user.bindStream(_authService.authState());
+    email.addListener(_validateForm);
+    password.addListener(_validateForm);
+    super.onInit();
   }
 
-  void createUser() async {
-    Lawyer lawyer = Lawyer(
-        lawyerName: 'Court Diary',
-        phone: '01xxxxxxxxx',
-        district: 'Dhaka, Bangladesh',
-        subFor: 25,
-        subStart: Timestamp.now(),
-        costs: [],
-        courts: [],
-        smsBalance: 0);
-    await setDocument(
-        collectionName: AppCollections.LAWYERS,
-        data: lawyer.toMap(),
-        documentId: FirebaseAuth.instance.currentUser!.uid);
+  @override
+  void onClose() {
+    email.dispose();
+    password.dispose();
+    super.onClose();
   }
 
-  void login() async {
+  bool get isLoggedIn => user.value != null;
+  String get getUid => user.value!.uid;
+
+  void _validateForm() {
+    error.value = '';
+    final isValidEmail =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$').hasMatch(email.text.trim());
+    final isValidPassword = password.text.trim().length >= 6;
+    enableBtn.value = isValidEmail && isValidPassword;
+  }
+
+  Future<void> login() async {
+    _setLoading(true);
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email.text, password: password.text);
+      await _authService.login(
+          email: email.text.trim(), password: password.text.trim());
+      Get.offAll(() => LayoutScreen());
     } catch (e) {
-      Get.snackbar('দুঃখিত!', 'আপনার ইমেল অথবা পাসওয়ার্ড টি সঠিক নয়।',
-          snackPosition: SnackPosition.BOTTOM);
+      _showError(e);
+    } finally {
+      _setLoading(false);
     }
   }
 
-  void resetPassword() async {
+  Future<void> signInWithGoogle() async {
+    _setLoading(true);
     try {
-      if (GetUtils.isEmail(email.text)) {
-        await FirebaseAuth.instance
-            .sendPasswordResetEmail(
-              email: email.text,
-            )
-            .whenComplete(() => Get.snackbar(
-                  'আপনার ইমেল চেক করুন',
-                  'আপনার ইমেইলে নতুন পাসওয়ার্ড সেট করার জন্য লিঙ্ক পাঠানো হয়েছে। লিঙ্কে ক্লিক করে একটি নতুন পাসওয়ার্ড সেট করুন।',
-                  snackPosition: SnackPosition.BOTTOM,
-                  margin: const EdgeInsets.all(12),
-                  duration: const Duration(seconds: 25),
-                ));
+      final userCredential = await _authService.signInWithGoogle();
+      if (userCredential != null) {
+        user.value = userCredential.user;
+        isNewUser.value = userCredential.additionalUserInfo?.isNewUser ?? false;
+        if (isNewUser.value) {
+          showNewUserDialog();
+        }
       } else {
-        Get.snackbar(
-          'ইমেইল টি সঠিক নয়।',
-          'উপরের ইমেইল বক্সে আপনার একাউন্টের ইমেল এড্রেস লিখুন এর পর Forgot Password এ ক্লিক করুন।',
-          snackPosition: SnackPosition.BOTTOM,
-          margin: const EdgeInsets.all(12),
-          duration: const Duration(seconds: 25),
-        );
+        _showError("Google Sign-In canceled or failed");
       }
     } catch (e) {
-      Get.snackbar('দুঃখিত!', 'কিছু একটা সমস্যা হয়েছে',
-          snackPosition: SnackPosition.BOTTOM);
+      _showError(e);
+    } finally {
+      _setLoading(false);
     }
   }
+
+  Future<void> forgotPassword() async {
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$')
+        .hasMatch(email.text.trim())) {
+      _showError("Please enter a valid Gmail address to reset password");
+      return;
+    }
+    try {
+      _setLoading(true);
+      await _authService.sendPasswordResetEmail(email.text.trim());
+      await openGmailApp();
+      _setLoading(false);
+    } catch (e) {
+      _showError(e);
+    }
+  }
+
+  Future<void> logout() async {
+    await _authService.logout();
+    Get.offAll(() => const AuthScreen());
+  }
+
+  Future<void> openGmailApp() async {
+    if (Platform.isAndroid) {
+      final intent = AndroidIntent(
+        action: 'android.intent.action.MAIN',
+        category: 'android.intent.category.APP_EMAIL',
+        package: 'com.google.android.gm',
+        flags: [Flag.FLAG_ACTIVITY_NEW_TASK],
+      );
+
+      try {
+        await intent.launch();
+      } catch (e) {
+        Get.snackbar("Error", "Could not open Gmail app.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red.shade100,
+            colorText: Colors.black);
+      }
+    } else if (Platform.isIOS) {
+      // Try opening Gmail using URL scheme
+      const gmailUrl = 'googlegmail://';
+      if (await canLaunchUrl(Uri.parse(gmailUrl))) {
+        await launchUrl(Uri.parse(gmailUrl));
+      } else {
+        // Fallback to mail app
+        const mailtoUrl = 'mailto:';
+        if (await canLaunchUrl(Uri.parse(mailtoUrl))) {
+          await launchUrl(Uri.parse(mailtoUrl));
+        } else {
+          Get.snackbar("Error", "No email app found to open.",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red.shade100,
+              colorText: Colors.black);
+        }
+      }
+    }
+  }
+
+  // 🔕 No snackbar here
+  void _showError(Object e) {
+    error.value = e.toString().replaceAll('Exception:', '').trim();
+  }
+
+  void _setLoading(bool value) => isLoading.value = value;
 }
