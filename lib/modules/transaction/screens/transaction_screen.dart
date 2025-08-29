@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/transaction_controller.dart';
+import 'edit_transaction_screen.dart';
 
 class TransactionScreen extends StatelessWidget {
   const TransactionScreen({super.key});
@@ -23,6 +24,9 @@ class TransactionScreen extends StatelessWidget {
           return ListTile(
             title: Text('${transaction.type} - ${transaction.amount}'),
             subtitle: Text(transaction.paymentMethod),
+            onTap: () {
+              Get.to(() => EditTransactionScreen(transaction: transaction));
+            },
           );
         },
       );
