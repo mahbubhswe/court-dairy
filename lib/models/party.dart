@@ -1,12 +1,13 @@
 class Party {
+  String? docId;
   final String name;
   final String phone;
   final String address;
   final String lawyerId;
 
-
   // Constructor
   Party({
+    this.docId,
     required this.name,
     required this.phone,
     required this.address,
@@ -25,15 +26,14 @@ class Party {
   }
 
   // Method to create a Party object from a Map (for example, when retrieving from a database)
-  factory Party.fromMap(Map<String, dynamic> map) {
+  factory Party.fromMap(Map<String, dynamic> map, {String? docId}) {
     Party party = Party(
+      docId: docId,
       name: map['name'],
       phone: map['phone'],
       address: map['address'],
       lawyerId: map['lawyerId'], // Extract the new field from the map
     );
-
-
 
     return party;
   }
