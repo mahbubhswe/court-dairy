@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../models/court_case.dart';
 import '../../../models/party.dart';
@@ -11,15 +14,14 @@ import '../services/case_service.dart';
 class AddCaseController extends GetxController {
   final caseTitle = TextEditingController();
   final courtName = TextEditingController();
-  final courtType = TextEditingController();
   final caseNumber = TextEditingController();
-  final caseStatus = TextEditingController();
   final caseSummary = TextEditingController();
   final judgeName = TextEditingController();
   final courtOrder = TextEditingController();
-  final document = TextEditingController();
 
   final RxnString selectedCaseType = RxnString();
+  final RxnString selectedCourtType = RxnString();
+  final RxnString selectedCaseStatus = RxnString();
   final Rx<DateTime?> filedDate = Rx<DateTime?>(null);
   final Rx<DateTime?> hearingDate = Rx<DateTime?>(null);
 
@@ -28,6 +30,10 @@ class AddCaseController extends GetxController {
 
   final parties = <Party>[].obs;
   final caseTypes = ['Civil', 'Criminal', 'Family', 'Other'];
+  final courtTypes = ['District', 'Appeal', 'High Court'];
+  final caseStatuses = ['Ongoing', 'Disposed', 'Completed'];
+
+  final documents = <String>[].obs;
 
   final RxBool isLoading = false.obs;
 
@@ -42,6 +48,22 @@ class AddCaseController extends GetxController {
     }
   }
 
+  Future<void> pickDocuments() async {
+    final picker = ImagePicker();
+    final files = await picker.pickMultiImage();
+    if (files.isEmpty) return;
+    final user = AppFirebase().currentUser;
+    if (user == null) return;
+    for (final file in files) {
+      final path =
+          'cases/${user.uid}/${DateTime.now().millisecondsSinceEpoch}_${file.name}';
+      final ref = AppFirebase().storage.ref().child(path);
+      await ref.putFile(File(file.path));
+      final url = await ref.getDownloadURL();
+      documents.add(url);
+    }
+  }
+
   Future<bool> addCase() async {
     final user = AppFirebase().currentUser;
     if (user == null || isLoading.value) return false;
@@ -50,19 +72,18 @@ class AddCaseController extends GetxController {
       final caseModel = CourtCase(
         caseType: selectedCaseType.value ?? '',
         caseTitle: caseTitle.text.trim(),
-        courtType: courtType.text.trim(),
+        courtType: selectedCourtType.value ?? '',
         courtName: courtName.text.trim(),
         caseNumber: caseNumber.text.trim(),
         filedDate: Timestamp.fromDate(filedDate.value ?? DateTime.now()),
-        caseStatus: caseStatus.text.trim(),
+        caseStatus: selectedCaseStatus.value ?? '',
         plaintiff: selectedPlaintiff.value!,
         defendant: selectedDefendant.value!,
         hearingDates: hearingDate.value != null
             ? [Timestamp.fromDate(hearingDate.value!)]
             : <Timestamp>[],
         judgeName: judgeName.text.trim(),
-        documentsAttached:
-            document.text.isNotEmpty ? [document.text.trim()] : <String>[],
+        documentsAttached: documents.toList(),
         courtOrders:
             courtOrder.text.isNotEmpty ? [courtOrder.text.trim()] : <String>[],
         caseSummary: caseSummary.text.trim(),

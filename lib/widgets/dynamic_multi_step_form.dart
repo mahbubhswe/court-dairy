@@ -22,6 +22,7 @@ class DynamicMultiStepForm extends StatefulWidget {
     required this.steps,
     required this.onSubmit,
     this.isLoading = false,
+    this.stepperType = StepperType.horizontal,
   });
 
   /// Ordered list of form steps.
@@ -32,6 +33,9 @@ class DynamicMultiStepForm extends StatefulWidget {
 
   /// Whether a submit operation is in progress.
   final bool isLoading;
+
+  /// Orientation of the [Stepper]. Defaults to [StepperType.horizontal].
+  final StepperType stepperType;
 
   @override
   State<DynamicMultiStepForm> createState() => _DynamicMultiStepFormState();
@@ -58,6 +62,7 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
   @override
   Widget build(BuildContext context) {
     return Stepper(
+      type: widget.stepperType,
       currentStep: _currentStep,
       onStepTapped: (i) => setState(() => _currentStep = i),
       onStepContinue: _next,
