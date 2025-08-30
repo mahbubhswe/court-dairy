@@ -21,7 +21,12 @@ class CaseTile extends StatelessWidget {
       },
       trailing: IconButton(
         icon: const Icon(Icons.delete_outline),
-        onPressed: () => controller.deleteCase(caseItem.docId),
+        onPressed: () {
+          final id = caseItem.docId;
+          if (id != null) {
+            controller.deleteCase(id);
+          }
+        },
       ),
     );
   }

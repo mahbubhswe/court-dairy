@@ -3,7 +3,7 @@ import 'party.dart';
 
 class CourtCase {
   // docId: Frontend unique identifier (only used in the frontend)
-  String docId;
+  String? docId;
 
   // Case Information
   String caseType;
@@ -34,7 +34,7 @@ class CourtCase {
 
   // Constructor
   CourtCase({
-    required this.docId,
+    this.docId,
     required this.caseType,
     required this.caseTitle,
     required this.courtName,
@@ -53,7 +53,6 @@ class CourtCase {
   // Method to convert the case data to a map (for Firebase storage)
   Map<String, dynamic> toMap() {
     return {
-      'docId': docId,  // Store docId in Firestore
       'caseType': caseType,
       'caseTitle': caseTitle,
       'courtName': courtName,
@@ -71,9 +70,9 @@ class CourtCase {
   }
 
   // Method to convert a map to a CourtCase object (for fetching data from Firebase)
-  factory CourtCase.fromMap(Map<String, dynamic> map) {
+  factory CourtCase.fromMap(Map<String, dynamic> map, {String? docId}) {
     return CourtCase(
-      docId: map['docId'],  // docId is fetched directly from Firestore
+      docId: docId,
       caseType: map['caseType'],
       caseTitle: map['caseTitle'],
       courtName: map['courtName'],

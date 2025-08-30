@@ -17,7 +17,7 @@ class CaseService {
 
   static Future<void> updateCase(CourtCase courtCase, String userId) async {
     final docId = courtCase.docId;
-    if (docId.isEmpty) {
+    if (docId == null || docId.isEmpty) {
       throw Exception('Case document ID is required for update');
     }
     await _firestore
@@ -35,7 +35,7 @@ class CaseService {
         .collection(AppCollections.cases)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => CourtCase.fromMap(doc.data()))
+            .map((doc) => CourtCase.fromMap(doc.data(), docId: doc.id))
             .toList());
   }
 
