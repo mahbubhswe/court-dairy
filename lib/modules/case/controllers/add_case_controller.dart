@@ -47,7 +47,6 @@ class AddCaseController extends GetxController {
     try {
       isLoading.value = true;
       final caseModel = CourtCase(
-        docId: '',
         caseType: selectedCaseType.value ?? '',
         caseTitle: caseTitle.text.trim(),
         courtName: courtName.text.trim(),
