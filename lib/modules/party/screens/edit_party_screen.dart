@@ -15,6 +15,9 @@ class EditPartyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Get.isRegistered<EditPartyController>()) {
+      Get.delete<EditPartyController>();
+    }
     final controller = Get.put(EditPartyController(party));
     return Scaffold(
       appBar: AppBar(
