@@ -1,6 +1,7 @@
 import '../../../widgets/dynamic_multi_step_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 import '../controllers/add_case_controller.dart';
 import '../../../models/party.dart';
@@ -41,8 +42,8 @@ class AddCaseScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Add Case')),
-      body: DynamicMultiStepForm(
-        steps: [
+      body: Obx(() => DynamicMultiStepForm(
+            steps: [
           FormStep(
             title: const Text('Case Info'),
             content: Column(
@@ -137,9 +138,50 @@ class AddCaseScreen extends StatelessWidget {
               ],
             ),
           ),
-        ],
-        onSubmit: controller.addCase,
-      ),
+            ],
+            isLoading: controller.isLoading.value,
+            onSubmit: () {
+              PanaraConfirmDialog.show(
+                context,
+                title: 'নিশ্চিত করুন',
+                message: 'কেস যুক্ত করতে চান?',
+                confirmButtonText: 'হ্যাঁ',
+                cancelButtonText: 'না',
+                onTapCancel: () {
+                  Navigator.of(context).pop();
+                },
+                onTapConfirm: () async {
+                  Navigator.of(context).pop();
+                  final success = await controller.addCase();
+                  if (success) {
+                    PanaraInfoDialog.show(
+                      context,
+                      title: 'সফল হয়েছে',
+                      message: 'কেস যুক্ত করা হয়েছে',
+                      panaraDialogType: PanaraDialogType.success,
+                      barrierDismissible: false,
+                      onTapDismiss: () {
+                        Navigator.of(context).pop();
+                        Get.back();
+                      },
+                    );
+                  } else {
+                    PanaraInfoDialog.show(
+                      context,
+                      title: 'ত্রুটি',
+                      message: 'কেস যুক্ত করতে ব্যর্থ হয়েছে',
+                      panaraDialogType: PanaraDialogType.error,
+                      barrierDismissible: false,
+                      onTapDismiss: () {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  }
+                },
+                panaraDialogType: PanaraDialogType.normal,
+              );
+            },
+          )),
     );
   }
 }
