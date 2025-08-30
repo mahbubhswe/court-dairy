@@ -13,17 +13,37 @@ class AddCaseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(AddCaseController());
 
-    Widget caseTypeChips() {
+    Widget chipGrid(List<String> options, RxnString selected) {
+      final width = (MediaQuery.of(context).size.width - 48) / 2;
       return Wrap(
         spacing: 8,
-        children: controller.caseTypes.map((type) {
-          return Obx(() => ChoiceChip(
-                label: Text(type),
-                selected: controller.selectedCaseType.value == type,
-                onSelected: (_) => controller.selectedCaseType.value = type,
-              ));
-        }).toList(),
+        runSpacing: 8,
+        children: options
+            .map((type) => SizedBox(
+                  width: width,
+                  child: Obx(() => ChoiceChip(
+                        label: Text(type),
+                        selected: selected.value == type,
+                        onSelected: (_) => selected.value = type,
+                      )),
+                ))
+            .toList(),
       );
+    }
+
+    Widget caseTypeChips() => chipGrid(controller.caseTypes, controller.selectedCaseType);
+
+    Widget courtTypeChips() => chipGrid(controller.courtTypes, controller.selectedCourtType);
+
+    Widget caseStatusDropdown() {
+      return Obx(() => DropdownButtonFormField<String>(
+            value: controller.selectedCaseStatus.value,
+            decoration: const InputDecoration(labelText: 'Case Status'),
+            items: controller.caseStatuses
+                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                .toList(),
+            onChanged: (v) => controller.selectedCaseStatus.value = v,
+          ));
     }
 
     Widget partyDropdown(Rx<Party?> selected) {
@@ -49,6 +69,8 @@ class AddCaseScreen extends StatelessWidget {
             content: Column(
               children: [
                 caseTypeChips(),
+                const SizedBox(height: 8),
+                courtTypeChips(),
                 TextField(
                   controller: controller.caseTitle,
                   decoration: const InputDecoration(labelText: 'Case Title'),
@@ -58,17 +80,10 @@ class AddCaseScreen extends StatelessWidget {
                   decoration: const InputDecoration(labelText: 'Court Name'),
                 ),
                 TextField(
-                  controller: controller.courtType,
-                  decoration: const InputDecoration(labelText: 'Court Type'),
-                ),
-                TextField(
                   controller: controller.caseNumber,
                   decoration: const InputDecoration(labelText: 'Case Number'),
                 ),
-                TextField(
-                  controller: controller.caseStatus,
-                  decoration: const InputDecoration(labelText: 'Case Status'),
-                ),
+                caseStatusDropdown(),
                 TextField(
                   controller: controller.caseSummary,
                   decoration: const InputDecoration(labelText: 'Summary'),
@@ -135,10 +150,23 @@ class AddCaseScreen extends StatelessWidget {
                   controller: controller.courtOrder,
                   decoration: const InputDecoration(labelText: 'Court Order'),
                 ),
-                TextField(
-                  controller: controller.document,
-                  decoration: const InputDecoration(labelText: 'Document'),
+                ElevatedButton(
+                  onPressed: controller.pickDocuments,
+                  child: const Text('Upload Documents'),
                 ),
+                const SizedBox(height: 8),
+                Obx(() => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: controller.documents
+                          .map((url) => Image.network(
+                                url,
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                              ))
+                          .toList(),
+                    )),
               ],
             ),
           ),
