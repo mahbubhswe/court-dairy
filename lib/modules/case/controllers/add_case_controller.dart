@@ -11,6 +11,7 @@ import '../services/case_service.dart';
 class AddCaseController extends GetxController {
   final caseTitle = TextEditingController();
   final courtName = TextEditingController();
+  final courtType = TextEditingController();
   final caseNumber = TextEditingController();
   final caseStatus = TextEditingController();
   final caseSummary = TextEditingController();
@@ -49,6 +50,7 @@ class AddCaseController extends GetxController {
       final caseModel = CourtCase(
         caseType: selectedCaseType.value ?? '',
         caseTitle: caseTitle.text.trim(),
+        courtType: courtType.text.trim(),
         courtName: courtName.text.trim(),
         caseNumber: caseNumber.text.trim(),
         filedDate: Timestamp.fromDate(filedDate.value ?? DateTime.now()),

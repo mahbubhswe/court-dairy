@@ -58,6 +58,10 @@ class AddCaseScreen extends StatelessWidget {
                   decoration: const InputDecoration(labelText: 'Court Name'),
                 ),
                 TextField(
+                  controller: controller.courtType,
+                  decoration: const InputDecoration(labelText: 'Court Type'),
+                ),
+                TextField(
                   controller: controller.caseNumber,
                   decoration: const InputDecoration(labelText: 'Case Number'),
                 ),
