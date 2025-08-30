@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
     final themeController = Get.put(ThemeController());
 
     return GetMaterialApp(
-      title: 'Seba POS',
+      title: 'Court Diary',
       debugShowCheckedModeBanner: false,
       theme: Themes.lightTheme,
       darkTheme: Themes.darkTheme,
