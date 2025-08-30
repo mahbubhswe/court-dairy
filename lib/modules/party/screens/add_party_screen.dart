@@ -13,6 +13,9 @@ class AddPartyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Get.isRegistered<AddPartyController>()) {
+      Get.delete<AddPartyController>();
+    }
     final controller = Get.put(AddPartyController());
     return Scaffold(
       appBar: AppBar(
