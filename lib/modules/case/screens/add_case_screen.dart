@@ -1,4 +1,4 @@
-import 'package:dynamic_multi_step_form/dynamic_multi_step_form.dart';
+import '../../../widgets/dynamic_multi_step_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

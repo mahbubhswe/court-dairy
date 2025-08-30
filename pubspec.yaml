@@ -77,7 +77,6 @@ dependencies:
   lottie: ^3.3.1
   dio: ^5.9.0
   image_picker: ^1.1.5
-  dynamic_multi_step_form: ^0.0.3
 
 dev_dependencies:
   flutter_test:
