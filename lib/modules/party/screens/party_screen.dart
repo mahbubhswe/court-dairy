@@ -1,5 +1,5 @@
 import 'package:courtdiary/widgets/data_not_found.dart';
-import 'package:courtdiary/widgets/party_tile.dart';
+import '../widgets/party_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

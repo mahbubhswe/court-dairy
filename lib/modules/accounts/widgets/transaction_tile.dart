@@ -5,13 +5,14 @@ import '../../../models/transaction.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction transaction;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+
   const TransactionTile({
     super.key,
     required this.transaction,
-    required this.onEdit,
-    required this.onDelete,
+    this.onEdit,
+    this.onDelete,
   });
 
   IconData _iconForType(String type) {
@@ -20,9 +21,9 @@ class TransactionTile extends StatelessWidget {
         return Icons.remove_circle_outline;
       case 'Deposit':
         return Icons.add_circle_outline;
-      case 'Capital Withdrawal':
+      case 'Withdrawal':
         return Icons.account_balance_wallet_outlined;
-      case 'Money Transfer':
+      case 'Transfer':
         return Icons.swap_horiz;
       default:
         return Icons.attach_money;
@@ -32,31 +33,69 @@ class TransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(_iconForType(transaction.type)),
-      title: Text('${transaction.type} - ${transaction.amount}'),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+      dense: true,
+      leading: CircleAvatar(
+        backgroundColor: Colors.orange.shade100,
+        child: Icon(
+          _iconForType(transaction.type),
+          color: Colors.orange,
+        ),
+      ),
+      title: Text(
+        transaction.type,
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(DateFormat('dd MMM yyyy').format(transaction.createdAt)),
-          Text('Payment: ${transaction.paymentMethod}'),
-          if (transaction.note != null && transaction.note!.isNotEmpty)
-            Text(transaction.note!),
+          Text(
+            DateFormat('dd MMM yyyy').format(transaction.createdAt),
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+          Text(
+            'Payment: ${transaction.paymentMethod}',
+          ),
         ],
       ),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          if (value == 'edit') {
-            onEdit();
-          } else if (value == 'delete') {
-            onDelete();
-          }
-        },
-        itemBuilder: (context) => const [
-          PopupMenuItem(value: 'edit', child: Text('Edit')),
-          PopupMenuItem(value: 'delete', child: Text('Delete')),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '${transaction.amount}',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.orange,
+            ),
+          ),
+          if (onEdit != null || onDelete != null) const SizedBox(width: 8),
+          if (onEdit != null || onDelete != null)
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'edit') {
+                  onEdit?.call();
+                } else if (value == 'delete') {
+                  onDelete?.call();
+                }
+              },
+              itemBuilder: (context) {
+                final items = <PopupMenuEntry<String>>[];
+                if (onEdit != null) {
+                  items.add(
+                      const PopupMenuItem(value: 'edit', child: Text('Edit')));
+                }
+                if (onDelete != null) {
+                  items.add(const PopupMenuItem(
+                      value: 'delete', child: Text('Delete')));
+                }
+                return items;
+              },
+            ),
         ],
       ),
     );
   }
 }
-

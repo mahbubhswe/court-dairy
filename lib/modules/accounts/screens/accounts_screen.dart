@@ -1,14 +1,10 @@
 import 'package:courtdiary/widgets/data_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../services/app_firebase.dart';
+import '../../layout/controllers/layout_controller.dart';
 import '../controllers/transaction_controller.dart';
-import '../services/transaction_service.dart';
 import '../widgets/transaction_tile.dart';
 import 'all_transactions_screen.dart';
-import 'edit_transaction_screen.dart';
-import '../../../utils/activation_guard.dart';
 
 class AccountsScreen extends StatelessWidget {
   const AccountsScreen({super.key});
@@ -16,6 +12,7 @@ class AccountsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(TransactionController());
+    final layoutController = Get.put(LayoutController());
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -23,7 +20,7 @@ class AccountsScreen extends StatelessWidget {
       return Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -44,6 +41,7 @@ class AccountsScreen extends StatelessWidget {
                 ? const DataNotFound(
                     title: 'Sorry', subtitle: 'No Transaction Found')
                 : ListView.builder(
+                    controller: layoutController.scrollController,
                     itemCount: controller.transactions.length > 10
                         ? 10
                         : controller.transactions.length,
@@ -51,20 +49,6 @@ class AccountsScreen extends StatelessWidget {
                       final transaction = controller.transactions[index];
                       return TransactionTile(
                         transaction: transaction,
-                        onEdit: () {
-                          if (ActivationGuard.check()) {
-                            Get.to(() =>
-                                EditTransactionScreen(transaction: transaction));
-                          }
-                        },
-                        onDelete: () async {
-                          if (!ActivationGuard.check()) return;
-                          final user = AppFirebase().currentUser;
-                          if (user != null && transaction.docId != null) {
-                            await TransactionService.deleteTransaction(
-                                transaction.docId!, user.uid);
-                          }
-                        },
                       );
                     },
                   ),

@@ -27,33 +27,73 @@ class AllTransactionsScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Obx(
-                    () => DropdownButtonFormField<String>(
-                      value: typeFilter.value,
-                      decoration: const InputDecoration(labelText: 'Type'),
-                      items: types
-                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                          .toList(),
-                      onChanged: (v) => typeFilter.value = v ?? 'All',
+                const Text('Type',
+                    style: TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                Obx(() {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: types.map((t) {
+                        final selected = typeFilter.value == t;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(t),
+                            selected: selected,
+                            onSelected: (_) => typeFilter.value = t,
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Obx(
-                    () => DropdownButtonFormField<String>(
+                  );
+                }),
+                const SizedBox(height: 16),
+                const Text('Date',
+                    style: TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                Obx(() => DropdownButtonFormField<String>(
                       value: dateFilter.value,
-                      decoration: const InputDecoration(labelText: 'Date'),
+                      isExpanded: true,
+                      borderRadius: BorderRadius.circular(12),
+                      menuMaxHeight: 320,
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                      decoration: InputDecoration(
+                        labelText: 'Date',
+                        prefixIcon: const Icon(Icons.date_range_outlined),
+                        filled: true,
+                        fillColor: Theme.of(context)
+                            .colorScheme
+                            .surface
+                            .withOpacity(0.7),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.outlineVariant,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1.4,
+                          ),
+                        ),
+                      ),
                       items: dates
-                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                          .map(
+                              (e) => DropdownMenuItem(value: e, child: Text(e)))
                           .toList(),
                       onChanged: (v) => dateFilter.value = v ?? 'All',
-                    ),
-                  ),
-                ),
+                    )),
               ],
             ),
           ),
@@ -73,8 +113,8 @@ class AllTransactionsScreen extends StatelessWidget {
                   case 'This Week':
                     final start = now.subtract(Duration(days: now.weekday - 1));
                     final end = start.add(const Duration(days: 7));
-                    dateMatch = t.createdAt.isAfter(start) &&
-                        t.createdAt.isBefore(end);
+                    dateMatch =
+                        t.createdAt.isAfter(start) && t.createdAt.isBefore(end);
                     break;
                   case 'This Month':
                     dateMatch = t.createdAt.year == now.year &&
@@ -121,4 +161,3 @@ class AllTransactionsScreen extends StatelessWidget {
     );
   }
 }
-

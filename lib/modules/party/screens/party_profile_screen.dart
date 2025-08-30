@@ -20,26 +20,108 @@ class PartyProfileScreen extends StatelessWidget {
         title: const Text('পক্ষ প্রোফাইল'),
       ),
       body: Obx(() {
+        final theme = Theme.of(context);
         return Stack(
           children: [
-            Padding(
+            SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
-                spacing: 16,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: party.photoUrl != null
-                        ? NetworkImage(party.photoUrl!)
-                        : null,
-                    child: party.photoUrl == null
-                        ? const Icon(Icons.person, size: 40)
-                        : null,
+                  // Header card with avatar and name
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        colors: [
+                          theme.colorScheme.primary.withOpacity(0.15),
+                          theme.colorScheme.primary.withOpacity(0.05),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircleAvatar(
+                          radius: 48,
+                          backgroundImage: (party.photoUrl != null && party.photoUrl!.isNotEmpty)
+                              ? NetworkImage(party.photoUrl!)
+                              : null,
+                          child: (party.photoUrl == null || party.photoUrl!.isEmpty)
+                              ? const Icon(Icons.person, size: 48)
+                              : null,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          party.name,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.phone_iphone, size: 16),
+                            const SizedBox(width: 6),
+                            Text(
+                              party.phone,
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  appInfoRow('নাম', party.name),
-                  appInfoRow('মোবাইল', party.phone),
-                  appInfoRow('ঠিকানা', party.address),
-                  const Spacer(),
+
+                  const SizedBox(height: 16),
+
+                  // Details card
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0.5,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.person_outline, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(child: appInfoRow('নাম', party.name)),
+                            ],
+                          ),
+                          const Divider(height: 20),
+                          Row(
+                            children: [
+                              const Icon(Icons.call_outlined, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(child: appInfoRow('মোবাইল', party.phone)),
+                            ],
+                          ),
+                          const Divider(height: 20),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(Icons.location_on_outlined, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(child: appInfoRow('ঠিকানা', party.address)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Actions
                   Row(
                     children: [
                       Expanded(
