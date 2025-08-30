@@ -8,6 +8,7 @@ class CourtCase {
   // Case Information
   String caseType;
   String caseTitle;
+  final String courtType;
   String courtName;
   String caseNumber;
   Timestamp filedDate; // Use Timestamp instead of DateTime
@@ -37,6 +38,7 @@ class CourtCase {
     this.docId,
     required this.caseType,
     required this.caseTitle,
+    required this.courtType,
     required this.courtName,
     required this.caseNumber,
     required this.filedDate,
@@ -55,6 +57,7 @@ class CourtCase {
     return {
       'caseType': caseType,
       'caseTitle': caseTitle,
+      'courtType': courtType,
       'courtName': courtName,
       'caseNumber': caseNumber,
       'filedDate': filedDate, // Firestore Timestamp will be directly saved
@@ -75,6 +78,7 @@ class CourtCase {
       docId: docId,
       caseType: map['caseType'],
       caseTitle: map['caseTitle'],
+      courtType: map['courtType'],
       courtName: map['courtName'],
       caseNumber: map['caseNumber'],
       filedDate: map['filedDate'], // Firestore Timestamp
