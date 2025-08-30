@@ -41,51 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAmLzlb5G87uYGChq2q5JXZdiVYNeerXXg',
-    appId: '1:648379937710:web:6f3073b3059a4a13b0ce3f',
-    messagingSenderId: '648379937710',
-    projectId: 'seba-pos-52e7a',
-    authDomain: 'seba-pos-52e7a.firebaseapp.com',
-    storageBucket: 'seba-pos-52e7a.firebasestorage.app',
-    measurementId: 'G-SY9F594E0F',
+    apiKey: 'AIzaSyBXGzTgrSNmGG93biOi8iyap33j-QfaFV0',
+    appId: '1:932683268574:web:8e517cdc43b3495b451d4f',
+    messagingSenderId: '932683268574',
+    projectId: 'court-dairy',
+    authDomain: 'court-dairy.firebaseapp.com',
+    storageBucket: 'court-dairy.firebasestorage.app',
+    measurementId: 'G-ECR8Y7344L',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDKmQIlUqy8g99ZYaY_0gq5Cq8s4Zlw2gs',
-    appId: '1:648379937710:android:61400c1cbc12db80b0ce3f',
-    messagingSenderId: '648379937710',
-    projectId: 'seba-pos-52e7a',
-    storageBucket: 'seba-pos-52e7a.firebasestorage.app',
+    apiKey: 'AIzaSyCPLFnlR9KTvOOumeAkl3aV0CgU2RTwNlc',
+    appId: '1:932683268574:android:5945cf5e0626789e451d4f',
+    messagingSenderId: '932683268574',
+    projectId: 'court-dairy',
+    storageBucket: 'court-dairy.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAredjyS7QD-jQxNbC0mQ41yQOuJ8yQJ3o',
-    appId: '1:648379937710:ios:af7f9f74c8f08299b0ce3f',
-    messagingSenderId: '648379937710',
-    projectId: 'seba-pos-52e7a',
-    storageBucket: 'seba-pos-52e7a.firebasestorage.app',
-    iosClientId: '648379937710-kn35rjoqcuqjulido8od9l3obmaeufkj.apps.googleusercontent.com',
-    iosBundleId: 'com.appseba.sebapos',
+    apiKey: 'AIzaSyC6TmGo56XIVzQRedxp-VQ3eqqbq4W5374',
+    appId: '1:932683268574:ios:7dd6fd4038176ffe451d4f',
+    messagingSenderId: '932683268574',
+    projectId: 'court-dairy',
+    storageBucket: 'court-dairy.firebasestorage.app',
+    iosBundleId: 'com.appseba.courtdiary',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAredjyS7QD-jQxNbC0mQ41yQOuJ8yQJ3o',
-    appId: '1:648379937710:ios:6ff27f66ef382f2fb0ce3f',
-    messagingSenderId: '648379937710',
-    projectId: 'seba-pos-52e7a',
-    storageBucket: 'seba-pos-52e7a.firebasestorage.app',
-    iosClientId: '648379937710-dops225ol8eaperno9t8dsjftcicrtq5.apps.googleusercontent.com',
-    iosBundleId: 'com.example.personalaccounts',
+    apiKey: 'AIzaSyC6TmGo56XIVzQRedxp-VQ3eqqbq4W5374',
+    appId: '1:932683268574:ios:e627a75dd9ac38b9451d4f',
+    messagingSenderId: '932683268574',
+    projectId: 'court-dairy',
+    storageBucket: 'court-dairy.firebasestorage.app',
+    iosBundleId: 'com.example.courtdiary',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAmLzlb5G87uYGChq2q5JXZdiVYNeerXXg',
-    appId: '1:648379937710:web:6aedc35c57e2cfceb0ce3f',
-    messagingSenderId: '648379937710',
-    projectId: 'seba-pos-52e7a',
-    authDomain: 'seba-pos-52e7a.firebaseapp.com',
-    storageBucket: 'seba-pos-52e7a.firebasestorage.app',
-    measurementId: 'G-L1SPBSEMEW',
+    apiKey: 'AIzaSyBXGzTgrSNmGG93biOi8iyap33j-QfaFV0',
+    appId: '1:932683268574:web:e3c5565d9d6bd3a5451d4f',
+    messagingSenderId: '932683268574',
+    projectId: 'court-dairy',
+    authDomain: 'court-dairy.firebaseapp.com',
+    storageBucket: 'court-dairy.firebasestorage.app',
+    measurementId: 'G-J6V7GXT256',
   );
 
 }
