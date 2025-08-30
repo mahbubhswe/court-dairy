@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Represents a single step in [DynamicMultiStepForm].
@@ -16,13 +17,21 @@ class FormStep {
 /// Displays a simple [Stepper] with next/back navigation and calls
 /// [onSubmit] when the last step is completed.
 class DynamicMultiStepForm extends StatefulWidget {
-  const DynamicMultiStepForm({super.key, required this.steps, required this.onSubmit});
+  const DynamicMultiStepForm({
+    super.key,
+    required this.steps,
+    required this.onSubmit,
+    this.isLoading = false,
+  });
 
   /// Ordered list of form steps.
   final List<FormStep> steps;
 
   /// Callback invoked when the final step is submitted.
   final VoidCallback onSubmit;
+
+  /// Whether a submit operation is in progress.
+  final bool isLoading;
 
   @override
   State<DynamicMultiStepForm> createState() => _DynamicMultiStepFormState();
@@ -32,6 +41,7 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
   int _currentStep = 0;
 
   void _next() {
+    if (widget.isLoading) return;
     if (_currentStep < widget.steps.length - 1) {
       setState(() => _currentStep++);
     } else {
@@ -60,8 +70,10 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
               TextButton(onPressed: _back, child: const Text('Back')),
             const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: _next,
-              child: Text(isLast ? 'Submit' : 'Next'),
+              onPressed: widget.isLoading ? null : _next,
+              child: widget.isLoading && isLast
+                  ? const CupertinoActivityIndicator()
+                  : Text(isLast ? 'Submit' : 'Next'),
             ),
           ],
         );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_from_field.dart';
@@ -20,13 +21,11 @@ class EditTransactionScreen extends StatelessWidget {
         title: const Text('লেনদেন আপডেট করুন'),
       ),
       body: Obx(() {
-        return Stack(
-          children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                spacing: 16,
-                children: [
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            spacing: 16,
+            children: [
                   DropdownButtonFormField<String>(
                     value: controller.type.value,
                     isExpanded: true,
@@ -123,29 +122,64 @@ class EditTransactionScreen extends StatelessWidget {
                     prefixIcon: Icons.note,
                     isMaxLines: 3,
                   ),
-                  const SizedBox(height: 80),
-                ],
-              ),
-            ),
-            if (controller.isLoading.value)
-              const Center(child: CircularProgressIndicator()),
-          ],
+              const SizedBox(height: 80),
+            ],
+          ),
         );
       }),
-      bottomNavigationBar: Obx(
-        () => SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: AppButton(
-              label: 'আপডেট করুন',
-              onPressed: controller.enableBtn.value
-                  ? controller.updateTransaction
-                  : null,
+      bottomNavigationBar: Obx(() => SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: AppButton(
+                label: 'আপডেট করুন',
+                isLoading: controller.isLoading.value,
+                onPressed: controller.enableBtn.value
+                    ? () {
+                        PanaraConfirmDialog.show(
+                          context,
+                          title: 'নিশ্চিত করুন',
+                          message: 'লেনদেন আপডেট করতে চান?',
+                          confirmButtonText: 'হ্যাঁ',
+                          cancelButtonText: 'না',
+                          onTapCancel: () {
+                            Navigator.of(context).pop();
+                          },
+                          onTapConfirm: () async {
+                            Navigator.of(context).pop();
+                            final success = await controller.updateTransaction();
+                            if (success) {
+                              PanaraInfoDialog.show(
+                                context,
+                                title: 'সফল হয়েছে',
+                                message: 'লেনদেন আপডেট করা হয়েছে',
+                                panaraDialogType: PanaraDialogType.success,
+                                barrierDismissible: false,
+                                onTapDismiss: () {
+                                  Navigator.of(context).pop();
+                                  Get.back();
+                                },
+                              );
+                            } else {
+                              PanaraInfoDialog.show(
+                                context,
+                                title: 'ত্রুটি',
+                                message: 'লেনদেন আপডেট করতে ব্যর্থ হয়েছে',
+                                panaraDialogType: PanaraDialogType.error,
+                                barrierDismissible: false,
+                                onTapDismiss: () {
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            }
+                          },
+                          panaraDialogType: PanaraDialogType.normal,
+                        );
+                      }
+                    : null,
+              ),
             ),
-          ),
-        ),
-      ),
+          )),
     );
   }
 }

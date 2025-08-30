@@ -30,9 +30,9 @@ class AddTransactionController extends GetxController {
         paymentMethod.value != null;
   }
 
-  Future<void> addTransaction() async {
-    if (!enableBtn.value || isLoading.value) return;
-    if (!ActivationGuard.check()) return;
+  Future<bool> addTransaction() async {
+    if (!enableBtn.value || isLoading.value) return false;
+    if (!ActivationGuard.check()) return false;
     try {
       isLoading.value = true;
       final user = AppFirebase().currentUser;
@@ -49,21 +49,9 @@ class AddTransactionController extends GetxController {
       );
 
       await TransactionService.addTransaction(transaction, user.uid);
-
-      Get.back();
-      Get.snackbar(
-        'সফল হয়েছে',
-        'লেনদেন যুক্ত করা হয়েছে',
-        backgroundColor: Colors.white,
-        colorText: Colors.green,
-      );
+      return true;
     } catch (e) {
-      Get.snackbar(
-        'ত্রুটি',
-        'লেনদেন যুক্ত করতে ব্যর্থ হয়েছে',
-        backgroundColor: Colors.white,
-        colorText: Colors.red,
-      );
+      return false;
     } finally {
       isLoading.value = false;
     }

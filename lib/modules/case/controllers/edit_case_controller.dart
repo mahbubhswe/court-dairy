@@ -32,6 +32,8 @@ class EditCaseController extends GetxController {
   final parties = <Party>[].obs;
   final caseTypes = ['Civil', 'Criminal', 'Family', 'Other'];
 
+  final RxBool isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -63,30 +65,36 @@ class EditCaseController extends GetxController {
     }
   }
 
-  Future<void> updateCase() async {
+  Future<bool> updateCase() async {
     final user = AppFirebase().currentUser;
-    if (user == null) return;
+    if (user == null || isLoading.value) return false;
+    try {
+      isLoading.value = true;
+      caseModel
+        ..caseType = selectedCaseType.value ?? ''
+        ..caseTitle = caseTitle.text.trim()
+        ..courtName = courtName.text.trim()
+        ..caseNumber = caseNumber.text.trim()
+        ..filedDate = Timestamp.fromDate(filedDate.value ?? DateTime.now())
+        ..caseStatus = caseStatus.text.trim()
+        ..plaintiff = selectedPlaintiff.value!
+        ..defendant = selectedDefendant.value!
+        ..hearingDates = hearingDate.value != null
+            ? [Timestamp.fromDate(hearingDate.value!)]
+            : <Timestamp>[]
+        ..judgeName = judgeName.text.trim()
+        ..documentsAttached =
+            document.text.isNotEmpty ? [document.text.trim()] : <String>[]
+        ..courtOrders =
+            courtOrder.text.isNotEmpty ? [courtOrder.text.trim()] : <String>[]
+        ..caseSummary = caseSummary.text.trim();
 
-    caseModel
-      ..caseType = selectedCaseType.value ?? ''
-      ..caseTitle = caseTitle.text.trim()
-      ..courtName = courtName.text.trim()
-      ..caseNumber = caseNumber.text.trim()
-      ..filedDate = Timestamp.fromDate(filedDate.value ?? DateTime.now())
-      ..caseStatus = caseStatus.text.trim()
-      ..plaintiff = selectedPlaintiff.value!
-      ..defendant = selectedDefendant.value!
-      ..hearingDates = hearingDate.value != null
-          ? [Timestamp.fromDate(hearingDate.value!)]
-          : <Timestamp>[]
-      ..judgeName = judgeName.text.trim()
-      ..documentsAttached =
-          document.text.isNotEmpty ? [document.text.trim()] : <String>[]
-      ..courtOrders =
-          courtOrder.text.isNotEmpty ? [courtOrder.text.trim()] : <String>[]
-      ..caseSummary = caseSummary.text.trim();
-
-    await CaseService.updateCase(caseModel, user.uid);
-    Get.back();
+      await CaseService.updateCase(caseModel, user.uid);
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

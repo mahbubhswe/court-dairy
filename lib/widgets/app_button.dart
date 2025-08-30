@@ -1,15 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 class AppButton extends StatelessWidget {
   final String label;
   final Function()? onPressed;
+  final bool isLoading;
 
-  const AppButton({super.key, required this.label, required this.onPressed});
+  const AppButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isEnabled = onPressed != null;
+    final isEnabled = onPressed != null && !isLoading;
 
     return SimpleShadow(
       opacity: isEnabled ? 0.3 : 0, // shadow only if enabled
@@ -23,14 +30,16 @@ class AppButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isEnabled ? Colors.white : Colors.white70,
-              ),
-            ),
+            child: isLoading
+                ? const CupertinoActivityIndicator(color: Colors.white)
+                : Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isEnabled ? Colors.white : Colors.white70,
+                    ),
+                  ),
           ),
         ),
       ),

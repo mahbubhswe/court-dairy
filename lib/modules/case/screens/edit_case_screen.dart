@@ -1,6 +1,7 @@
 import '../../../widgets/dynamic_multi_step_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 import '../../../models/court_case.dart';
 import '../../../models/party.dart';
@@ -44,8 +45,8 @@ class EditCaseScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Case')),
-      body: DynamicMultiStepForm(
-        steps: [
+      body: Obx(() => DynamicMultiStepForm(
+            steps: [
           FormStep(
             title: const Text('Case Info'),
             content: Column(
@@ -140,9 +141,50 @@ class EditCaseScreen extends StatelessWidget {
               ],
             ),
           ),
-        ],
-        onSubmit: controller.updateCase,
-      ),
+            ],
+            isLoading: controller.isLoading.value,
+            onSubmit: () {
+              PanaraConfirmDialog.show(
+                context,
+                title: 'নিশ্চিত করুন',
+                message: 'কেস আপডেট করতে চান?',
+                confirmButtonText: 'হ্যাঁ',
+                cancelButtonText: 'না',
+                onTapCancel: () {
+                  Navigator.of(context).pop();
+                },
+                onTapConfirm: () async {
+                  Navigator.of(context).pop();
+                  final success = await controller.updateCase();
+                  if (success) {
+                    PanaraInfoDialog.show(
+                      context,
+                      title: 'সফল হয়েছে',
+                      message: 'কেস আপডেট করা হয়েছে',
+                      panaraDialogType: PanaraDialogType.success,
+                      barrierDismissible: false,
+                      onTapDismiss: () {
+                        Navigator.of(context).pop();
+                        Get.back();
+                      },
+                    );
+                  } else {
+                    PanaraInfoDialog.show(
+                      context,
+                      title: 'ত্রুটি',
+                      message: 'কেস আপডেট করতে ব্যর্থ হয়েছে',
+                      panaraDialogType: PanaraDialogType.error,
+                      barrierDismissible: false,
+                      onTapDismiss: () {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  }
+                },
+                panaraDialogType: PanaraDialogType.normal,
+              );
+            },
+          )),
     );
   }
 }
