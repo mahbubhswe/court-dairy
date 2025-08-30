@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_from_field.dart';
@@ -27,10 +28,14 @@ class EditCaseScreen extends StatelessWidget {
                   AppTextFromField(
                     controller: controller.caseNumber,
                     label: 'Case Number',
+                    prefixIcon: HugeIcons.strokeRoundedAiChat01,
+                    hintText: '',
                   ),
                   AppTextFromField(
                     controller: controller.caseName,
                     label: 'Case Name',
+                    prefixIcon: HugeIcons.strokeRoundedAiChat01,
+                    hintText: '',
                   ),
                   DropdownButtonFormField<Party>(
                     value: controller.selectedParty.value,

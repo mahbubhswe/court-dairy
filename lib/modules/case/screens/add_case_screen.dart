@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_from_field.dart';
@@ -25,12 +26,12 @@ class AddCaseScreen extends StatelessWidget {
                   AppTextFromField(
                     controller: controller.caseNumber,
                     label: 'Case Number',
-                    hintText: 'Enter case number',
+                    hintText: 'Enter case number', prefixIcon: HugeIcons.strokeRoundedAiChat01,
                   ),
                   AppTextFromField(
                     controller: controller.caseName,
                     label: 'Case Name',
-                    hintText: 'Enter case name',
+                    hintText: 'Enter case name', prefixIcon: HugeIcons.strokeRoundedAiChat01,
                   ),
                   DropdownButtonFormField<Party>(
                     value: controller.selectedParty.value,
@@ -64,11 +65,11 @@ class AddCaseScreen extends StatelessWidget {
                   ),
                   AppTextFromField(
                     controller: controller.plaintiffName,
-                    label: 'Plaintiff',
+                    label: 'Plaintiff',prefixIcon: HugeIcons.strokeRoundedAiChat01, hintText: '',
                   ),
                   AppTextFromField(
                     controller: controller.defendantName,
-                    label: 'Defendant',
+                    label: 'Defendant',prefixIcon: HugeIcons.strokeRoundedAiChat01, hintText: '',
                   ),
                   AppButton(
                     label: 'Save',
