@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../models/case.dart';
+import '../../../models/court_case.dart';
 import '../controllers/case_controller.dart';
 import 'edit_case_screen.dart';
 import '../../../utils/activation_guard.dart';

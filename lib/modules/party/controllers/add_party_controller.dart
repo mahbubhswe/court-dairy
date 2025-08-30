@@ -35,29 +35,83 @@ class AddPartyController extends GetxController {
   }
 
   void showImagePicker() {
+    Widget action(IconData icon, String label, VoidCallback onTap) {
+      return InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Get.theme.colorScheme.primary.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: Get.theme.colorScheme.primary),
+              ),
+              const SizedBox(height: 8),
+              Text(label),
+            ],
+          ),
+        ),
+      );
+    }
+
     Get.bottomSheet(
       SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('গ্যালারি থেকে নির্বাচন করুন'),
-              onTap: () {
-                Get.back();
-                _pickImage(ImageSource.gallery);
-              },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Get.theme.colorScheme.surface,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('ক্যামেরা ব্যবহার করুন'),
-              onTap: () {
-                Get.back();
-                _pickImage(ImageSource.camera);
-              },
-            ),
-          ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Get.theme.dividerColor,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    action(Icons.camera_alt_rounded, 'ক্যামেরা', () {
+                      Get.back();
+                      _pickImage(ImageSource.camera);
+                    }),
+                    action(Icons.photo_library_outlined, 'গ্যালারি', () {
+                      Get.back();
+                      _pickImage(ImageSource.gallery);
+                    }),
+                    if (photo.value != null)
+                      action(Icons.delete_outline, 'রিমুভ', () {
+                        Get.back();
+                        photo.value = null;
+                      }),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
     );
   }
 
@@ -121,4 +175,3 @@ class AddPartyController extends GetxController {
     super.onClose();
   }
 }
-

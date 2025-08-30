@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../models/case.dart';
+import '../../../models/court_case.dart';
 import '../../../services/app_firebase.dart';
 import '../services/case_service.dart';
 

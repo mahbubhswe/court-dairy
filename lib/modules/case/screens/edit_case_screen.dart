@@ -5,7 +5,7 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_from_field.dart';
 import '../../../models/party.dart';
-import '../../../models/case.dart';
+import '../../../models/court_case.dart';
 import '../controllers/edit_case_controller.dart';
 
 class EditCaseScreen extends StatelessWidget {

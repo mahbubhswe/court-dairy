@@ -1,5 +1,5 @@
 import '../../../constants/app_collections.dart';
-import '../../../models/case.dart';
+import '../../../models/court_case.dart';
 import '../../../services/app_firebase.dart';
 import '../../../services/firebase_export.dart';
 

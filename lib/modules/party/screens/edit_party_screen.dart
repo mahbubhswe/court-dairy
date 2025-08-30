@@ -65,12 +65,6 @@ class EditPartyScreen extends StatelessWidget {
                     isMaxLines: 3,
                   ),
                   const SizedBox(height: 20),
-                  AppButton(
-                    label: 'আপডেট করুন',
-                    onPressed: controller.enableBtn.value
-                        ? controller.updateParty
-                        : null,
-                  ),
                 ],
               ),
             ),
@@ -79,6 +73,18 @@ class EditPartyScreen extends StatelessWidget {
           ],
         );
       }),
+      bottomNavigationBar: Obx(() => SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: AppButton(
+                label: 'আপডেট করুন',
+                onPressed: controller.enableBtn.value
+                    ? controller.updateParty
+                    : null,
+              ),
+            ),
+          )),
     );
   }
 }

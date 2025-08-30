@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/party.dart';
 
@@ -61,8 +62,23 @@ class PartyTile extends StatelessWidget {
             ),
         ],
       ),
-      trailing: (onEdit != null || onDelete != null)
-          ? PopupMenuButton<String>(
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: 'কল করুন',
+            icon: const Icon(Icons.call),
+            color: Colors.green,
+            onPressed: () async {
+              final uri = Uri(scheme: 'tel', path: party.phone);
+              try {
+                await launchUrl(uri);
+              } catch (_) {}
+            },
+          ),
+          if (onEdit != null || onDelete != null) const SizedBox(width: 4),
+          if (onEdit != null || onDelete != null)
+            PopupMenuButton<String>(
               onSelected: (value) {
                 if (value == 'edit') {
                   onEdit?.call();
@@ -86,8 +102,9 @@ class PartyTile extends StatelessWidget {
                 }
                 return items;
               },
-            )
-          : null,
+            ),
+        ],
+      ),
       onTap: onTap,
     );
   }

@@ -60,11 +60,6 @@ class AddPartyScreen extends StatelessWidget {
                     isMaxLines: 3,
                   ),
                   const SizedBox(height: 20),
-                  AppButton(
-                    label: 'সেভ করুন',
-                    onPressed:
-                        controller.enableBtn.value ? controller.addParty : null,
-                  ),
                 ],
               ),
             ),
@@ -73,6 +68,17 @@ class AddPartyScreen extends StatelessWidget {
           ],
         );
       }),
+      bottomNavigationBar: Obx(() => SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: AppButton(
+                label: 'সেভ করুন',
+                onPressed:
+                    controller.enableBtn.value ? controller.addParty : null,
+              ),
+            ),
+          )),
     );
   }
 }
