@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'party.dart';
 
 class CourtCase {
+  // docId: Frontend unique identifier (only used in the frontend)
+  String docId;
+
   // Case Information
-  String caseId;
   String caseType;
   String caseTitle;
   String courtName;
@@ -32,7 +34,7 @@ class CourtCase {
 
   // Constructor
   CourtCase({
-    required this.caseId,
+    required this.docId,
     required this.caseType,
     required this.caseTitle,
     required this.courtName,
@@ -51,7 +53,7 @@ class CourtCase {
   // Method to convert the case data to a map (for Firebase storage)
   Map<String, dynamic> toMap() {
     return {
-      'caseId': caseId,
+      'docId': docId,  // Store docId in Firestore
       'caseType': caseType,
       'caseTitle': caseTitle,
       'courtName': courtName,
@@ -60,9 +62,7 @@ class CourtCase {
       'caseStatus': caseStatus,
       'plaintiff': plaintiff.toMap(),
       'defendant': defendant.toMap(),
-      'hearingDates': hearingDates
-          .map((e) => e)
-          .toList(), // Firestore Timestamp will be directly saved
+      'hearingDates': hearingDates.map((e) => e).toList(), // Firestore Timestamp will be directly saved
       'judgeName': judgeName,
       'documentsAttached': documentsAttached,
       'courtOrders': courtOrders,
@@ -73,7 +73,7 @@ class CourtCase {
   // Method to convert a map to a CourtCase object (for fetching data from Firebase)
   factory CourtCase.fromMap(Map<String, dynamic> map) {
     return CourtCase(
-      caseId: map['caseId'],
+      docId: map['docId'],  // docId is fetched directly from Firestore
       caseType: map['caseType'],
       caseTitle: map['caseTitle'],
       courtName: map['courtName'],
@@ -82,8 +82,7 @@ class CourtCase {
       caseStatus: map['caseStatus'],
       plaintiff: Party.fromMap(map['plaintiff']),
       defendant: Party.fromMap(map['defendant']),
-      hearingDates: List<Timestamp>.from(
-          map['hearingDates'] ?? []), // Convert to List of Timestamps
+      hearingDates: List<Timestamp>.from(map['hearingDates'] ?? []), // Convert to List of Timestamps
       judgeName: map['judgeName'],
       documentsAttached: List<String>.from(map['documentsAttached']),
       courtOrders: List<String>.from(map['courtOrders']),
