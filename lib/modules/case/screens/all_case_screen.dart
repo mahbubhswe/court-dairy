@@ -10,6 +10,7 @@ class AllCaseScreen extends StatelessWidget {
 
   final controller = Get.find<CaseController>();
   final RxString typeFilter = 'All'.obs;
+  final RxString courtFilter = 'All'.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,10 @@ class AllCaseScreen extends StatelessWidget {
             child: Obx(() {
               final uniqueTypes =
                   controller.cases.map((c) => c.caseType).toSet().toList();
+              final uniqueCourts =
+                  controller.cases.map((c) => c.courtType).toSet().toList();
               final types = ['All', ...uniqueTypes];
+              final courts = ['All', ...uniqueCourts];
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -53,6 +57,34 @@ class AllCaseScreen extends StatelessWidget {
                       }).toList(),
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  const Text('Court Type',
+                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 8),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: courts.map((t) {
+                        final selected = courtFilter.value == t;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: ChoiceChip(
+                            label: Text(t,
+                                style: const TextStyle(fontSize: 12)),
+                            selected: selected,
+                            onSelected: (_) => courtFilter.value = t,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            visualDensity: VisualDensity.compact,
+                            labelPadding:
+                                const EdgeInsets.symmetric(horizontal: 8),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ],
               );
             }),
@@ -60,8 +92,11 @@ class AllCaseScreen extends StatelessWidget {
           Expanded(
             child: Obx(() {
               final filtered = controller.cases.where((c) {
-                return typeFilter.value == 'All' ||
-                    c.caseType == typeFilter.value;
+                final typeMatch =
+                    typeFilter.value == 'All' || c.caseType == typeFilter.value;
+                final courtMatch = courtFilter.value == 'All' ||
+                    c.courtType == courtFilter.value;
+                return typeMatch && courtMatch;
               }).toList();
 
               if (filtered.isEmpty) {
