@@ -1,8 +1,10 @@
+import 'package:courtdiary/widgets/data_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/case_controller.dart';
 import '../widgets/case_tile.dart';
+import 'all_case_screen.dart';
 
 class CaseScreen extends StatelessWidget {
   const CaseScreen({super.key});
@@ -15,26 +17,38 @@ class CaseScreen extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
       if (controller.cases.isEmpty) {
-        return const Center(child: Text('No cases found'));
+        return const DataNotFound(title: "Sorry", subtitle: "No cases found");
       }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              'Your Cases',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Your Cases',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                    onPressed: () => Get.to(() => AllCaseScreen()),
+                    child: Text("See ALl"))
+              ],
             ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                filterChip('today', "Today's (${controller.todayCount})", controller),
-                filterChip('tomorrow', 'Tomorrow (${controller.tomorrowCount})', controller),
-                filterChip('week', 'This Week (${controller.weekCount})', controller),
-                filterChip('month', 'This Month (${controller.monthCount})', controller),
+                filterChip(
+                    'today', "Today's (${controller.todayCount})", controller),
+                filterChip('tomorrow', 'Tomorrow (${controller.tomorrowCount})',
+                    controller),
+                filterChip(
+                    'week', 'This Week (${controller.weekCount})', controller),
+                filterChip('month', 'This Month (${controller.monthCount})',
+                    controller),
               ],
             ),
           ),

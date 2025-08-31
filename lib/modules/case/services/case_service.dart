@@ -1,6 +1,7 @@
 import '../../../constants/app_collections.dart';
 import '../../../models/court_case.dart';
 import '../../../services/app_firebase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CaseService {
   static final _firestore = AppFirebase().firestore;
@@ -46,5 +47,63 @@ class CaseService {
         .collection(AppCollections.cases)
         .doc(docId)
         .delete();
+  }
+
+  static Future<void> addHearingDate(
+      String docId, String userId, Timestamp date) async {
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.cases)
+        .doc(docId)
+        .update({
+      'hearingDates': FieldValue.arrayUnion([date])
+    });
+  }
+
+  static Future<void> removeHearingDate(
+      String docId, String userId, Timestamp date) async {
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.cases)
+        .doc(docId)
+        .update({
+      'hearingDates': FieldValue.arrayRemove([date])
+    });
+  }
+
+  static Future<void> addCourtOrder(
+      String docId, String userId, String order) async {
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.cases)
+        .doc(docId)
+        .update({
+      'courtOrders': FieldValue.arrayUnion([order])
+    });
+  }
+
+  static Future<void> removeCourtOrder(
+      String docId, String userId, String order) async {
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.cases)
+        .doc(docId)
+        .update({
+      'courtOrders': FieldValue.arrayRemove([order])
+    });
+  }
+
+  static Future<void> updateCaseStatus(
+      String docId, String userId, String status) async {
+    await _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.cases)
+        .doc(docId)
+        .update({'caseStatus': status});
   }
 }
