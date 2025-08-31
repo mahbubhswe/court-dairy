@@ -25,6 +25,7 @@ class DynamicMultiStepForm extends StatefulWidget {
     this.stepperType = StepperType.horizontal,
     this.controlsInBottom = false,
     this.stepIconColor,
+    this.stepperMargin,
   });
 
   /// Ordered list of form steps.
@@ -45,6 +46,9 @@ class DynamicMultiStepForm extends StatefulWidget {
 
   /// Custom color for the step index icons and connectors.
   final Color? stepIconColor;
+
+  /// Optional margin to apply around the Stepper. Defaults to horizontal 8.
+  final EdgeInsetsGeometry? stepperMargin;
 
   @override
   State<DynamicMultiStepForm> createState() => _DynamicMultiStepFormState();
@@ -75,6 +79,7 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
     Widget stepper = Stepper(
       type: widget.stepperType,
       currentStep: _currentStep,
+      margin: widget.stepperMargin ?? const EdgeInsets.symmetric(horizontal: 8),
       onStepTapped: (i) => setState(() => _currentStep = i),
       onStepContinue: _next,
       onStepCancel: _back,
@@ -84,7 +89,14 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
               return Row(
                 children: [
                   if (_currentStep > 0)
-                    TextButton(onPressed: _back, child: const Text('Back')),
+                    OutlinedButton(
+                      onPressed: _back,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onSurface,
+                      ),
+                      child: const Text('Back'),
+                    ),
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: widget.isLoading ? null : _next,
@@ -125,11 +137,17 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
         SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             child: Row(
               children: [
                 if (_currentStep > 0)
-                  TextButton(onPressed: _back, child: const Text('Back')),
+                  OutlinedButton(
+                    onPressed: _back,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    child: const Text('Back'),
+                  ),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: widget.isLoading ? null : _next,
