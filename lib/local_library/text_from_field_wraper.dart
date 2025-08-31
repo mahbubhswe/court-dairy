@@ -120,15 +120,12 @@ class TextFormFieldWrapperState extends State<TextFormFieldWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color shadowColor = widget.shadowColor ?? Colors.grey;
-    final Color borderColorUnFocused =
-        isDark ? const Color.fromARGB(255, 83, 82, 82) : Colors.grey.shade300;
-    final Color borderColorFocused =
-        widget.borderFocusedColor ?? Colors.lightBlue.shade300;
-    final Color darkFillColor = Colors.grey.shade900;
-    final Color lightFillColor = Colors.white;
-    Color fillColor = isDark ? darkFillColor : lightFillColor;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final Color shadowColor = widget.shadowColor ?? theme.shadowColor;
+    final Color borderColorUnFocused = widget.borderColor ?? cs.outlineVariant;
+    final Color borderColorFocused = widget.borderFocusedColor ?? cs.primary;
+    final Color fillColor = cs.surface;
     Color borderColor = hasFocus ? borderColorFocused : borderColorUnFocused;
     double borderWidth =
         hasFocus ? widget.borderFocusedThickness : widget.borderThickness;

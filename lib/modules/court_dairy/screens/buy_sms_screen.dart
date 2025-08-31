@@ -20,7 +20,7 @@ class BuySmsView extends StatelessWidget {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        systemNavigationBarColor: cs.surface,
+        systemNavigationBarColor: theme.scaffoldBackgroundColor,
         systemNavigationBarIconBrightness:
             isDark ? Brightness.light : Brightness.dark,
         systemNavigationBarDividerColor: Colors.transparent,

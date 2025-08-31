@@ -12,12 +12,13 @@ class AccountsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return SizedBox(
       width: Get.width * 0.3,
       child: Material(
         elevation: 0.1,
         borderRadius: BorderRadius.circular(7),
-        color: themeController.isDarkMode ? Colors.grey[900] : Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(3.0),
           child: Column(
@@ -26,7 +27,8 @@ class AccountsCard extends StatelessWidget {
                 title,
               ),
               TweenAnimationBuilder<int>(
-                tween: IntTween(begin: 0, end: amount.floor()), // Count up to endValue
+                tween: IntTween(
+                    begin: 0, end: amount.floor()), // Count up to endValue
                 duration: const Duration(seconds: 1),
                 builder: (context, value, child) {
                   return Text(

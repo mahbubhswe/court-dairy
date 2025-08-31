@@ -9,10 +9,9 @@ class AccountsFirstCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Material(
-      color: themeController.isDarkMode
-          ? Colors.black
-          : const Color.fromARGB(255, 241, 238, 238),
+      color: cs.surface,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(

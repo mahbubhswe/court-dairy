@@ -27,15 +27,18 @@ class AppDrawer extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     final cs = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final navColor = cs.surface; // Match drawer background
+    final navIconsBrightness =
+        ThemeData.estimateBrightnessForColor(navColor) == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark;
     return Drawer(
       width: width,
       backgroundColor: cs.surface,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-          systemNavigationBarColor: cs.surface,
-          systemNavigationBarIconBrightness:
-              isDark ? Brightness.light : Brightness.dark,
+          systemNavigationBarColor: navColor,
+          systemNavigationBarIconBrightness: navIconsBrightness,
           systemNavigationBarDividerColor: Colors.transparent,
         ),
         child: Obx(() {
@@ -154,7 +157,8 @@ class AppDrawer extends StatelessWidget {
                     title: 'নতুন কেস',
                     subtitle: 'দ্রুত নতুন কেস যুক্ত করুন',
                     hasArrow: true,
-                    onTap: () => Get.to(() => const AddCaseScreen(), fullscreenDialog: true),
+                    onTap: () => Get.to(() => const AddCaseScreen(),
+                        fullscreenDialog: true),
                   ),
                   _infoTile(
                     context,
@@ -162,7 +166,8 @@ class AppDrawer extends StatelessWidget {
                     title: 'নতুন পক্ষ',
                     subtitle: 'পক্ষ যুক্ত করুন',
                     hasArrow: true,
-                    onTap: () => Get.to(() => const AddPartyScreen(), fullscreenDialog: true),
+                    onTap: () => Get.to(() => const AddPartyScreen(),
+                        fullscreenDialog: true),
                   ),
                   _infoTile(
                     context,
@@ -170,7 +175,8 @@ class AppDrawer extends StatelessWidget {
                     title: 'নতুন লেনদেন',
                     subtitle: 'ব্যয়/আয় যোগ করুন',
                     hasArrow: true,
-                    onTap: () => Get.to(() => const AddTransactionScreen(), fullscreenDialog: true),
+                    onTap: () => Get.to(() => const AddTransactionScreen(),
+                        fullscreenDialog: true),
                   ),
 
                   const SizedBox(height: 24),
@@ -200,7 +206,8 @@ class AppDrawer extends StatelessWidget {
                     title: 'ক্যালকুলেটর',
                     subtitle: 'সহজ হিসাব',
                     hasArrow: true,
-                    onTap: () => Get.to(() => CalculatorScreen(), fullscreenDialog: true),
+                    onTap: () => Get.to(() => CalculatorScreen(),
+                        fullscreenDialog: true),
                   ),
                   _infoTile(
                     context,
@@ -401,7 +408,9 @@ class AppDrawer extends StatelessWidget {
                 border: Border.all(
                     color: Theme.of(context).colorScheme.outlineVariant),
               ),
-              child: Icon(icon, size: 20),
+              child: Icon(icon,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -425,15 +434,10 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             if (hasArrow)
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: Theme.of(context).colorScheme.outlineVariant),
-                ),
-                child: const Icon(CupertinoIcons.chevron_forward, size: 18),
+              Icon(
+                CupertinoIcons.chevron_forward,
+                size: 18,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
           ],
         ),

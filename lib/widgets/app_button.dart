@@ -17,6 +17,7 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isEnabled = onPressed != null && !isLoading;
+    final cs = Theme.of(context).colorScheme;
 
     return SimpleShadow(
       opacity: isEnabled ? 0.3 : 0, // shadow only if enabled
@@ -26,18 +27,18 @@ class AppButton extends StatelessWidget {
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-            color: isEnabled ? const Color(0xFFCB2D3C) : Colors.grey.shade400,
+            color: isEnabled ? cs.primary : cs.outlineVariant.withOpacity(0.6),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
             child: isLoading
-                ? const CupertinoActivityIndicator(color: Colors.white)
+                ? CupertinoActivityIndicator(color: cs.onPrimary)
                 : Text(
                     label,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: isEnabled ? Colors.white : Colors.white70,
+                      color: isEnabled ? cs.onPrimary : cs.onSurfaceVariant,
                     ),
                   ),
           ),

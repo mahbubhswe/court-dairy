@@ -16,14 +16,11 @@ class CaseScreen extends StatelessWidget {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
-      if (controller.cases.isEmpty) {
-        return const DataNotFound(title: "Sorry", subtitle: "No cases found");
-      }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.symmetric(horizontal: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -33,7 +30,10 @@ class CaseScreen extends StatelessWidget {
                 ),
                 TextButton(
                     onPressed: () => Get.to(() => AllCaseScreen()),
-                    child: Text("See ALl"))
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    child: Text("See All"))
               ],
             ),
           ),
@@ -56,20 +56,26 @@ class CaseScreen extends StatelessWidget {
           Expanded(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              child: ListView.builder(
-                key: ValueKey(controller.selectedFilter.value),
-                itemCount: controller.filteredCases.length,
-                itemBuilder: (_, i) {
-                  final caseItem = controller.filteredCases[i];
-                  return TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 0, end: 1),
-                    duration: const Duration(milliseconds: 300),
-                    builder: (context, value, child) =>
-                        Opacity(opacity: value, child: child),
-                    child: CaseTile(caseItem: caseItem),
-                  );
-                },
-              ),
+              child: controller.filteredCases.isEmpty
+                  ? const Center(
+                      key: ValueKey('empty_cases'),
+                      child: DataNotFound(
+                          title: "Sorry", subtitle: "No cases found"),
+                    )
+                  : ListView.builder(
+                      key: ValueKey(controller.selectedFilter.value),
+                      itemCount: controller.filteredCases.length,
+                      itemBuilder: (_, i) {
+                        final caseItem = controller.filteredCases[i];
+                        return TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0, end: 1),
+                          duration: const Duration(milliseconds: 300),
+                          builder: (context, value, child) =>
+                              Opacity(opacity: value, child: child),
+                          child: CaseTile(caseItem: caseItem),
+                        );
+                      },
+                    ),
             ),
           ),
         ],

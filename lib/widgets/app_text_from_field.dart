@@ -2,7 +2,6 @@ import 'package:courtdiary/local_library/text_from_field_wraper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../constants/app_colors.dart';
 
 class AppTextFromField extends StatelessWidget {
   final TextEditingController controller;
@@ -47,8 +46,9 @@ class AppTextFromField extends StatelessWidget {
         ? [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))]
         : null;
 
+    final cs = Theme.of(context).colorScheme;
     return TextFormFieldWrapper(
-      borderFocusedColor: AppColors.fixedPrimary,
+      borderFocusedColor: cs.primary,
       formField: TextFormField(
         controller: controller,
         keyboardType: effectiveKeyboardType,
@@ -64,7 +64,7 @@ class AppTextFromField extends StatelessWidget {
           border: InputBorder.none,
           hintText: hintText,
           labelText: label,
-          prefixIcon: Icon(prefixIcon),
+          prefixIcon: Icon(prefixIcon, color: cs.onSurfaceVariant),
           suffixIcon: suffixIconButton,
         ),
       ),

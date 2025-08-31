@@ -32,6 +32,11 @@ class TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final amountText = NumberFormat.currency(
+      locale: 'bn_BD',
+      symbol: '৳',
+      decimalDigits: 0,
+    ).format(transaction.amount);
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 12),
       dense: true,
@@ -64,7 +69,7 @@ class TransactionTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '${transaction.amount}',
+            amountText,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,

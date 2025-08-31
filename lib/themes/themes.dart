@@ -70,6 +70,12 @@ class Themes {
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _waLightSecondary,
+        foregroundColor: Colors.white,
+      ),
+    ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: _waLightSecondary,
       foregroundColor: Colors.white,
@@ -125,6 +131,12 @@ class Themes {
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _waDarkSecondary,
+        foregroundColor: Colors.white,
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(

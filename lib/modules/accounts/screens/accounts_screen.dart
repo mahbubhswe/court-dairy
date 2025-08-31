@@ -31,6 +31,9 @@ class AccountsScreen extends StatelessWidget {
                   onPressed: () {
                     Get.to(() => AllTransactionsScreen());
                   },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  ),
                   child: const Text('All Transactions'),
                 ),
               ],

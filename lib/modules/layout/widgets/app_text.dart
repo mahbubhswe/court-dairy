@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 
 class AppText extends StatelessWidget {
   AppText({super.key});
-  final colorizeColors = [
-    const Color(0xFFCC2D3C),
-    Colors.teal,
-    Colors.black,
-  ];
+  List<Color> _colors(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return [cs.primary, cs.secondary, cs.tertiary];
+  }
   TextStyle colorizeTextStyle =
       const TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
   @override
@@ -20,32 +19,32 @@ class AppText extends StatelessWidget {
           ColorizeAnimatedText(
             'কোর্ট ডাইরি অ্যাপ ব্যবহার খুব সহজ ও নিরাপদ',
             textStyle: colorizeTextStyle,
-            colors: colorizeColors,
+            colors: _colors(context),
           ),
           ColorizeAnimatedText(
             'আপনার সকল হিসাব-নিকাশ সবসময় নিরাপদ',
             textStyle: colorizeTextStyle,
-            colors: colorizeColors,
+            colors: _colors(context),
           ),
           ColorizeAnimatedText(
             'সহজ এবং নির্ভুল হিসাব রাখতে ব্যবহার করুন',
             textStyle: colorizeTextStyle,
-            colors: colorizeColors,
+            colors: _colors(context),
           ),
           ColorizeAnimatedText(
             'অটমেটিক ডাটা বেকাপ থাকে Google সার্ভারে',
             textStyle: colorizeTextStyle,
-            colors: colorizeColors,
+            colors: _colors(context),
           ),
           ColorizeAnimatedText(
             'ইন্টারনেট ছাড়াও ব্যবহার করুন নিশ্চিন্তে',
             textStyle: colorizeTextStyle,
-            colors: colorizeColors,
+            colors: _colors(context),
           ),
           ColorizeAnimatedText(
             'কোন ধরণের এড বা বিজ্ঞাপন দেখার ঝামেলা নেই',
             textStyle: colorizeTextStyle,
-            colors: colorizeColors,
+            colors: _colors(context),
           ),
         ],
         isRepeatingAnimation: true,

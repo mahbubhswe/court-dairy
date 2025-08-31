@@ -49,7 +49,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     final cs = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      backgroundColor: cs.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -140,9 +139,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   Widget _buildButton(BuildContext context, String text,
       {bool isOperator = false, bool isEqual = false, bool isClear = false}) {
-    final cs = Theme.of(context).colorScheme;
-    Color bgColor = cs.surfaceContainerHighest;
-    Color textColor = cs.onSurface;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    Color bgColor = theme.scaffoldBackgroundColor; // match screen color
+    Color textColor = cs.onBackground;
 
     if (isEqual) {
       bgColor = cs.primary;
