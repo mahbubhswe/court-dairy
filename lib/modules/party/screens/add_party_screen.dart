@@ -22,7 +22,7 @@ class AddPartyScreen extends StatelessWidget {
         title: const Text('নতুন পক্ষ যুক্ত করুন'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(8),
         child: Column(
           spacing: 16,
           children: [
@@ -34,8 +34,9 @@ class AddPartyScreen extends StatelessWidget {
                   radius: 50,
                   backgroundImage:
                       image != null ? FileImage(File(image.path)) : null,
-                  child:
-                      image == null ? const Icon(Icons.camera_alt, size: 40) : null,
+                  child: image == null
+                      ? const Icon(Icons.camera_alt, size: 40)
+                      : null,
                 );
               }),
             ),
@@ -87,7 +88,8 @@ class AddPartyScreen extends StatelessWidget {
                             if (success) {
                               PanaraInfoDialog.show(
                                 context,
-                                title: 'সফল হয়েছে', buttonText: 'Okey',
+                                title: 'সফল হয়েছে',
+                                buttonText: 'Okey',
                                 message: 'পক্ষ যুক্ত করা হয়েছে',
                                 panaraDialogType: PanaraDialogType.success,
                                 barrierDismissible: false,
@@ -99,7 +101,8 @@ class AddPartyScreen extends StatelessWidget {
                             } else {
                               PanaraInfoDialog.show(
                                 context,
-                                title: 'ত্রুটি', buttonText: 'Okey',
+                                title: 'ত্রুটি',
+                                buttonText: 'Okey',
                                 message: 'পক্ষ যুক্ত করতে ব্যর্থ হয়েছে',
                                 panaraDialogType: PanaraDialogType.error,
                                 barrierDismissible: false,

@@ -23,7 +23,7 @@ class AddTransactionScreen extends StatelessWidget {
       ),
       body: Obx(() {
         return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           child: Column(
             spacing: 16,
             children: [
