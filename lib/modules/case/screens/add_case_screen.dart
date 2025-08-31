@@ -20,6 +20,8 @@ class AddCaseScreen extends StatelessWidget {
       required List<String> options,
       required RxnString selected,
     }) {
+      final appBarColor = Theme.of(context).appBarTheme.backgroundColor ??
+          Theme.of(context).colorScheme.primary;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,6 +39,13 @@ class AddCaseScreen extends StatelessWidget {
                       label: Text(t),
                       selected: isSelected,
                       onSelected: (_) => selected.value = t,
+                      shape: StadiumBorder(
+                        side: BorderSide(
+                          color: isSelected
+                              ? Colors.transparent
+                              : appBarColor,
+                        ),
+                      ),
                     ),
                   );
                 }).toList(),

@@ -29,6 +29,7 @@ class CaseDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<CaseController>();
     final theme = Theme.of(context);
+    final appBarColor = theme.appBarTheme.backgroundColor ?? theme.colorScheme.primary;
     final statuses = const ['Ongoing', 'Disposed', 'Completed'];
 
     Widget chip(String text, {Color? color, IconData? icon}) {
@@ -291,6 +292,9 @@ class CaseDetailScreen extends StatelessWidget {
                               children: current.hearingDates.map((ts) {
                                 return InputChip(
                                   label: Text(_fmtDate(ts)),
+                                  shape: StadiumBorder(
+                                    side: BorderSide(color: appBarColor),
+                                  ),
                                   onDeleted: () async {
                                     PanaraConfirmDialog.show(
                                       context,

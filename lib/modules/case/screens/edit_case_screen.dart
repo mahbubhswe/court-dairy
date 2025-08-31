@@ -17,14 +17,25 @@ class EditCaseScreen extends StatelessWidget {
     final controller = Get.put(EditCaseController(caseItem));
 
     Widget caseTypeChips() {
+      final appBarColor = Theme.of(context).appBarTheme.backgroundColor ??
+          Theme.of(context).colorScheme.primary;
       return Wrap(
         spacing: 8,
         children: controller.caseTypes.map((type) {
-          return Obx(() => ChoiceChip(
-                label: Text(type),
-                selected: controller.selectedCaseType.value == type,
-                onSelected: (_) => controller.selectedCaseType.value = type,
-              ));
+          return Obx(() {
+            final isSelected = controller.selectedCaseType.value == type;
+            return ChoiceChip(
+              label: Text(type),
+              selected: isSelected,
+              onSelected: (_) => controller.selectedCaseType.value = type,
+              shape: StadiumBorder(
+                side: BorderSide(
+                  color:
+                      isSelected ? Colors.transparent : appBarColor,
+                ),
+              ),
+            );
+          });
         }).toList(),
       );
     }

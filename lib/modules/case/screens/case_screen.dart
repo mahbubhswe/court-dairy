@@ -44,14 +44,14 @@ class CaseScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                filterChip(
-                    'today', "Today's (${controller.todayCount})", controller),
-                filterChip('tomorrow', 'Tomorrow (${controller.tomorrowCount})',
-                    controller),
-                filterChip(
-                    'week', 'This Week (${controller.weekCount})', controller),
-                filterChip('month', 'This Month (${controller.monthCount})',
-                    controller),
+                filterChip(context, 'today',
+                    "Today's (${controller.todayCount})", controller),
+                filterChip(context, 'tomorrow',
+                    'Tomorrow (${controller.tomorrowCount})', controller),
+                filterChip(context, 'week',
+                    'This Week (${controller.weekCount})', controller),
+                filterChip(context, 'month',
+                    'This Month (${controller.monthCount})', controller),
               ],
             ),
           ),
@@ -87,14 +87,23 @@ class CaseScreen extends StatelessWidget {
   }
 }
 
-Widget filterChip(String key, String label, CaseController controller) {
+Widget filterChip(
+    BuildContext context, String key, String label, CaseController controller) {
+  final appBarColor =
+      Theme.of(context).appBarTheme.backgroundColor ?? Theme.of(context).colorScheme.primary;
+  final selected = controller.selectedFilter.value == key;
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 4),
     child: ChoiceChip(
       label: Text(label, style: const TextStyle(fontSize: 12)),
-      selected: controller.selectedFilter.value == key,
+      selected: selected,
       onSelected: (_) => controller.selectedFilter.value = key,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: selected ? Colors.transparent : appBarColor,
+        ),
+      ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       visualDensity: VisualDensity.compact,
       labelPadding: const EdgeInsets.symmetric(horizontal: 8),

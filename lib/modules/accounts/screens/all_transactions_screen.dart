@@ -21,6 +21,8 @@ class AllTransactionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final types = ['All', ...getTransactionTypes()];
     final dates = ['All', 'Today', 'This Week', 'This Month'];
+    final appBarColor = Theme.of(context).appBarTheme.backgroundColor ??
+        Theme.of(context).colorScheme.primary;
     return Scaffold(
       appBar: AppBar(title: const Text('All Transactions')),
       body: Column(
@@ -45,6 +47,13 @@ class AllTransactionsScreen extends StatelessWidget {
                             label: Text(t),
                             selected: selected,
                             onSelected: (_) => typeFilter.value = t,
+                            shape: StadiumBorder(
+                              side: BorderSide(
+                                color: selected
+                                    ? Colors.transparent
+                                    : appBarColor,
+                              ),
+                            ),
                           ),
                         );
                       }).toList(),

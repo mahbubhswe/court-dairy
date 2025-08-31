@@ -17,6 +17,7 @@ class BuySmsView extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final appBarColor = theme.appBarTheme.backgroundColor ?? cs.primary;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -154,6 +155,13 @@ class BuySmsView extends StatelessWidget {
                                         selected: selected,
                                         onSelected: (_) =>
                                             controller.smsCount.value = v,
+                                        shape: StadiumBorder(
+                                          side: BorderSide(
+                                            color: selected
+                                                ? Colors.transparent
+                                                : appBarColor,
+                                          ),
+                                        ),
                                       );
                                     }))
                                 .toList(),
