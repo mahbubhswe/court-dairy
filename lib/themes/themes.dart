@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/app_colors.dart';
@@ -81,6 +82,23 @@ class Themes {
       foregroundColor: Colors.white,
       elevation: 2.0,
     ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: Colors.black,
+      selectionColor: Color(0x3325D366),
+      selectionHandleColor: _waLightSecondary,
+    ),
+    pageTransitionsTheme: const PageTransitionsTheme(builders: {
+      TargetPlatform.android:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.iOS:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.macOS:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.windows:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.linux:
+          FadeThroughPageTransitionsBuilder(),
+    }),
     textTheme: GoogleFonts.hindSiliguriTextTheme(),
   );
 
@@ -144,6 +162,23 @@ class Themes {
       foregroundColor: Colors.white,
       elevation: 2.0,
     ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: Colors.white,
+      selectionColor: Color(0x3300A884),
+      selectionHandleColor: _waDarkSecondary,
+    ),
+    pageTransitionsTheme: const PageTransitionsTheme(builders: {
+      TargetPlatform.android:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.iOS:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.macOS:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.windows:
+          FadeThroughPageTransitionsBuilder(),
+      TargetPlatform.linux:
+          FadeThroughPageTransitionsBuilder(),
+    }),
     textTheme: GoogleFonts.hindSiliguriTextTheme(ThemeData.dark().textTheme),
   );
 }

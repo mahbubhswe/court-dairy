@@ -37,8 +37,7 @@ class LayoutScreen extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  Get.to(() => CaseSearchScreen(),
-                      transition: Transition.downToUp);
+                  Get.to(() => CaseSearchScreen());
                 },
                 icon: const Icon(Icons.search),
               ),

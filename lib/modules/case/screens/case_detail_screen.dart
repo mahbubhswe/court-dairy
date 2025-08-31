@@ -63,6 +63,19 @@ class CaseDetailScreen extends StatelessWidget {
       );
     }
 
+    Color _statusColor(String status) {
+      switch (status.toLowerCase()) {
+        case 'ongoing':
+          return theme.colorScheme.primary;
+        case 'disposed':
+          return Colors.orange;
+        case 'completed':
+          return Colors.green;
+        default:
+          return theme.colorScheme.secondary;
+      }
+    }
+
     Future<void> handleMenu(String value) async {
       if (value == 'edit') {
         Get.to(() => EditCaseScreen(caseItem));
@@ -134,23 +147,46 @@ class CaseDetailScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              chip(caseItem.caseType,
-                                  icon: Icons.category_outlined,
-                                  color: theme.colorScheme.primary),
-                              chip(caseItem.courtType,
-                                  icon: Icons.account_balance_outlined,
-                                  color: theme.colorScheme.secondary),
-                              chip(caseItem.caseStatus,
-                                  icon: Icons.flag_outlined,
-                                  color: theme.colorScheme.tertiary),
-                            ],
-                          ),
                         ],
                       ),
+                    ),
+                  ),
+
+                  // Case Information
+                  section(
+                    'Case Information',
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        appInfoRow('Case Type', caseItem.caseType),
+                        const SizedBox(height: 8),
+                        appInfoRow('Court Type', caseItem.courtType),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Case Status',
+                                style: TextStyle(fontSize: 14)),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: _statusColor(caseItem.caseStatus)
+                                    .withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              child: Text(
+                                caseItem.caseStatus,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                  color: _statusColor(caseItem.caseStatus),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
 

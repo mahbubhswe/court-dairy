@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'accounts_first_card.dart';
+import 'accounts_second_card.dart';
 import 'app_text.dart';
 
 class Dashboard extends StatelessWidget {
@@ -11,7 +13,15 @@ class Dashboard extends StatelessWidget {
       children: [
         SizedBox(
           height: 116,
-          child: AccountsFirstCard(),
+          child: Swiper(
+            itemCount: 2,
+            loop: true,
+            autoplay: true,
+            itemBuilder: (context, index) {
+              if (index == 0) return AccountsFirstCard();
+              return AccountsSecondCard();
+            },
+          ),
         ),
         AppText(),
       ],

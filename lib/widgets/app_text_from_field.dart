@@ -51,6 +51,7 @@ class AppTextFromField extends StatelessWidget {
       borderFocusedColor: cs.primary,
       formField: TextFormField(
         controller: controller,
+        cursorColor: Theme.of(context).colorScheme.onSurface,
         keyboardType: effectiveKeyboardType,
         inputFormatters: inputFormatters,
         obscureText: isPassword,

@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:courtdiary/services/initial_bindings.dart';
 import 'package:courtdiary/themes/theme_controller.dart';
 import 'package:courtdiary/themes/themes.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'screens/splash_screen.dart';
+import 'navigation/app_transitions.dart';
 import 'services/app_initializer.dart';
 
 void main() async {
@@ -62,6 +64,11 @@ class MyApp extends StatelessWidget {
       themeMode: themeController.themeMode,
       initialBinding: InitialBindings(),
       home: const SplashScreen(),
+      // Apply shared-axis transitions to all Get routes
+      customTransition:  SharedAxisCustomTransition(
+        transitionType: SharedAxisTransitionType.horizontal,
+      ),
+      transitionDuration: const Duration(milliseconds: 300),
 
       // This runs on every build and after theme changes
       builder: (context, child) {

@@ -16,8 +16,11 @@ class CaseSearchScreen extends StatelessWidget {
       appBar: AppBar(
         title: TextField(
           autofocus: true,
+          style: const TextStyle(color: Colors.white),
+          cursorColor: Colors.white,
           decoration: const InputDecoration(
             hintText: 'Search cases',
+            hintStyle: TextStyle(color: Colors.white70),
             border: InputBorder.none,
           ),
           onChanged: (v) => query.value = v.toLowerCase(),
