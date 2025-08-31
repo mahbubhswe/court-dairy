@@ -15,6 +15,9 @@ class EditTransactionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Get.isRegistered<EditTransactionController>()) {
+      Get.delete<EditTransactionController>();
+    }
     final controller = Get.put(EditTransactionController(transaction));
     return Scaffold(
       appBar: AppBar(
@@ -26,102 +29,94 @@ class EditTransactionScreen extends StatelessWidget {
           child: Column(
             spacing: 16,
             children: [
-                  DropdownButtonFormField<String>(
-                    value: controller.type.value,
-                    isExpanded: true,
+              DropdownButtonFormField<String>(
+                value: controller.type.value,
+                isExpanded: true,
+                borderRadius: BorderRadius.circular(12),
+                menuMaxHeight: 320,
+                icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                decoration: InputDecoration(
+                  labelText: 'ধরণ',
+                  hintText: 'লেনদেনের ধরণ নির্বাচন করুন',
+                  prefixIcon: const Icon(Icons.category),
+                  filled: true,
+                  fillColor:
+                      Theme.of(context).colorScheme.surface.withOpacity(0.7),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    menuMaxHeight: 320,
-                    icon:
-                        const Icon(Icons.keyboard_arrow_down_rounded),
-                    decoration: InputDecoration(
-                      labelText: 'ধরণ',
-                      hintText: 'লেনদেনের ধরণ নির্বাচন করুন',
-                      prefixIcon: const Icon(Icons.category),
-                      filled: true,
-                      fillColor: Theme.of(context)
-                          .colorScheme
-                          .surface
-                          .withOpacity(0.7),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.outlineVariant,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 1.4,
-                        ),
-                      ),
-                    ),
-                    items: getTransactionTypes()
-                        .map((e) =>
-                            DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    onChanged: (v) => controller.type.value = v,
                   ),
-                  AppTextFromField(
-                    controller: controller.amount,
-                    label: 'পরিমাণ',
-                    hintText: 'পরিমাণ লিখুন',
-                    prefixIcon: Icons.money,
-                    keyboardType: TextInputType.number,
-                  ),
-                  DropdownButtonFormField<String>(
-                    value: controller.paymentMethod.value,
-                    isExpanded: true,
+                  enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    menuMaxHeight: 320,
-                    icon:
-                        const Icon(Icons.keyboard_arrow_down_rounded),
-                    decoration: InputDecoration(
-                      labelText: 'পেমেন্ট পদ্ধতি',
-                      hintText: 'পেমেন্ট পদ্ধতি নির্বাচন করুন',
-                      prefixIcon: const Icon(Icons.payment),
-                      filled: true,
-                      fillColor: Theme.of(context)
-                          .colorScheme
-                          .surface
-                          .withOpacity(0.7),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.outlineVariant,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 1.4,
-                        ),
-                      ),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant,
                     ),
-                    items: paymentMethods
-                        .map((e) =>
-                            DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    onChanged: (v) => controller.paymentMethod.value = v,
                   ),
-                  AppTextFromField(
-                    controller: controller.note,
-                    label: 'নোট',
-                    hintText: 'নোট লিখুন',
-                    prefixIcon: Icons.note,
-                    isMaxLines: 3,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 1.4,
+                    ),
                   ),
+                ),
+                items: getTransactionTypes()
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (v) => controller.type.value = v,
+              ),
+              AppTextFromField(
+                controller: controller.amount,
+                label: 'পরিমাণ',
+                hintText: 'পরিমাণ লিখুন',
+                prefixIcon: Icons.money,
+                keyboardType: TextInputType.number,
+              ),
+              DropdownButtonFormField<String>(
+                value: controller.paymentMethod.value,
+                isExpanded: true,
+                borderRadius: BorderRadius.circular(12),
+                menuMaxHeight: 320,
+                icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                decoration: InputDecoration(
+                  labelText: 'পেমেন্ট পদ্ধতি',
+                  hintText: 'পেমেন্ট পদ্ধতি নির্বাচন করুন',
+                  prefixIcon: const Icon(Icons.payment),
+                  filled: true,
+                  fillColor:
+                      Theme.of(context).colorScheme.surface.withOpacity(0.7),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 1.4,
+                    ),
+                  ),
+                ),
+                items: paymentMethods
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (v) => controller.paymentMethod.value = v,
+              ),
+              AppTextFromField(
+                controller: controller.note,
+                label: 'নোট',
+                hintText: 'নোট লিখুন',
+                prefixIcon: Icons.note,
+                isMaxLines: 3,
+              ),
               const SizedBox(height: 80),
             ],
           ),
@@ -147,11 +142,13 @@ class EditTransactionScreen extends StatelessWidget {
                           },
                           onTapConfirm: () async {
                             Navigator.of(context).pop();
-                            final success = await controller.updateTransaction();
+                            final success =
+                                await controller.updateTransaction();
                             if (success) {
                               PanaraInfoDialog.show(
                                 context,
                                 title: 'সফল হয়েছে',
+                                buttonText: 'Okey',
                                 message: 'লেনদেন আপডেট করা হয়েছে',
                                 panaraDialogType: PanaraDialogType.success,
                                 barrierDismissible: false,
@@ -164,6 +161,7 @@ class EditTransactionScreen extends StatelessWidget {
                               PanaraInfoDialog.show(
                                 context,
                                 title: 'ত্রুটি',
+                                buttonText: 'Okey',
                                 message: 'লেনদেন আপডেট করতে ব্যর্থ হয়েছে',
                                 panaraDialogType: PanaraDialogType.error,
                                 barrierDismissible: false,

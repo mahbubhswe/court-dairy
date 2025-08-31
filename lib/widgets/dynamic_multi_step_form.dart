@@ -23,6 +23,8 @@ class DynamicMultiStepForm extends StatefulWidget {
     required this.onSubmit,
     this.isLoading = false,
     this.stepperType = StepperType.horizontal,
+    this.controlsInBottom = false,
+    this.stepIconColor,
   });
 
   /// Ordered list of form steps.
@@ -36,6 +38,13 @@ class DynamicMultiStepForm extends StatefulWidget {
 
   /// Orientation of the [Stepper]. Defaults to [StepperType.horizontal].
   final StepperType stepperType;
+
+  /// When true, renders Back/Next/Submit controls fixed at the bottom
+  /// instead of inline within the Stepper.
+  final bool controlsInBottom;
+
+  /// Custom color for the step index icons and connectors.
+  final Color? stepIconColor;
 
   @override
   State<DynamicMultiStepForm> createState() => _DynamicMultiStepFormState();
@@ -61,28 +70,31 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Stepper(
+    final bool isLast = _currentStep == widget.steps.length - 1;
+
+    Widget stepper = Stepper(
       type: widget.stepperType,
       currentStep: _currentStep,
       onStepTapped: (i) => setState(() => _currentStep = i),
       onStepContinue: _next,
       onStepCancel: _back,
-      controlsBuilder: (context, details) {
-        final bool isLast = _currentStep == widget.steps.length - 1;
-        return Row(
-          children: [
-            if (_currentStep > 0)
-              TextButton(onPressed: _back, child: const Text('Back')),
-            const SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: widget.isLoading ? null : _next,
-              child: widget.isLoading && isLast
-                  ? const CupertinoActivityIndicator()
-                  : Text(isLast ? 'Submit' : 'Next'),
-            ),
-          ],
-        );
-      },
+      controlsBuilder: widget.controlsInBottom
+          ? (context, details) => const SizedBox.shrink()
+          : (context, details) {
+              return Row(
+                children: [
+                  if (_currentStep > 0)
+                    TextButton(onPressed: _back, child: const Text('Back')),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: widget.isLoading ? null : _next,
+                    child: widget.isLoading && isLast
+                        ? const CupertinoActivityIndicator()
+                        : Text(isLast ? 'Submit' : 'Next'),
+                  ),
+                ],
+              );
+            },
       steps: widget.steps
           .asMap()
           .entries
@@ -93,6 +105,43 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
               ))
           .toList(),
     );
+
+    if (widget.stepIconColor != null) {
+      stepper = Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+                primary: widget.stepIconColor,
+              ),
+        ),
+        child: stepper,
+      );
+    }
+
+    if (!widget.controlsInBottom) return stepper;
+
+    return Column(
+      children: [
+        Expanded(child: stepper),
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                if (_currentStep > 0)
+                  TextButton(onPressed: _back, child: const Text('Back')),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: widget.isLoading ? null : _next,
+                  child: widget.isLoading && isLast
+                      ? const CupertinoActivityIndicator()
+                      : Text(isLast ? 'Submit' : 'Next'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
-

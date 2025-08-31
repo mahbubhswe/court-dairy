@@ -13,6 +13,9 @@ class AddTransactionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Get.isRegistered<AddTransactionController>()) {
+      Get.delete<AddTransactionController>();
+    }
     final controller = Get.put(AddTransactionController());
     return Scaffold(
       appBar: AppBar(
@@ -35,10 +38,8 @@ class AddTransactionScreen extends StatelessWidget {
                   hintText: 'লেনদেনের ধরণ নির্বাচন করুন',
                   prefixIcon: const Icon(Icons.category),
                   filled: true,
-                  fillColor: Theme.of(context)
-                      .colorScheme
-                      .surface
-                      .withOpacity(0.7),
+                  fillColor:
+                      Theme.of(context).colorScheme.surface.withOpacity(0.7),
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   border: OutlineInputBorder(
@@ -84,10 +85,8 @@ class AddTransactionScreen extends StatelessWidget {
                   hintText: 'পেমেন্ট পদ্ধতি নির্বাচন করুন',
                   prefixIcon: const Icon(Icons.payment),
                   filled: true,
-                  fillColor: Theme.of(context)
-                      .colorScheme
-                      .surface
-                      .withOpacity(0.7),
+                  fillColor:
+                      Theme.of(context).colorScheme.surface.withOpacity(0.7),
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   border: OutlineInputBorder(
@@ -152,6 +151,7 @@ class AddTransactionScreen extends StatelessWidget {
                               PanaraInfoDialog.show(
                                 context,
                                 title: 'সফল হয়েছে',
+                                buttonText: 'Okey',
                                 message: 'লেনদেন যুক্ত করা হয়েছে',
                                 panaraDialogType: PanaraDialogType.success,
                                 barrierDismissible: false,
@@ -164,6 +164,7 @@ class AddTransactionScreen extends StatelessWidget {
                               PanaraInfoDialog.show(
                                 context,
                                 title: 'ত্রুটি',
+                                buttonText: 'Okey',
                                 message: 'লেনদেন যুক্ত করতে ব্যর্থ হয়েছে',
                                 panaraDialogType: PanaraDialogType.error,
                                 barrierDismissible: false,

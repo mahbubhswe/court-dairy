@@ -159,7 +159,7 @@ class EditCaseScreen extends StatelessWidget {
                   if (success) {
                     PanaraInfoDialog.show(
                       context,
-                      title: 'সফল হয়েছে',
+                      title: 'সফল হয়েছে', buttonText: 'Okey',
                       message: 'কেস আপডেট করা হয়েছে',
                       panaraDialogType: PanaraDialogType.success,
                       barrierDismissible: false,
@@ -171,7 +171,7 @@ class EditCaseScreen extends StatelessWidget {
                   } else {
                     PanaraInfoDialog.show(
                       context,
-                      title: 'ত্রুটি',
+                      title: 'ত্রুটি', buttonText: 'Okey',
                       message: 'কেস আপডেট করতে ব্যর্থ হয়েছে',
                       panaraDialogType: PanaraDialogType.error,
                       barrierDismissible: false,

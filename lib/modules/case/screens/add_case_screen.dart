@@ -1,4 +1,6 @@
 import '../../../widgets/dynamic_multi_step_form.dart';
+import '../../../widgets/app_text_from_field.dart';
+import '../../../constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
@@ -13,32 +15,70 @@ class AddCaseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(AddCaseController());
 
-    Widget chipGrid(List<String> options, RxnString selected) {
-      final width = (MediaQuery.of(context).size.width - 48) / 2;
-      return Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: options
-            .map((type) => SizedBox(
-                  width: width,
-                  child: Obx(() => ChoiceChip(
-                        label: Text(type),
-                        selected: selected.value == type,
-                        onSelected: (_) => selected.value = type,
-                      )),
-                ))
-            .toList(),
+    Widget titledChipRow({
+      required String title,
+      required List<String> options,
+      required RxnString selected,
+    }) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          Obx(() {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: options.map((t) {
+                  final isSelected = selected.value == t;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ChoiceChip(
+                      label: Text(t),
+                      selected: isSelected,
+                      onSelected: (_) => selected.value = t,
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          }),
+        ],
       );
     }
-
-    Widget caseTypeChips() => chipGrid(controller.caseTypes, controller.selectedCaseType);
-
-    Widget courtTypeChips() => chipGrid(controller.courtTypes, controller.selectedCourtType);
 
     Widget caseStatusDropdown() {
       return Obx(() => DropdownButtonFormField<String>(
             value: controller.selectedCaseStatus.value,
-            decoration: const InputDecoration(labelText: 'Case Status'),
+            isExpanded: true,
+            borderRadius: BorderRadius.circular(12),
+            menuMaxHeight: 320,
+            icon: const Icon(Icons.keyboard_arrow_down_rounded),
+            decoration: InputDecoration(
+              labelText: 'Case Status',
+              hintText: 'Select case status',
+              prefixIcon: const Icon(Icons.flag_outlined),
+              filled: true,
+              fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.7),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 1.4,
+                ),
+              ),
+            ),
             items: controller.caseStatuses
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
@@ -46,10 +86,43 @@ class AddCaseScreen extends StatelessWidget {
           ));
     }
 
-    Widget partyDropdown(Rx<Party?> selected) {
-      return Obx(() => DropdownButton<Party>(
+    Widget partyDropdown({
+      required Rx<Party?> selected,
+      required String label,
+      required String hint,
+      required IconData icon,
+    }) {
+      return Obx(() => DropdownButtonFormField<Party>(
             value: selected.value,
-            hint: const Text('Select'),
+            isExpanded: true,
+            borderRadius: BorderRadius.circular(12),
+            menuMaxHeight: 320,
+            icon: const Icon(Icons.keyboard_arrow_down_rounded),
+            decoration: InputDecoration(
+              labelText: label,
+              hintText: hint,
+              prefixIcon: Icon(icon),
+              filled: true,
+              fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.7),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 1.4,
+                ),
+              ),
+            ),
             items: controller.parties
                 .map((p) => DropdownMenuItem(
                       value: p,
@@ -64,114 +137,151 @@ class AddCaseScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Add Case')),
       body: Obx(() => DynamicMultiStepForm(
             steps: [
-          FormStep(
-            title: const Text('Case Info'),
-            content: Column(
-              children: [
-                caseTypeChips(),
-                const SizedBox(height: 8),
-                courtTypeChips(),
-                TextField(
-                  controller: controller.caseTitle,
-                  decoration: const InputDecoration(labelText: 'Case Title'),
+              FormStep(
+                title: const Text('Case Info'),
+                content: Column(
+                  spacing: 5,
+                  children: [
+                    titledChipRow(
+                      title: 'Case Type',
+                      options: controller.caseTypes,
+                      selected: controller.selectedCaseType,
+                    ),
+                    const SizedBox(height: 16),
+                    titledChipRow(
+                      title: 'Court Type',
+                      options: controller.courtTypes,
+                      selected: controller.selectedCourtType,
+                    ),
+                    AppTextFromField(
+                      controller: controller.caseTitle,
+                      label: 'Case Title',
+                      hintText: 'Enter case title',
+                      prefixIcon: Icons.title,
+                    ),
+                    AppTextFromField(
+                      controller: controller.courtName,
+                      label: 'Court Name',
+                      hintText: 'Enter court name',
+                      prefixIcon: Icons.account_balance,
+                    ),
+                    AppTextFromField(
+                      controller: controller.caseNumber,
+                      label: 'Case Number',
+                      hintText: 'Enter case number',
+                      prefixIcon: Icons.numbers,
+                      keyboardType: TextInputType.text,
+                    ),
+                    caseStatusDropdown(),
+                    AppTextFromField(
+                      controller: controller.caseSummary,
+                      label: 'Summary',
+                      hintText: 'Enter summary',
+                      prefixIcon: Icons.description_outlined,
+                      isMaxLines: 3,
+                    ),
+                    Obx(() => ListTile(
+                          title: Text(controller.filedDate.value == null
+                              ? 'Filed Date'
+                              : controller.filedDate.value
+                                  .toString()
+                                  .split(' ')
+                                  .first),
+                          trailing: const Icon(Icons.calendar_today),
+                          onTap: () async {
+                            final picked = await showDatePicker(
+                                context: context,
+                                initialDate: controller.filedDate.value ??
+                                    DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100));
+                            if (picked != null)
+                              controller.filedDate.value = picked;
+                          },
+                        )),
+                  ],
                 ),
-                TextField(
-                  controller: controller.courtName,
-                  decoration: const InputDecoration(labelText: 'Court Name'),
+              ),
+              FormStep(
+                title: const Text('Parties'),
+                content: Column(
+                  children: [
+                    partyDropdown(
+                      selected: controller.selectedPlaintiff,
+                      label: 'Plaintiff',
+                      hint: 'Select plaintiff',
+                      icon: Icons.person_outline,
+                    ),
+                    const SizedBox(height: 16),
+                    partyDropdown(
+                      selected: controller.selectedDefendant,
+                      label: 'Defendant',
+                      hint: 'Select defendant',
+                      icon: Icons.person_outline,
+                    ),
+                  ],
                 ),
-                TextField(
-                  controller: controller.caseNumber,
-                  decoration: const InputDecoration(labelText: 'Case Number'),
+              ),
+              FormStep(
+                title: const Text('More'),
+                content: Column(
+                  children: [
+                    Obx(() => ListTile(
+                          title: Text(controller.hearingDate.value == null
+                              ? 'Hearing Date'
+                              : controller.hearingDate.value
+                                  .toString()
+                                  .split(' ')
+                                  .first),
+                          trailing: const Icon(Icons.calendar_today),
+                          onTap: () async {
+                            final picked = await showDatePicker(
+                                context: context,
+                                initialDate: controller.hearingDate.value ??
+                                    DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100));
+                            if (picked != null)
+                              controller.hearingDate.value = picked;
+                          },
+                        )),
+                    AppTextFromField(
+                      controller: controller.judgeName,
+                      label: 'Judge Name',
+                      hintText: 'Enter judge name',
+                      prefixIcon: Icons.gavel,
+                    ),
+                    AppTextFromField(
+                      controller: controller.courtOrder,
+                      label: 'Court Order',
+                      hintText: 'Enter court order',
+                      prefixIcon: Icons.article_outlined,
+                      isMaxLines: 3,
+                    ),
+                    ElevatedButton(
+                      onPressed: controller.pickDocuments,
+                      child: const Text('Upload Documents'),
+                    ),
+                    const SizedBox(height: 8),
+                    Obx(() => Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: controller.documents
+                              .map((url) => Image.network(
+                                    url,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ))
+                              .toList(),
+                        )),
+                  ],
                 ),
-                caseStatusDropdown(),
-                TextField(
-                  controller: controller.caseSummary,
-                  decoration: const InputDecoration(labelText: 'Summary'),
-                ),
-                Obx(() => ListTile(
-                      title: Text(controller.filedDate.value == null
-                          ? 'Filed Date'
-                          : controller.filedDate.value
-                              .toString()
-                              .split(' ')
-                              .first),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: () async {
-                        final picked = await showDatePicker(
-                            context: context,
-                            initialDate: controller.filedDate.value ?? DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        if (picked != null) controller.filedDate.value = picked;
-                      },
-                    )),
-              ],
-            ),
-          ),
-          FormStep(
-            title: const Text('Parties'),
-            content: Column(
-              children: [
-                const Text('Plaintiff'),
-                partyDropdown(controller.selectedPlaintiff),
-                const SizedBox(height: 16),
-                const Text('Defendant'),
-                partyDropdown(controller.selectedDefendant),
-              ],
-            ),
-          ),
-          FormStep(
-            title: const Text('More'),
-            content: Column(
-              children: [
-                Obx(() => ListTile(
-                      title: Text(controller.hearingDate.value == null
-                          ? 'Hearing Date'
-                          : controller.hearingDate.value
-                              .toString()
-                              .split(' ')
-                              .first),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: () async {
-                        final picked = await showDatePicker(
-                            context: context,
-                            initialDate:
-                                controller.hearingDate.value ?? DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        if (picked != null) controller.hearingDate.value = picked;
-                      },
-                    )),
-                TextField(
-                  controller: controller.judgeName,
-                  decoration: const InputDecoration(labelText: 'Judge Name'),
-                ),
-                TextField(
-                  controller: controller.courtOrder,
-                  decoration: const InputDecoration(labelText: 'Court Order'),
-                ),
-                ElevatedButton(
-                  onPressed: controller.pickDocuments,
-                  child: const Text('Upload Documents'),
-                ),
-                const SizedBox(height: 8),
-                Obx(() => Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: controller.documents
-                          .map((url) => Image.network(
-                                url,
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ))
-                          .toList(),
-                    )),
-              ],
-            ),
-          ),
+              ),
             ],
             isLoading: controller.isLoading.value,
+            controlsInBottom: true,
+            stepIconColor: AppColors.fixedPrimary,
             onSubmit: () {
               PanaraConfirmDialog.show(
                 context,
@@ -189,6 +299,7 @@ class AddCaseScreen extends StatelessWidget {
                     PanaraInfoDialog.show(
                       context,
                       title: 'সফল হয়েছে',
+                      buttonText: 'Okey',
                       message: 'কেস যুক্ত করা হয়েছে',
                       panaraDialogType: PanaraDialogType.success,
                       barrierDismissible: false,
@@ -201,6 +312,7 @@ class AddCaseScreen extends StatelessWidget {
                     PanaraInfoDialog.show(
                       context,
                       title: 'ত্রুটি',
+                      buttonText: 'Okey',
                       message: 'কেস যুক্ত করতে ব্যর্থ হয়েছে',
                       panaraDialogType: PanaraDialogType.error,
                       barrierDismissible: false,

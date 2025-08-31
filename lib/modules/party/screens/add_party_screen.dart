@@ -21,50 +21,48 @@ class AddPartyScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('নতুন পক্ষ যুক্ত করুন'),
       ),
-      body: Obx(() {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            spacing: 16,
-            children: [
-              GestureDetector(
-                onTap: controller.showImagePicker,
-                child: Obx(() {
-                  final image = controller.photo.value;
-                  return CircleAvatar(
-                    radius: 50,
-                    backgroundImage:
-                        image != null ? FileImage(File(image.path)) : null,
-                    child:
-                        image == null ? const Icon(Icons.camera_alt, size: 40) : null,
-                  );
-                }),
-              ),
-              AppTextFromField(
-                controller: controller.name,
-                label: 'নাম',
-                hintText: 'পক্ষের নাম লিখুন',
-                prefixIcon: Icons.person,
-              ),
-              AppTextFromField(
-                controller: controller.phone,
-                label: 'মোবাইল',
-                hintText: 'মোবাইল নম্বর লিখুন',
-                prefixIcon: Icons.phone,
-                keyboardType: TextInputType.phone,
-              ),
-              AppTextFromField(
-                controller: controller.address,
-                label: 'ঠিকানা',
-                hintText: 'ঠিকানা লিখুন',
-                prefixIcon: Icons.home,
-                isMaxLines: 3,
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      }),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          spacing: 16,
+          children: [
+            GestureDetector(
+              onTap: controller.showImagePicker,
+              child: Obx(() {
+                final image = controller.photo.value;
+                return CircleAvatar(
+                  radius: 50,
+                  backgroundImage:
+                      image != null ? FileImage(File(image.path)) : null,
+                  child:
+                      image == null ? const Icon(Icons.camera_alt, size: 40) : null,
+                );
+              }),
+            ),
+            AppTextFromField(
+              controller: controller.name,
+              label: 'নাম',
+              hintText: 'পক্ষের নাম লিখুন',
+              prefixIcon: Icons.person,
+            ),
+            AppTextFromField(
+              controller: controller.phone,
+              label: 'মোবাইল',
+              hintText: 'মোবাইল নম্বর লিখুন',
+              prefixIcon: Icons.phone,
+              keyboardType: TextInputType.phone,
+            ),
+            AppTextFromField(
+              controller: controller.address,
+              label: 'ঠিকানা',
+              hintText: 'ঠিকানা লিখুন',
+              prefixIcon: Icons.home,
+              isMaxLines: 3,
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
       bottomNavigationBar: Obx(() => SafeArea(
             top: false,
             child: Padding(
@@ -89,7 +87,7 @@ class AddPartyScreen extends StatelessWidget {
                             if (success) {
                               PanaraInfoDialog.show(
                                 context,
-                                title: 'সফল হয়েছে',
+                                title: 'সফল হয়েছে', buttonText: 'Okey',
                                 message: 'পক্ষ যুক্ত করা হয়েছে',
                                 panaraDialogType: PanaraDialogType.success,
                                 barrierDismissible: false,
@@ -101,7 +99,7 @@ class AddPartyScreen extends StatelessWidget {
                             } else {
                               PanaraInfoDialog.show(
                                 context,
-                                title: 'ত্রুটি',
+                                title: 'ত্রুটি', buttonText: 'Okey',
                                 message: 'পক্ষ যুক্ত করতে ব্যর্থ হয়েছে',
                                 panaraDialogType: PanaraDialogType.error,
                                 barrierDismissible: false,
