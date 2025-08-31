@@ -14,6 +14,8 @@ class AllCaseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appBarColor = Theme.of(context).appBarTheme.backgroundColor ??
+        Theme.of(context).colorScheme.primary;
     return Scaffold(
       appBar: AppBar(title: const Text('All Cases')),
       body: Column(
@@ -46,7 +48,13 @@ class AllCaseScreen extends StatelessWidget {
                             selected: selected,
                             onSelected: (_) => typeFilter.value = t,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(
+                                color: selected
+                                    ? Colors.transparent
+                                    : appBarColor,
+                              ),
+                            ),
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity.compact,
@@ -74,7 +82,13 @@ class AllCaseScreen extends StatelessWidget {
                             selected: selected,
                             onSelected: (_) => courtFilter.value = t,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(
+                                color: selected
+                                    ? Colors.transparent
+                                    : appBarColor,
+                              ),
+                            ),
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity.compact,
