@@ -7,6 +7,10 @@ import '../services/transaction_service.dart';
 import '../../../utils/activation_guard.dart';
 
 class AddTransactionController extends GetxController {
+  AddTransactionController({this.partyId});
+
+  /// Optional: when opened from a Party, link the transaction
+  final String? partyId;
   final RxnString type = RxnString();
   final amount = TextEditingController();
   final RxnString paymentMethod = RxnString();
@@ -46,6 +50,7 @@ class AddTransactionController extends GetxController {
         note: note.text.trim().isEmpty ? null : note.text.trim(),
         paymentMethod: paymentMethod.value!,
         createdAt: DateTime.now(),
+        partyId: partyId,
       );
 
       await TransactionService.addTransaction(transaction, user.uid);

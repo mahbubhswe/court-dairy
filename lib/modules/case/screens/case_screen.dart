@@ -7,7 +7,8 @@ import '../widgets/case_tile.dart';
 import 'all_case_screen.dart';
 
 class CaseScreen extends StatelessWidget {
-  const CaseScreen({super.key});
+  final bool showHeader;
+  const CaseScreen({super.key, this.showHeader = true});
 
   @override
   Widget build(BuildContext context) {
@@ -19,24 +20,26 @@ class CaseScreen extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Your Cases',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                    onPressed: () => Get.to(() => AllCaseScreen()),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
-                    ),
-                    child: Text("See All"))
-              ],
+          if (showHeader)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Your Cases',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                      onPressed: () => Get.to(() => AllCaseScreen()),
+                      style: TextButton.styleFrom(
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onSurface,
+                      ),
+                      child: Text("See All"))
+                ],
+              ),
             ),
-          ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(

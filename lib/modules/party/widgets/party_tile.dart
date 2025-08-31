@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/party.dart';
+import '../../accounts/screens/add_transaction_screen.dart';
 
 class PartyTile extends StatelessWidget {
   final Party party;
@@ -65,6 +67,20 @@ class PartyTile extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          IconButton(
+            tooltip: 'পেমেন্ট',
+            icon: const Icon(
+              Icons.payment_rounded,
+              color: Colors.green,
+            ),
+            color: Theme.of(context).colorScheme.primary,
+            onPressed: () async {
+              Get.to(
+                () => AddTransactionScreen(partyId: party.docId),
+                fullscreenDialog: true,
+              );
+            },
+          ),
           IconButton(
             tooltip: 'কল করুন',
             icon: const Icon(Icons.call),

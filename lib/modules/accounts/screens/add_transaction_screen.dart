@@ -9,14 +9,15 @@ import '../../../utils/transaction_types.dart';
 import '../controllers/add_transaction_controller.dart';
 
 class AddTransactionScreen extends StatelessWidget {
-  const AddTransactionScreen({super.key});
+  final String? partyId;
+  const AddTransactionScreen({super.key, this.partyId});
 
   @override
   Widget build(BuildContext context) {
     if (Get.isRegistered<AddTransactionController>()) {
       Get.delete<AddTransactionController>();
     }
-    final controller = Get.put(AddTransactionController());
+    final controller = Get.put(AddTransactionController(partyId: partyId));
     return Scaffold(
       appBar: AppBar(
         title: const Text('নতুন লেনদেন যুক্ত করুন'),

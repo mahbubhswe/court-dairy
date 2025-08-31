@@ -146,13 +146,13 @@ class AppDrawer extends StatelessWidget {
                   _sectionHeader(context, 'সাবস্ক্রিপশন বিস্তারিত'),
 
                   const SizedBox(height: 8),
-                  _infoTile(
-                    context,
-                    icon: Icons.brightness_6_rounded,
-                    title: 'থিম পরিবর্তন',
-                    subtitle: 'ডার্ক/লাইট মোড',
-                    onTap: () => Get.find<ThemeController>().toggleTheme(),
-                  ),
+                  // _infoTile(
+                  //   context,
+                  //   icon: Icons.brightness_6_rounded,
+                  //   title: 'থিম পরিবর্তন',
+                  //   subtitle: 'ডার্ক/লাইট মোড',
+                  //   onTap: () => Get.find<ThemeController>().toggleTheme(),
+                  // ),
                   const SizedBox(height: 12),
                   _infoTile(
                     context,

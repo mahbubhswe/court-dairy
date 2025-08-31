@@ -7,10 +7,11 @@ import 'package:courtdiary/themes/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../../screens/calculator_screen.dart';
+// import '../../../screens/calculator_screen.dart';
 import '../../../screens/customer_service_screen.dart';
 import '../../../constants/app_texts.dart';
 import '../../accounts/screens/add_transaction_screen.dart';
+import '../../case/screens/case_fullscreen_screen.dart';
 import '../../party/screens/add_party_screen.dart';
 import '../../party/screens/party_screen.dart';
 import '../widgets/app_drawer.dart';
@@ -43,10 +44,11 @@ class LayoutScreen extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  Get.to(() => CalculatorScreen(), fullscreenDialog: true);
+                  Get.to(() => const CaseFullscreenScreen(),
+                      fullscreenDialog: true);
                 },
-                icon: const Icon(HugeIcons.strokeRoundedCalculator01),
-                tooltip: AppTexts.calculator,
+                icon: const Icon(HugeIcons.strokeRoundedArrowAllDirection),
+                tooltip: 'Cases Fullscreen',
               ),
               IconButton(
                 onPressed: () {
