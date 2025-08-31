@@ -18,6 +18,7 @@ class SplashScreen extends StatelessWidget {
         AppImages.logo,
         height: 150,
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       nextScreen: Obx(() {
         if (authController.user.value != null) {
           return LayoutScreen();

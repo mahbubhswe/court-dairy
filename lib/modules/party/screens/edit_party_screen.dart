@@ -24,7 +24,7 @@ class EditPartyScreen extends StatelessWidget {
         title: const Text('পক্ষ সম্পাদনা'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(8),
         child: Column(
           spacing: 16,
           children: [

@@ -30,7 +30,7 @@ class AllCaseScreen extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: Obx(() {
               final uniqueTypes =
                   controller.cases.map((c) => c.caseType).toSet().toList();

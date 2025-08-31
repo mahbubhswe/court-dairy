@@ -6,14 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import '../../../themes/theme_controller.dart';
 import '../../auth/controllers/auth_controller.dart';
-import '../../court_dairy/screens/buy_sms_screen.dart';
-import '../../case/screens/add_case_screen.dart';
-import '../../party/screens/add_party_screen.dart';
-import '../../accounts/screens/add_transaction_screen.dart';
-import '../../case/screens/all_case_screen.dart';
-import '../../accounts/screens/all_transactions_screen.dart';
-import '../../../screens/calculator_screen.dart';
-import '../../../screens/customer_service_screen.dart';
 import '../controllers/layout_controller.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -26,15 +18,17 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    final cs = Theme.of(context).colorScheme;
-    final navColor = cs.surface; // Match drawer background
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final bg = theme.scaffoldBackgroundColor; // Match app background
+    final navColor = bg; // Keep system nav consistent with drawer bg
     final navIconsBrightness =
         ThemeData.estimateBrightnessForColor(navColor) == Brightness.dark
             ? Brightness.light
             : Brightness.dark;
     return Drawer(
       width: width,
-      backgroundColor: cs.surface,
+      backgroundColor: bg,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           systemNavigationBarColor: navColor,
@@ -147,8 +141,6 @@ class AppDrawer extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 36),
-
-
 
                   // সাবস্ক্রিপশন বিস্তারিত Section
                   _sectionHeader(context, 'সাবস্ক্রিপশন বিস্তারিত'),
