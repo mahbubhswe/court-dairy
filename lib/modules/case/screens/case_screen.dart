@@ -88,9 +88,13 @@ Widget filterChip(String key, String label, CaseController controller) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 4),
     child: ChoiceChip(
-      label: Text(label),
+      label: Text(label, style: const TextStyle(fontSize: 12)),
       selected: controller.selectedFilter.value == key,
       onSelected: (_) => controller.selectedFilter.value = key,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      visualDensity: VisualDensity.compact,
+      labelPadding: const EdgeInsets.symmetric(horizontal: 8),
     ),
   );
 }
