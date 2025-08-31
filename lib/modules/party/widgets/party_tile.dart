@@ -30,98 +30,102 @@ class PartyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 12, right: 8),
-      dense: true,
-      leading: CircleAvatar(
-        backgroundColor: Colors.orange.shade100,
-        foregroundColor: Colors.orange,
-        backgroundImage: party.photoUrl != null && party.photoUrl!.isNotEmpty
-            ? NetworkImage(party.photoUrl!)
-            : null,
-        child: (party.photoUrl == null || party.photoUrl!.isEmpty)
-            ? Text(_initials(party.name))
-            : null,
-      ),
-      title: Text(
-        party.name,
-        style: theme.textTheme.titleMedium,
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (party.phone.isNotEmpty)
-            Text(
-              party.phone,
-              style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+    return Card(
+      elevation: 0.5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: ListTile(
+        contentPadding: const EdgeInsets.only(left: 12, right: 8),
+        dense: true,
+        leading: CircleAvatar(
+          backgroundColor: Colors.orange.shade100,
+          foregroundColor: Colors.orange,
+          backgroundImage: party.photoUrl != null && party.photoUrl!.isNotEmpty
+              ? NetworkImage(party.photoUrl!)
+              : null,
+          child: (party.photoUrl == null || party.photoUrl!.isEmpty)
+              ? Text(_initials(party.name))
+              : null,
+        ),
+        title: Text(
+          party.name,
+          style: theme.textTheme.titleMedium,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (party.phone.isNotEmpty)
+              Text(
+                party.phone,
+                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+              ),
+            if (party.address.isNotEmpty)
+              Text(
+                party.address,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+              ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              tooltip: 'পেমেন্ট',
+              icon: const Icon(
+                Icons.payment_rounded,
+                color: Colors.green,
+              ),
+              color: Theme.of(context).colorScheme.primary,
+              onPressed: () async {
+                Get.to(
+                  () => AddTransactionScreen(partyId: party.docId),
+                  fullscreenDialog: true,
+                );
+              },
             ),
-          if (party.address.isNotEmpty)
-            Text(
-              party.address,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
-            ),
-        ],
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            tooltip: 'পেমেন্ট',
-            icon: const Icon(
-              Icons.payment_rounded,
+            IconButton(
+              tooltip: 'কল করুন',
+              icon: const Icon(Icons.call),
               color: Colors.green,
-            ),
-            color: Theme.of(context).colorScheme.primary,
-            onPressed: () async {
-              Get.to(
-                () => AddTransactionScreen(partyId: party.docId),
-                fullscreenDialog: true,
-              );
-            },
-          ),
-          IconButton(
-            tooltip: 'কল করুন',
-            icon: const Icon(Icons.call),
-            color: Colors.green,
-            onPressed: () async {
-              final uri = Uri(scheme: 'tel', path: party.phone);
-              try {
-                await launchUrl(uri);
-              } catch (_) {}
-            },
-          ),
-          if (onEdit != null || onDelete != null) const SizedBox(width: 4),
-          if (onEdit != null || onDelete != null)
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'edit') {
-                  onEdit?.call();
-                } else if (value == 'delete') {
-                  onDelete?.call();
-                }
-              },
-              itemBuilder: (context) {
-                final items = <PopupMenuEntry<String>>[];
-                if (onEdit != null) {
-                  items.add(const PopupMenuItem(
-                    value: 'edit',
-                    child: Text('Edit'),
-                  ));
-                }
-                if (onDelete != null) {
-                  items.add(const PopupMenuItem(
-                    value: 'delete',
-                    child: Text('Delete'),
-                  ));
-                }
-                return items;
+              onPressed: () async {
+                final uri = Uri(scheme: 'tel', path: party.phone);
+                try {
+                  await launchUrl(uri);
+                } catch (_) {}
               },
             ),
-        ],
+            if (onEdit != null || onDelete != null) const SizedBox(width: 4),
+            if (onEdit != null || onDelete != null)
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    onEdit?.call();
+                  } else if (value == 'delete') {
+                    onDelete?.call();
+                  }
+                },
+                itemBuilder: (context) {
+                  final items = <PopupMenuEntry<String>>[];
+                  if (onEdit != null) {
+                    items.add(const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ));
+                  }
+                  if (onDelete != null) {
+                    items.add(const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ));
+                  }
+                  return items;
+                },
+              ),
+          ],
+        ),
+        onTap: onTap,
       ),
-      onTap: onTap,
     );
   }
 }
