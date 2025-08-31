@@ -34,9 +34,9 @@ class AccountsCard extends StatelessWidget {
                   return Text(
                     NumberFormat.currency(
                       locale: 'bn_BD',
-                      symbol: '৳',
+                      symbol: '',
                       decimalDigits: 0,
-                    ).format(value), // Format the number as currency
+                    ).format(value).trim(), // Format the number as currency
                   );
                 },
               ),
