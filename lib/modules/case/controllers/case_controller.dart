@@ -7,6 +7,71 @@ import '../services/case_service.dart';
 class CaseController extends GetxController {
   final cases = <CourtCase>[].obs;
   final isLoading = true.obs;
+  final selectedFilter = 'today'.obs;
+
+  DateTime? _nextDate(CourtCase c) {
+    if (c.hearingDates.isEmpty) return null;
+    return c.hearingDates.first.toDate();
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  List<CourtCase> get todayCases {
+    final now = DateTime.now();
+    return cases.where((c) {
+      final d = _nextDate(c);
+      if (d == null) return false;
+      return _isSameDay(d, now);
+    }).toList();
+  }
+
+  List<CourtCase> get tomorrowCases {
+    final now = DateTime.now().add(const Duration(days: 1));
+    return cases.where((c) {
+      final d = _nextDate(c);
+      if (d == null) return false;
+      return _isSameDay(d, now);
+    }).toList();
+  }
+
+  List<CourtCase> get weekCases {
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    final endOfWeek = startOfWeek.add(const Duration(days: 6));
+    return cases.where((c) {
+      final d = _nextDate(c);
+      if (d == null) return false;
+      return !d.isBefore(startOfWeek) && !d.isAfter(endOfWeek);
+    }).toList();
+  }
+
+  List<CourtCase> get monthCases {
+    final now = DateTime.now();
+    return cases.where((c) {
+      final d = _nextDate(c);
+      if (d == null) return false;
+      return d.year == now.year && d.month == now.month;
+    }).toList();
+  }
+
+  List<CourtCase> get filteredCases {
+    switch (selectedFilter.value) {
+      case 'tomorrow':
+        return tomorrowCases;
+      case 'week':
+        return weekCases;
+      case 'month':
+        return monthCases;
+      default:
+        return todayCases;
+    }
+  }
+
+  int get todayCount => todayCases.length;
+  int get tomorrowCount => tomorrowCases.length;
+  int get weekCount => weekCases.length;
+  int get monthCount => monthCases.length;
 
   @override
   void onInit() {

@@ -1,5 +1,8 @@
 import 'package:courtdiary/modules/accounts/screens/accounts_screen.dart';
+import 'package:courtdiary/modules/case/controllers/case_controller.dart';
+import 'package:courtdiary/modules/case/screens/add_case_screen.dart';
 import 'package:courtdiary/modules/case/screens/case_screen.dart';
+import 'package:courtdiary/modules/case/screens/case_search_screen.dart';
 import 'package:courtdiary/themes/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +22,7 @@ class LayoutScreen extends StatelessWidget {
   LayoutScreen({super.key});
   final themeController = Get.find<ThemeController>();
   final layoutController = Get.put(LayoutController());
+  final _caseController = Get.put(CaseController());
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,13 @@ class LayoutScreen extends StatelessWidget {
             titleSpacing: 0,
             title: const Text('Court Dairy'),
             actions: [
+              IconButton(
+                onPressed: () {
+                  Get.to(() => CaseSearchScreen(),
+                      transition: Transition.downToUp);
+                },
+                icon: const Icon(Icons.search),
+              ),
               IconButton(
                 onPressed: () {
                   Get.to(() => CalculatorScreen(), fullscreenDialog: true);
@@ -63,7 +74,8 @@ class LayoutScreen extends StatelessWidget {
                     if (!ActivationGuard.check()) return;
                     final index = DefaultTabController.of(context).index;
                     if (index == 0) {
-                      // add later
+                      Get.to(() => const AddCaseScreen(),
+                          fullscreenDialog: true);
                     } else if (index == 1) {
                       Get.to(() => const AddPartyScreen(),
                           fullscreenDialog: true);
