@@ -104,8 +104,10 @@ class LayoutScreen extends StatelessWidget {
               Expanded(
                 child: Column(
                   children: [
-                    const TabBar(
-                      tabs: [
+                    TabBar(
+                      dividerColor:
+                          Theme.of(context).colorScheme.outline,
+                      tabs: const [
                         Tab(text: AppTexts.tabParty),
                         Tab(text: AppTexts.tabCase),
                         Tab(text: AppTexts.tabAccounts),
