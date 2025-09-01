@@ -6,6 +6,7 @@ import 'package:courtdiary/services/local_notification.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import '../modules/case/screens/overdue_cases_screen.dart';
+import '../modules/case/screens/tomorrow_cases_screen.dart';
 import '../utils/app_config.dart';
 
 class AppInitializer {
@@ -34,6 +35,8 @@ class AppInitializer {
     await localNoti.initialize(onTap: (payload) {
       if (payload == 'overdue_cases') {
         Get.to(() => const OverdueCasesScreen());
+      } else if (payload == 'tomorrow_cases') {
+        Get.to(() => const TomorrowCasesScreen());
       }
     });
     await localNoti.scheduleDailyNotification(

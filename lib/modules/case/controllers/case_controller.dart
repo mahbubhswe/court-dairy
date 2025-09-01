@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../../models/court_case.dart';
 import '../../../services/app_firebase.dart';
+import '../../../services/local_notification.dart';
 import '../services/case_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,6 +10,7 @@ class CaseController extends GetxController {
   final cases = <CourtCase>[].obs;
   final isLoading = true.obs;
   final selectedFilter = 'today'.obs;
+  final _localNoti = LocalNotificationService();
 
   DateTime? _nextDate(CourtCase c) {
     if (c.hearingDates.isEmpty) return null;
@@ -104,6 +106,7 @@ class CaseController extends GetxController {
       CaseService.getCases(user.uid).listen((event) {
         cases.value = event;
         isLoading.value = false;
+        _scheduleTomorrowNotification();
       });
     } else {
       isLoading.value = false;
@@ -132,5 +135,21 @@ class CaseController extends GetxController {
       cases[idx].hearingDates = updated;
       cases.refresh();
     }
+  }
+
+  Future<void> _scheduleTomorrowNotification() async {
+    final tomorrow = tomorrowCases;
+    final title = "Tomorrow's Cases";
+    final body = tomorrow.isEmpty
+        ? 'No cases scheduled for tomorrow'
+        : tomorrow.map((c) => c.caseTitle).join(', ');
+    await _localNoti.scheduleDailyAtTime(
+      id: 2,
+      title: title,
+      body: body,
+      hour: 16,
+      minute: 0,
+      payload: 'tomorrow_cases',
+    );
   }
 }
