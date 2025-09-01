@@ -12,6 +12,7 @@ import '../../../screens/customer_service_screen.dart';
 import '../../../constants/app_texts.dart';
 import '../../accounts/screens/add_transaction_screen.dart';
 import '../../case/screens/case_fullscreen_screen.dart';
+import '../../case/screens/case_calendar_screen.dart';
 import '../../party/screens/add_party_screen.dart';
 import '../../party/screens/party_screen.dart';
 import '../widgets/app_drawer.dart';
@@ -49,6 +50,13 @@ class LayoutScreen extends StatelessWidget {
                 },
                 icon: const Icon(HugeIcons.strokeRoundedArrowAllDirection),
                 tooltip: 'Cases Fullscreen',
+              ),
+              IconButton(
+                onPressed: () {
+                  Get.to(() => CaseCalendarScreen(), fullscreenDialog: true);
+                },
+                icon: const Icon(HugeIcons.strokeRoundedCalendar01),
+                tooltip: 'Cases Calendar',
               ),
               IconButton(
                 onPressed: () {

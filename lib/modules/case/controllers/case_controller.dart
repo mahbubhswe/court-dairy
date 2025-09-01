@@ -56,6 +56,19 @@ class CaseController extends GetxController {
     }).toList();
   }
 
+  Map<int, int> get monthCaseCounts {
+    final now = DateTime.now();
+    final map = <int, int>{};
+    for (final c in cases) {
+      final d = _nextDate(c);
+      if (d == null) continue;
+      if (d.year == now.year && d.month == now.month) {
+        map[d.day] = (map[d.day] ?? 0) + 1;
+      }
+    }
+    return map;
+  }
+
   List<CourtCase> get overdueCases {
     final now = DateTime.now();
     return cases.where((c) {
