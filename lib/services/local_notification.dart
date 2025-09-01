@@ -1,4 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class LocalNotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -7,6 +9,7 @@ class LocalNotificationService {
 
   Future<void> initialize({Function(String?)? onTap}) async {
     if (isInit) return;
+    tz.initializeTimeZones();
     const androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosInitializationSettings = DarwinInitializationSettings();
@@ -48,5 +51,34 @@ class LocalNotificationService {
     notificationsPlugin.periodicallyShow(id, title, body, RepeatInterval.daily,
         notificationDetails(),
         androidAllowWhileIdle: true, payload: payload);
+  }
+
+  Future<void> scheduleDailyAtTime({
+    required int id,
+    required String title,
+    required String body,
+    required int hour,
+    required int minute,
+    String? payload,
+  }) async {
+    await notificationsPlugin.cancel(id);
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduledDate = tz.TZDateTime(
+        tz.local, now.year, now.month, now.day, hour, minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    await notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledDate,
+      notificationDetails(),
+      androidAllowWhileIdle: true,
+      matchDateTimeComponents: DateTimeComponents.time,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      payload: payload,
+    );
   }
 }
