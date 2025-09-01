@@ -41,9 +41,7 @@ class AddCaseScreen extends StatelessWidget {
                       onSelected: (_) => selected.value = t,
                       shape: StadiumBorder(
                         side: BorderSide(
-                          color: isSelected
-                              ? Colors.transparent
-                              : appBarColor,
+                          color: isSelected ? Colors.transparent : appBarColor,
                         ),
                       ),
                     ),
@@ -149,7 +147,7 @@ class AddCaseScreen extends StatelessWidget {
               FormStep(
                 title: const Text('Case Info'),
                 content: Column(
-                  spacing: 5,
+                  spacing: 10,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -235,7 +233,7 @@ class AddCaseScreen extends StatelessWidget {
               FormStep(
                 title: const Text('More'),
                 content: Column(
-                  spacing: 5,
+                  spacing: 10,
                   children: [
                     Obx(() => ListTile(
                           title: Text(controller.hearingDate.value == null
