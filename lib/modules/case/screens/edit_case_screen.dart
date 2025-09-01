@@ -1,4 +1,5 @@
 import '../../../widgets/dynamic_multi_step_form.dart';
+import '../../../widgets/app_type_ahead_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
@@ -67,9 +68,12 @@ class EditCaseScreen extends StatelessWidget {
                   controller: controller.caseTitle,
                   decoration: const InputDecoration(labelText: 'Case Title'),
                 ),
-                TextField(
+                AppTypeAheadField(
                   controller: controller.courtName,
-                  decoration: const InputDecoration(labelText: 'Court Name'),
+                  label: 'Court Name',
+                  hintText: 'Enter court name',
+                  prefixIcon: Icons.account_balance,
+                  suggestions: controller.allCourtNames,
                 ),
                 TextField(
                   controller: controller.caseNumber,
@@ -137,9 +141,12 @@ class EditCaseScreen extends StatelessWidget {
                         if (picked != null) controller.hearingDate.value = picked;
                       },
                     )),
-                TextField(
+                AppTypeAheadField(
                   controller: controller.judgeName,
-                  decoration: const InputDecoration(labelText: 'Judge Name'),
+                  label: 'Judge Name',
+                  hintText: 'Enter judge name',
+                  prefixIcon: Icons.gavel,
+                  suggestions: controller.allJudgeNames,
                 ),
                 TextField(
                   controller: controller.courtOrder,

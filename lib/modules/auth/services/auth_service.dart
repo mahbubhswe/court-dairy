@@ -34,7 +34,8 @@ class AuthService {
             subFor: 0,
             subStartsAt: DateTime.now(),
             isActive: true,
-            courts: []);
+            courts: [],
+            judges: []);
 
         await _firestore
             .collection(AppCollections.lawyers)

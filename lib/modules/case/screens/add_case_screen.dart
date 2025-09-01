@@ -2,6 +2,7 @@ import 'package:hugeicons/hugeicons.dart';
 
 import '../../../widgets/dynamic_multi_step_form.dart';
 import '../../../widgets/app_text_from_field.dart';
+import '../../../widgets/app_type_ahead_field.dart';
 import '../../../constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -169,11 +170,12 @@ class AddCaseScreen extends StatelessWidget {
                       hintText: 'Enter case title',
                       prefixIcon: Icons.title,
                     ),
-                    AppTextFromField(
+                    AppTypeAheadField(
                       controller: controller.courtName,
                       label: 'Court Name',
                       hintText: 'Enter court name',
                       prefixIcon: Icons.account_balance,
+                      suggestions: controller.allCourtNames,
                     ),
                     AppTextFromField(
                       controller: controller.caseNumber,
@@ -258,11 +260,12 @@ class AddCaseScreen extends StatelessWidget {
                               controller.hearingDate.value = picked;
                           },
                         )),
-                    AppTextFromField(
+                    AppTypeAheadField(
                       controller: controller.judgeName,
                       label: 'Judge Name',
                       hintText: 'Enter judge name',
                       prefixIcon: Icons.gavel,
+                      suggestions: controller.allJudgeNames,
                     ),
                     AppTextFromField(
                       controller: controller.courtOrder,

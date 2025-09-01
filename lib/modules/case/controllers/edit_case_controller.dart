@@ -7,6 +7,7 @@ import '../../../models/party.dart';
 import '../../../services/app_firebase.dart';
 import '../../party/services/party_service.dart';
 import '../services/case_service.dart';
+import '../../../constants/app_collections.dart';
 
 class EditCaseController extends GetxController {
   EditCaseController(this.caseModel);
@@ -33,6 +34,9 @@ class EditCaseController extends GetxController {
   final caseTypes = ['Civil', 'Criminal', 'Family', 'Other'];
 
   final RxBool isLoading = false.obs;
+
+  final allCourtNames = <String>[].obs;
+  final allJudgeNames = <String>[].obs;
 
   @override
   void onInit() {
@@ -62,6 +66,40 @@ class EditCaseController extends GetxController {
       PartyService.getParties(user.uid).listen((list) {
         parties.value = list;
       });
+      _loadSuggestions(user.uid);
+    }
+  }
+
+  Future<void> _loadSuggestions(String uid) async {
+    final doc = await AppFirebase()
+        .firestore
+        .collection(AppCollections.lawyers)
+        .doc(uid)
+        .get();
+    final data = doc.data();
+    if (data != null) {
+      allCourtNames.assignAll(List<String>.from(data['courts'] ?? []));
+      allJudgeNames.assignAll(List<String>.from(data['judges'] ?? []));
+    }
+  }
+
+  Future<void> _updateSuggestions(
+      String uid, String court, String judge) async {
+    final updates = <String, dynamic>{};
+    if (court.isNotEmpty && !allCourtNames.contains(court)) {
+      allCourtNames.add(court);
+      updates['courts'] = FieldValue.arrayUnion([court]);
+    }
+    if (judge.isNotEmpty && !allJudgeNames.contains(judge)) {
+      allJudgeNames.add(judge);
+      updates['judges'] = FieldValue.arrayUnion([judge]);
+    }
+    if (updates.isNotEmpty) {
+      await AppFirebase()
+          .firestore
+          .collection(AppCollections.lawyers)
+          .doc(uid)
+          .update(updates);
     }
   }
 
@@ -90,6 +128,8 @@ class EditCaseController extends GetxController {
         ..caseSummary = caseSummary.text.trim();
 
       await CaseService.updateCase(caseModel, user.uid);
+      await _updateSuggestions(
+          user.uid, caseModel.courtName, caseModel.judgeName);
       return true;
     } catch (e) {
       return false;
