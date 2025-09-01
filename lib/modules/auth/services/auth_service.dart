@@ -26,7 +26,6 @@ class AuthService {
       final fcmToken = await AppFirebase().getFcmToken();
       if (fcmToken != null) {
         Lawyer newLawyer = Lawyer(
-            name: "Court Dairy",
             address: "Dhaka, Bangladesh",
             fcmToken: fcmToken,
             phone: "01623131102",

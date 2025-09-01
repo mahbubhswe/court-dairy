@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import '../../../themes/theme_controller.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../controllers/layout_controller.dart';
 
@@ -91,8 +90,9 @@ class AppDrawer extends StatelessWidget {
                               : null,
                           child: user.photoURL == null
                               ? Text(
-                                  shop.name.isNotEmpty
-                                      ? shop.name[0].toUpperCase()
+                                  user.displayName != null &&
+                                          user.displayName!.isNotEmpty
+                                      ? user.displayName![0].toUpperCase()
                                       : '?',
                                   style: Theme.of(context)
                                       .textTheme
@@ -102,7 +102,7 @@ class AppDrawer extends StatelessWidget {
                         ),
                         const SizedBox(height: 18),
                         Text(
-                          user.displayName ?? shop.name,
+                          user.displayName ?? "Not Found",
                           style:
                               Theme.of(context).textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,

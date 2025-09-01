@@ -2,7 +2,6 @@ import 'package:courtdiary/services/firebase_export.dart';
 
 class Lawyer {
   String? docId;
-  final String name;
   final String address;
   final String fcmToken;
   final String phone;
@@ -15,7 +14,6 @@ class Lawyer {
 
   Lawyer({
     this.docId,
-    required this.name,
     required this.address,
     required this.fcmToken,
     required this.phone,
@@ -24,13 +22,12 @@ class Lawyer {
     required this.isActive,
     required this.subFor,
     required this.subStartsAt,
-    this.courts = const [], // ✅ Default empty list
+    this.courts = const [], 
   });
 
   /// Convert to Firestore Map
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
       'address': address,
       'fcmToken': fcmToken,
       'phone': phone,
@@ -47,7 +44,6 @@ class Lawyer {
   factory Lawyer.fromMap(Map<String, dynamic> map, {String? docId}) {
     return Lawyer(
       docId: docId,
-      name: map['name'] ?? '',
       address: map['address'] ?? '',
       fcmToken: map['fcmToken'] ?? '',
       phone: map['phone'] ?? '',
