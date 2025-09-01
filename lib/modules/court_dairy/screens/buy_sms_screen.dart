@@ -51,7 +51,7 @@ class BuySmsView extends StatelessWidget {
                     child: Container(
                       constraints: const BoxConstraints(maxWidth: 560),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Header summary card
                           Container(

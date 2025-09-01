@@ -19,6 +19,7 @@ class AllCaseScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('All Cases')),
       body: Column(
+        spacing: 10,
         children: [
           Padding(
             padding: const EdgeInsets.all(8),
@@ -34,7 +35,6 @@ class AllCaseScreen extends StatelessWidget {
                 children: [
                   const Text('Case Type',
                       style: TextStyle(fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 8),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -43,16 +43,15 @@ class AllCaseScreen extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: ChoiceChip(
-                            label: Text(t,
-                                style: const TextStyle(fontSize: 12)),
+                            label:
+                                Text(t, style: const TextStyle(fontSize: 12)),
                             selected: selected,
                             onSelected: (_) => typeFilter.value = t,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                               side: BorderSide(
-                                color: selected
-                                    ? Colors.transparent
-                                    : appBarColor,
+                                color:
+                                    selected ? Colors.transparent : appBarColor,
                               ),
                             ),
                             materialTapTargetSize:
@@ -65,10 +64,8 @@ class AllCaseScreen extends StatelessWidget {
                       }).toList(),
                     ),
                   ),
-                  const SizedBox(height: 12),
                   const Text('Court Type',
                       style: TextStyle(fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 8),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -77,16 +74,15 @@ class AllCaseScreen extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: ChoiceChip(
-                            label: Text(t,
-                                style: const TextStyle(fontSize: 12)),
+                            label:
+                                Text(t, style: const TextStyle(fontSize: 12)),
                             selected: selected,
                             onSelected: (_) => courtFilter.value = t,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                               side: BorderSide(
-                                color: selected
-                                    ? Colors.transparent
-                                    : appBarColor,
+                                color:
+                                    selected ? Colors.transparent : appBarColor,
                               ),
                             ),
                             materialTapTargetSize:

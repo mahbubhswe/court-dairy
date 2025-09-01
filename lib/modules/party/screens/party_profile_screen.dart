@@ -26,7 +26,7 @@ class PartyProfileScreen extends StatelessWidget {
             SingleChildScrollView(
               padding: const EdgeInsets.all(8),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header card with avatar and name
                   Container(
@@ -41,16 +41,19 @@ class PartyProfileScreen extends StatelessWidget {
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 24, horizontal: 16),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CircleAvatar(
                           radius: 48,
-                          backgroundImage: (party.photoUrl != null && party.photoUrl!.isNotEmpty)
+                          backgroundImage: (party.photoUrl != null &&
+                                  party.photoUrl!.isNotEmpty)
                               ? NetworkImage(party.photoUrl!)
                               : null,
-                          child: (party.photoUrl == null || party.photoUrl!.isEmpty)
+                          child: (party.photoUrl == null ||
+                                  party.photoUrl!.isEmpty)
                               ? const Icon(Icons.person, size: 48)
                               : null,
                         ),
@@ -87,7 +90,8 @@ class PartyProfileScreen extends StatelessWidget {
                     ),
                     elevation: 0.5,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       child: Column(
                         children: [
                           Row(
@@ -102,7 +106,8 @@ class PartyProfileScreen extends StatelessWidget {
                             children: [
                               const Icon(Icons.call_outlined, size: 20),
                               const SizedBox(width: 8),
-                              Expanded(child: appInfoRow('মোবাইল', party.phone)),
+                              Expanded(
+                                  child: appInfoRow('মোবাইল', party.phone)),
                             ],
                           ),
                           const Divider(height: 20),
@@ -111,7 +116,8 @@ class PartyProfileScreen extends StatelessWidget {
                             children: [
                               const Icon(Icons.location_on_outlined, size: 20),
                               const SizedBox(width: 8),
-                              Expanded(child: appInfoRow('ঠিকানা', party.address)),
+                              Expanded(
+                                  child: appInfoRow('ঠিকানা', party.address)),
                             ],
                           ),
                         ],
