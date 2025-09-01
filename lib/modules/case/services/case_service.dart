@@ -106,4 +106,25 @@ class CaseService {
         .doc(docId)
         .update({'caseStatus': status});
   }
+
+  static Future<void> updateNextHearingDate(
+      String docId, String userId, Timestamp newDate) async {
+    final docRef = _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.cases)
+        .doc(docId);
+
+    await _firestore.runTransaction((tx) async {
+      final snap = await tx.get(docRef);
+      final data = snap.data() as Map<String, dynamic>?;
+      final dates = List<Timestamp>.from(data?['hearingDates'] ?? []);
+      if (dates.isNotEmpty) {
+        dates[0] = newDate;
+      } else {
+        dates.add(newDate);
+      }
+      tx.update(docRef, {'hearingDates': dates});
+    });
+  }
 }

@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+
+import '../../../models/court_case.dart';
+import '../controllers/case_controller.dart';
+
+class CaseUpdateTile extends StatelessWidget {
+  const CaseUpdateTile({super.key, required this.caseItem});
+
+  final CourtCase caseItem;
+
+  String _format(DateTime date) => DateFormat('dd MMM yyyy').format(date);
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<CaseController>();
+    final lastDate =
+        caseItem.hearingDates.isNotEmpty ? caseItem.hearingDates.first.toDate() : null;
+    return Card(
+      child: ListTile(
+        title: Text(caseItem.caseTitle),
+        subtitle: Text(
+          'Case No: ${caseItem.caseNumber}\nLast date: ${lastDate != null ? _format(lastDate) : 'N/A'}',
+        ),
+        isThreeLine: true,
+        trailing: IconButton(
+          icon: const Icon(Icons.edit_calendar_outlined),
+          onPressed: () async {
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+            );
+            if (picked != null) {
+              await controller.updateNextHearingDate(caseItem, picked);
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+

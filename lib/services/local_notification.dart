@@ -5,7 +5,7 @@ class LocalNotificationService {
   bool isInit = false;
   bool get isInited => isInit;
 
-  Future<void> initialize() async {
+  Future<void> initialize({Function(String?)? onTap}) async {
     if (isInit) return;
     const androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -13,7 +13,10 @@ class LocalNotificationService {
 
     const initSetting = InitializationSettings(
         android: androidInitializationSettings, iOS: iosInitializationSettings);
-    await notificationsPlugin.initialize(initSetting);
+    await notificationsPlugin.initialize(initSetting,
+        onDidReceiveNotificationResponse: (details) {
+      onTap?.call(details.payload);
+    });
     isInit = true;
   }
 
@@ -33,5 +36,17 @@ class LocalNotificationService {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     int id = timestamp % 2147483647;
     notificationsPlugin.show(id, title, body, notificationDetails());
+  }
+
+  Future<void> scheduleDailyNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    await notificationsPlugin.cancel(id);
+    notificationsPlugin.periodicallyShow(id, title, body, RepeatInterval.daily,
+        notificationDetails(),
+        androidAllowWhileIdle: true, payload: payload);
   }
 }

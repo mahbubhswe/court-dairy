@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../models/court_case.dart';
 import '../../../services/app_firebase.dart';
 import '../services/case_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CaseController extends GetxController {
   final cases = <CourtCase>[].obs;
@@ -55,6 +56,15 @@ class CaseController extends GetxController {
     }).toList();
   }
 
+  List<CourtCase> get overdueCases {
+    final now = DateTime.now();
+    return cases.where((c) {
+      final d = _nextDate(c);
+      if (d == null) return false;
+      return d.isBefore(now);
+    }).toList();
+  }
+
   List<CourtCase> get filteredCases {
     switch (selectedFilter.value) {
       case 'tomorrow':
@@ -91,5 +101,23 @@ class CaseController extends GetxController {
     final user = AppFirebase().currentUser;
     if (user == null) return;
     await CaseService.deleteCase(docId, user.uid);
+  }
+
+  Future<void> updateNextHearingDate(CourtCase c, DateTime date) async {
+    final user = AppFirebase().currentUser;
+    if (user == null || c.docId == null) return;
+    final ts = Timestamp.fromDate(date);
+    await CaseService.updateNextHearingDate(c.docId!, user.uid, ts);
+    final idx = cases.indexWhere((e) => e.docId == c.docId);
+    if (idx != -1) {
+      final updated = List<Timestamp>.from(cases[idx].hearingDates);
+      if (updated.isNotEmpty) {
+        updated[0] = ts;
+      } else {
+        updated.add(ts);
+      }
+      cases[idx].hearingDates = updated;
+      cases.refresh();
+    }
   }
 }
