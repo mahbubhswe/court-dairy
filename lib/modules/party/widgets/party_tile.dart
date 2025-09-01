@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/party.dart';
@@ -73,7 +74,7 @@ class PartyTile extends StatelessWidget {
             IconButton(
               tooltip: 'পেমেন্ট',
               icon: const Icon(
-                Icons.payment_rounded,
+                HugeIcons.strokeRoundedPayment02,
                 color: Colors.green,
               ),
               color: Theme.of(context).colorScheme.primary,
@@ -86,7 +87,7 @@ class PartyTile extends StatelessWidget {
             ),
             IconButton(
               tooltip: 'কল করুন',
-              icon: const Icon(Icons.call),
+              icon: const Icon(HugeIcons.strokeRoundedCall02),
               color: Colors.green,
               onPressed: () async {
                 final uri = Uri(scheme: 'tel', path: party.phone);

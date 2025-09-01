@@ -20,6 +20,7 @@ class AllCaseScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('All Cases')),
       body: Column(
         spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(8),
@@ -41,7 +42,7 @@ class AllCaseScreen extends StatelessWidget {
                       children: types.map((t) {
                         final selected = typeFilter.value == t;
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.only(right: 8),
                           child: ChoiceChip(
                             label:
                                 Text(t, style: const TextStyle(fontSize: 12)),
@@ -72,7 +73,7 @@ class AllCaseScreen extends StatelessWidget {
                       children: courts.map((t) {
                         final selected = courtFilter.value == t;
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.only(right: 8),
                           child: ChoiceChip(
                             label:
                                 Text(t, style: const TextStyle(fontSize: 12)),

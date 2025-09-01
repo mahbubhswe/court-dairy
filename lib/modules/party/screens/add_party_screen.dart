@@ -17,6 +17,7 @@ class AddPartyScreen extends StatelessWidget {
       Get.delete<AddPartyController>();
     }
     final controller = Get.put(AddPartyController());
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('নতুন পক্ষ যুক্ত করুন'),
@@ -32,10 +33,11 @@ class AddPartyScreen extends StatelessWidget {
                 final image = controller.photo.value;
                 return CircleAvatar(
                   radius: 50,
+                  backgroundColor: cs.surfaceContainerHighest,
                   backgroundImage:
                       image != null ? FileImage(File(image.path)) : null,
                   child: image == null
-                      ? const Icon(Icons.camera_alt, size: 40)
+                      ? Icon(Icons.camera_alt, size: 40, color: cs.onSurface)
                       : null,
                 );
               }),

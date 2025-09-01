@@ -84,7 +84,14 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
               return Row(
                 children: [
                   if (_currentStep > 0)
-                    TextButton(onPressed: _back, child: const Text('Back')),
+                    TextButton(
+                      onPressed: _back,
+                      style: TextButton.styleFrom(
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onSurface,
+                      ),
+                      child: const Text('Back'),
+                    ),
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: widget.isLoading ? null : _next,
@@ -129,7 +136,13 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
             child: Row(
               children: [
                 if (_currentStep > 0)
-                  TextButton(onPressed: _back, child: const Text('Back')),
+                  TextButton(
+                    onPressed: _back,
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    child: const Text('Back'),
+                  ),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: widget.isLoading ? null : _next,

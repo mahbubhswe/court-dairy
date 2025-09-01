@@ -22,6 +22,9 @@ class AddTransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Set sensible defaults
+    type.value = type.value ?? 'Deposit';
+    paymentMethod.value = paymentMethod.value ?? 'Cash';
     amount.addListener(_validate);
     ever(type, (_) => _validate());
     ever(paymentMethod, (_) => _validate());

@@ -1,3 +1,4 @@
+import 'package:courtdiary/screens/account_reset_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -195,7 +196,7 @@ class AppDrawer extends StatelessWidget {
                     icon: Icons.account_balance_wallet,
                     title: 'অ্যাকাউন্ট রিসেট',
                     subtitle: 'আপনার সম্পূর্ণ অ্যাকাউন্ট ডেটা রিসেট করুন',
-                    onTap: () {},
+                    onTap: () => Get.to((AccountResetScreen())),
                   ),
 
                   const SizedBox(height: 36),

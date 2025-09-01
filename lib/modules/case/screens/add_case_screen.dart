@@ -1,3 +1,5 @@
+import 'package:hugeicons/hugeicons.dart';
+
 import '../../../widgets/dynamic_multi_step_form.dart';
 import '../../../widgets/app_text_from_field.dart';
 import '../../../constants/app_colors.dart';
@@ -195,7 +197,8 @@ class AddCaseScreen extends StatelessWidget {
                                   .toString()
                                   .split(' ')
                                   .first),
-                          trailing: const Icon(Icons.calendar_today),
+                          trailing:
+                              const Icon(HugeIcons.strokeRoundedCalendar01),
                           onTap: () async {
                             final picked = await showDatePicker(
                                 context: context,
@@ -242,7 +245,8 @@ class AddCaseScreen extends StatelessWidget {
                                   .toString()
                                   .split(' ')
                                   .first),
-                          trailing: const Icon(Icons.calendar_today),
+                          trailing:
+                              const Icon(HugeIcons.strokeRoundedCalendar01),
                           onTap: () async {
                             final picked = await showDatePicker(
                                 context: context,
@@ -267,23 +271,6 @@ class AddCaseScreen extends StatelessWidget {
                       prefixIcon: Icons.article_outlined,
                       isMaxLines: 3,
                     ),
-                    ElevatedButton(
-                      onPressed: controller.pickDocuments,
-                      child: const Text('Upload Documents'),
-                    ),
-                    const SizedBox(height: 8),
-                    Obx(() => Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: controller.documents
-                              .map((url) => Image.network(
-                                    url,
-                                    width: 80,
-                                    height: 80,
-                                    fit: BoxFit.cover,
-                                  ))
-                              .toList(),
-                        )),
                   ],
                 ),
               ),

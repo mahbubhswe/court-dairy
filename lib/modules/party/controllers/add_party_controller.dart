@@ -47,13 +47,16 @@ class AddPartyController extends GetxController {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Get.theme.colorScheme.primary.withOpacity(0.1),
+                  color: Get.theme.colorScheme.primaryContainer,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: Get.theme.colorScheme.primary),
+                child: Icon(icon, color: Get.theme.colorScheme.onPrimaryContainer),
               ),
               const SizedBox(height: 8),
-              Text(label),
+              Text(
+                label,
+                style: TextStyle(color: Get.theme.colorScheme.onSurface),
+              ),
             ],
           ),
         ),
@@ -78,7 +81,7 @@ class AddPartyController extends GetxController {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Get.theme.dividerColor,
+                  color: Get.theme.colorScheme.onSurface,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
