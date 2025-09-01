@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:courtdiary/services/app_update_service.dart';
 import 'package:courtdiary/services/fcm_service.dart';
 import 'package:courtdiary/services/local_storage.dart';
+import 'package:courtdiary/services/local_notification.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
+import '../modules/case/screens/overdue_cases_screen.dart';
 import '../utils/app_config.dart';
 
 class AppInitializer {
@@ -26,7 +29,21 @@ class AppInitializer {
     // 5) FCM token initialization and refresh listener
     await FcmService().initialize();
 
-    // 6) Check for app updates in background
+    // 6) Daily reminder to update hearing dates
+    final localNoti = LocalNotificationService();
+    await localNoti.initialize(onTap: (payload) {
+      if (payload == 'overdue_cases') {
+        Get.to(() => const OverdueCasesScreen());
+      }
+    });
+    await localNoti.scheduleDailyNotification(
+      id: 1,
+      title: 'Update hearing dates',
+      body: 'Tap to update past hearing dates',
+      payload: 'overdue_cases',
+    );
+
+    // 7) Check for app updates in background
     await AppUpdateService.checkForAppUpdate();
   }
 }
