@@ -22,7 +22,9 @@ class AddCaseController extends GetxController {
 
   final RxnString selectedCaseType = RxnString();
   final RxnString selectedCourtType = RxnString();
-  final RxnString selectedCaseStatus = RxnString();
+  /// Default to the first case status option so the dropdown shows a
+  /// preselected value when the add case screen opens.
+  final RxnString selectedCaseStatus = RxnString('Ongoing');
   final Rx<DateTime?> filedDate = Rx<DateTime?>(null);
   final Rx<DateTime?> hearingDate = Rx<DateTime?>(null);
 
