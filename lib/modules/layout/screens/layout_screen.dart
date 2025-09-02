@@ -66,15 +66,8 @@ class _LayoutScreenState extends State<LayoutScreen>
     }
   }
 
-  bool _isEveningToMorningWindow(DateTime now) {
-    // Show between 16:00 (4 PM) and 08:59 next day
-    return now.hour >= 16 || now.hour < 9;
-  }
-
   Future<void> _maybeShowOverdueSheet() async {
     if (!mounted || _isShowingOverdueSheet) return;
-    final now = DateTime.now();
-    if (!_isEveningToMorningWindow(now)) return;
 
     // If still loading, skip this attempt.
     if (_caseController.isLoading.value) return;
