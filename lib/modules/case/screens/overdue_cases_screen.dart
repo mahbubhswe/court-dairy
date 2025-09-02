@@ -12,7 +12,7 @@ class OverdueCasesScreen extends StatelessWidget {
     final controller = Get.put(CaseController());
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pending Hearing Updates'),
+        title: const Text('বকেয়া হিয়ারিং আপডেট'),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -20,7 +20,7 @@ class OverdueCasesScreen extends StatelessWidget {
         }
         final list = controller.overdueCases;
         if (list.isEmpty) {
-          return const Center(child: Text('No pending cases'));
+          return const Center(child: Text('কোনো বকেয়া কেস নেই'));
         }
         return ListView.builder(
           itemCount: list.length,
@@ -30,4 +30,3 @@ class OverdueCasesScreen extends StatelessWidget {
     );
   }
 }
-
