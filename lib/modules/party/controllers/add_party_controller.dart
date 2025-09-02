@@ -19,6 +19,7 @@ class AddPartyController extends GetxController {
 
   final RxBool isLoading = false.obs;
   final RxBool enableBtn = false.obs;
+  final RxBool isSendSms = true.obs;
 
   @override
   void onInit() {
@@ -146,6 +147,7 @@ class AddPartyController extends GetxController {
         address: address.text.trim(),
         lawyerId: user.uid,
         photoUrl: photoUrl,
+        isSendSms: isSendSms.value,
       );
 
       await PartyService.addParty(party);

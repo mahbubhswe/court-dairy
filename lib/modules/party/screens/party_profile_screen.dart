@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../models/party.dart';
-import '../../../widgets/app_button.dart';
 import '../../../widgets/app_info_row.dart';
 import '../controllers/party_profile_controller.dart';
 import 'edit_party_screen.dart';
@@ -18,6 +17,25 @@ class PartyProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('পক্ষ প্রোফাইল'),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'edit') {
+                if (ActivationGuard.check()) {
+                  Get.to(() => EditPartyScreen(party: party));
+                }
+              } else if (value == 'delete') {
+                if (ActivationGuard.check()) {
+                  controller.deleteParty();
+                }
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(value: 'edit', child: Text('এডিট')),
+              PopupMenuItem(value: 'delete', child: Text('ডিলিট')),
+            ],
+          ),
+        ],
       ),
       body: Obx(() {
         final theme = Theme.of(context);
@@ -126,39 +144,21 @@ class PartyProfileScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 16),
-
-                  // Actions
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppButton(
-                          label: 'এডিট',
-                          onPressed: () {
-                            if (ActivationGuard.check()) {
-                              Get.to(() => EditPartyScreen(party: party));
-                            }
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: AppButton(
-                          label: 'ডিলিট',
-                          onPressed: controller.isDeleting.value
-                              ? null
-                              : () {
-                                  if (ActivationGuard.check()) {
-                                    controller.deleteParty();
-                                  }
-                                },
-                        ),
-                      ),
-                    ],
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0.5,
+                    child: Obx(() => SwitchListTile(
+                          title: const Text('এসএমএস নোটিফায়ার'),
+                          value: controller.isSendSms.value,
+                          onChanged: controller.updateSms,
+                        )),
                   ),
                 ],
               ),
             ),
-            if (controller.isDeleting.value)
+            if (controller.isDeleting.value || controller.isUpdatingSms.value)
               const Center(child: CircularProgressIndicator()),
           ],
         );
