@@ -7,7 +7,6 @@ import '../../../models/court_case.dart';
 import '../../../widgets/app_info_row.dart';
 import '../../../widgets/app_button.dart';
 import '../../../utils/activation_guard.dart';
-import '../../../widgets/app_text_from_field.dart';
 import '../../../services/app_firebase.dart';
 import '../services/case_service.dart';
 import '../controllers/case_controller.dart';
@@ -18,7 +17,6 @@ class CaseDetailScreen extends StatelessWidget {
 
   final CourtCase caseItem;
   final RxBool isDeleting = false.obs;
-  final TextEditingController orderController = TextEditingController();
 
   String _fmtDate(Timestamp ts) {
     final d = ts.toDate();
@@ -459,10 +457,6 @@ class CaseDetailScreen extends StatelessWidget {
                       Column(
                         children: [
                           ListTile(
-                            leading: CircleAvatar(
-                                child: Text(caseItem.plaintiff.name.isNotEmpty
-                                    ? caseItem.plaintiff.name[0]
-                                    : '?')),
                             title: Text(caseItem.plaintiff.name),
                             subtitle: Text(
                                 'Plaintiff\n${caseItem.plaintiff.phone}\n${caseItem.plaintiff.address}'),
@@ -470,10 +464,6 @@ class CaseDetailScreen extends StatelessWidget {
                           ),
                           const Divider(height: 0),
                           ListTile(
-                            leading: CircleAvatar(
-                                child: Text(caseItem.defendant.name.isNotEmpty
-                                    ? caseItem.defendant.name[0]
-                                    : '?')),
                             title: Text(caseItem.defendant.name),
                             subtitle: Text(
                                 'Defendant\n${caseItem.defendant.phone}\n${caseItem.defendant.address}'),
@@ -495,132 +485,74 @@ class CaseDetailScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: AppTextFromField(
-                                  controller: orderController,
-                                  label: 'Add Court Order',
-                                  hintText: 'Type order and press add',
-                                  prefixIcon: Icons.article_outlined,
-                                  onFieldSubmitted: (text) async {
-                                    final trimmed = text.trim();
-                                    if (trimmed.isEmpty) return;
-                                    PanaraConfirmDialog.show(
-                                      context,
-                                      title: 'নিশ্চিত করুন',
-                                      message: 'কোর্ট অর্ডার যুক্ত করবেন?',
-                                      confirmButtonText: 'হ্যাঁ',
-                                      cancelButtonText: 'না',
-                                      onTapCancel: () =>
-                                          Navigator.of(context).pop(),
-                                      onTapConfirm: () async {
-                                        Navigator.of(context).pop();
-                                        bool ok = false;
-                                        try {
-                                          final user =
-                                              AppFirebase().currentUser;
-                                          final id = caseItem.docId;
-                                          if (user != null && id != null) {
-                                            await CaseService.addCourtOrder(
-                                                id, user.uid, trimmed);
-                                            ok = true;
-                                          }
-                                        } catch (_) {}
-                                        if (ok) orderController.clear();
-                                        PanaraInfoDialog.show(
-                                          context,
-                                          title: ok ? 'সফল হয়েছে' : 'ত্রুটি',
-                                          message: ok
-                                              ? 'কোর্ট অর্ডার যুক্ত করা হয়েছে'
-                                              : 'যুক্ত করতে ব্যর্থ',
-                                          buttonText: 'Okey',
-                                          panaraDialogType: ok
-                                              ? PanaraDialogType.success
-                                              : PanaraDialogType.error,
-                                          barrierDismissible: false,
-                                          onTapDismiss: () =>
-                                              Navigator.of(context).pop(),
-                                        );
-                                      },
-                                      panaraDialogType: PanaraDialogType.normal,
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              ElevatedButton.icon(
-                                onPressed: () async {
-                                  final controllerText =
-                                      TextEditingController();
-                                  final result = await showDialog<String>(
-                                    context: context,
-                                    builder: (ctx) {
-                                      return AlertDialog(
-                                        title: const Text('Add Court Order'),
-                                        content: TextField(
-                                          controller: controllerText,
-                                          decoration: const InputDecoration(
-                                              hintText: 'Enter order'),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(ctx),
-                                              child: const Text('Cancel')),
-                                          TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  ctx,
+                          ElevatedButton.icon(
+                            onPressed: () async {
+                              final controllerText = TextEditingController();
+                              final result = await showDialog<String>(
+                                context: context,
+                                builder: (ctx) {
+                                  return AlertDialog(
+                                    title: const Text('Add Court Order'),
+                                    content: TextField(
+                                      controller: controllerText,
+                                      decoration: const InputDecoration(
+                                          hintText: 'Enter order'),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(ctx),
+                                          child: const Text('Cancel')),
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx,
                                                   controllerText.text.trim()),
-                                              child: const Text('Add')),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  final text = result?.trim();
-                                  if (text == null || text.isEmpty) return;
-                                  PanaraConfirmDialog.show(
-                                    context,
-                                    title: 'নিশ্চিত করুন',
-                                    message: 'কোর্ট অর্ডার যুক্ত করবেন?',
-                                    confirmButtonText: 'হ্যাঁ',
-                                    cancelButtonText: 'না',
-                                    onTapCancel: () =>
-                                        Navigator.of(context).pop(),
-                                    onTapConfirm: () async {
-                                      Navigator.of(context).pop();
-                                      bool ok = false;
-                                      try {
-                                        final user = AppFirebase().currentUser;
-                                        final id = caseItem.docId;
-                                        if (user != null && id != null) {
-                                          await CaseService.addCourtOrder(
-                                              id, user.uid, text);
-                                          ok = true;
-                                        }
-                                      } catch (_) {}
-                                      PanaraInfoDialog.show(
-                                        context,
-                                        title: ok ? 'সফল হয়েছে' : 'ত্রুটি',
-                                        message: ok
-                                            ? 'কোর্ট অর্ডার যুক্ত করা হয়েছে'
-                                            : 'যুক্ত করতে ব্যর্থ',
-                                        buttonText: 'Okey',
-                                        panaraDialogType: ok
-                                            ? PanaraDialogType.success
-                                            : PanaraDialogType.error,
-                                        barrierDismissible: false,
-                                        onTapDismiss: () =>
-                                            Navigator.of(context).pop(),
-                                      );
-                                    },
-                                    panaraDialogType: PanaraDialogType.normal,
+                                          child: const Text('Add')),
+                                    ],
                                   );
                                 },
-                                icon: const Icon(Icons.add),
-                                label: const Text('Add'),
-                              ),
-                            ],
+                              );
+                              final text = result?.trim();
+                              if (text == null || text.isEmpty) return;
+                              PanaraConfirmDialog.show(
+                                context,
+                                title: 'নিশ্চিত করুন',
+                                message: 'কোর্ট অর্ডার যুক্ত করবেন?',
+                                confirmButtonText: 'হ্যাঁ',
+                                cancelButtonText: 'না',
+                                onTapCancel: () =>
+                                    Navigator.of(context).pop(),
+                                onTapConfirm: () async {
+                                  Navigator.of(context).pop();
+                                  bool ok = false;
+                                  try {
+                                    final user = AppFirebase().currentUser;
+                                    final id = caseItem.docId;
+                                    if (user != null && id != null) {
+                                      await CaseService.addCourtOrder(
+                                          id, user.uid, text);
+                                      ok = true;
+                                    }
+                                  } catch (_) {}
+                                  PanaraInfoDialog.show(
+                                    context,
+                                    title: ok ? 'সফল হয়েছে' : 'ত্রুটি',
+                                    message: ok
+                                        ? 'কোর্ট অর্ডার যুক্ত করা হয়েছে'
+                                        : 'যুক্ত করতে ব্যর্থ',
+                                    buttonText: 'Okey',
+                                    panaraDialogType: ok
+                                        ? PanaraDialogType.success
+                                        : PanaraDialogType.error,
+                                    barrierDismissible: false,
+                                    onTapDismiss: () =>
+                                        Navigator.of(context).pop(),
+                                  );
+                                },
+                                panaraDialogType: PanaraDialogType.normal,
+                              );
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add'),
                           ),
                           const SizedBox(height: 12),
                           Obx(() {
