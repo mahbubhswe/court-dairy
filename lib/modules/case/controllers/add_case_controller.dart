@@ -44,6 +44,9 @@ class AddCaseController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Set default case status to the first option
+    selectedCaseStatus.value = caseStatuses.first;
+
     final user = AppFirebase().currentUser;
     if (user != null) {
       PartyService.getParties(user.uid).listen((list) {
