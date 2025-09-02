@@ -64,16 +64,28 @@ class CaseDetailScreen extends StatelessWidget {
       );
     }
 
-    Color _statusColor(String status) {
+    Color _statusBgColor(String status) {
       switch (status.toLowerCase()) {
         case 'ongoing':
-          return theme.colorScheme.primary;
+          return Colors.white;
         case 'disposed':
-          return Colors.orange;
+          return Colors.red;
         case 'completed':
           return Colors.green;
         default:
           return theme.colorScheme.secondary;
+      }
+    }
+
+    Color _statusTextColor(String status) {
+      switch (status.toLowerCase()) {
+        case 'ongoing':
+          return Colors.black;
+        case 'disposed':
+        case 'completed':
+          return Colors.white;
+        default:
+          return theme.colorScheme.onSecondary;
       }
     }
 
@@ -170,8 +182,7 @@ class CaseDetailScreen extends StatelessWidget {
                                 style: TextStyle(fontSize: 14)),
                             Container(
                               decoration: BoxDecoration(
-                                color: _statusColor(caseItem.caseStatus)
-                                    .withOpacity(0.12),
+                                color: _statusBgColor(caseItem.caseStatus),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               padding: const EdgeInsets.symmetric(
@@ -181,7 +192,8 @@ class CaseDetailScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 14,
-                                  color: _statusColor(caseItem.caseStatus),
+                                  color:
+                                      _statusTextColor(caseItem.caseStatus),
                                 ),
                               ),
                             ),
