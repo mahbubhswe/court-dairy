@@ -5,6 +5,7 @@ class Party {
   final String address;
   final String lawyerId;
   final String? photoUrl;
+  final bool isSendSms;
 
   // Constructor
   Party({
@@ -14,6 +15,7 @@ class Party {
     required this.address,
     required this.lawyerId, // Include the new field in the constructor
     this.photoUrl,
+    this.isSendSms = true,
   });
 
   // Method to convert Party object to a Map (for example, to store in a database)
@@ -24,6 +26,7 @@ class Party {
       'address': address,
       'lawyerId': lawyerId, // Include the new field in the map
       'photoUrl': photoUrl,
+      'isSendSms': isSendSms,
     // Include dynamic fields in the map
     };
   }
@@ -37,6 +40,7 @@ class Party {
       address: map['address'],
       lawyerId: map['lawyerId'], // Extract the new field from the map
       photoUrl: map['photoUrl'],
+      isSendSms: map['isSendSms'] ?? true,
     );
 
     return party;

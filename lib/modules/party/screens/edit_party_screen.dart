@@ -65,6 +65,12 @@ class EditPartyScreen extends StatelessWidget {
               prefixIcon: Icons.home,
               isMaxLines: 3,
             ),
+            Obx(() => SwitchListTile(
+                  title: const Text('এসএমএস নোটিফায়ার'),
+                  contentPadding: EdgeInsets.zero,
+                  value: controller.isSendSms.value,
+                  onChanged: (v) => controller.isSendSms.value = v,
+                )),
             const SizedBox(height: 20),
           ],
         ),

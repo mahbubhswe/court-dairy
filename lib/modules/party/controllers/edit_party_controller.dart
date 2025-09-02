@@ -22,6 +22,7 @@ class EditPartyController extends GetxController {
 
   final RxBool isLoading = false.obs;
   final RxBool enableBtn = false.obs;
+  final RxBool isSendSms = true.obs;
 
   @override
   void onInit() {
@@ -29,6 +30,7 @@ class EditPartyController extends GetxController {
     name.text = party.name;
     phone.text = party.phone;
     address.text = party.address;
+    isSendSms.value = party.isSendSms;
 
     name.addListener(_validate);
     phone.addListener(_validate);
@@ -151,6 +153,7 @@ class EditPartyController extends GetxController {
         address: address.text.trim(),
         lawyerId: user.uid,
         photoUrl: photoUrl,
+        isSendSms: isSendSms.value,
       );
 
       await PartyService.updateParty(updated);
