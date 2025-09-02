@@ -5,7 +5,6 @@ import 'package:panara_dialogs/panara_dialogs.dart';
 
 import '../../../models/court_case.dart';
 import '../../../widgets/app_info_row.dart';
-import '../../../widgets/app_button.dart';
 import '../../../utils/activation_guard.dart';
 import '../../../services/app_firebase.dart';
 import '../services/case_service.dart';
@@ -89,8 +88,11 @@ class CaseDetailScreen extends StatelessWidget {
 
     Future<void> handleMenu(String value) async {
       if (value == 'edit') {
-        Get.to(() => EditCaseScreen(caseItem));
+        if (ActivationGuard.check()) {
+          Get.to(() => EditCaseScreen(caseItem));
+        }
       } else if (value == 'delete') {
+        if (!ActivationGuard.check()) return;
         final id = caseItem.docId;
         if (id == null) return;
         PanaraConfirmDialog.show(
@@ -102,7 +104,9 @@ class CaseDetailScreen extends StatelessWidget {
           onTapCancel: () => Navigator.of(context).pop(),
           onTapConfirm: () async {
             Navigator.of(context).pop();
+            isDeleting.value = true;
             await controller.deleteCase(id);
+            isDeleting.value = false;
             Get.back();
           },
           panaraDialogType: PanaraDialogType.warning,
@@ -113,6 +117,21 @@ class CaseDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(caseItem.caseTitle),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: handleMenu,
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 'edit',
+                child: Text('Edit'),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Text('Delete'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: SafeArea(
         child: Stack(
@@ -660,56 +679,6 @@ class CaseDetailScreen extends StatelessWidget {
                               },
                             )),
 
-                  const SizedBox(height: 16),
-
-                  // Actions section similar to PartyProfileScreen
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppButton(
-                          label: 'এডিট',
-                          onPressed: () {
-                            if (ActivationGuard.check()) {
-                              Get.to(() => EditCaseScreen(caseItem));
-                            }
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Obx(() => AppButton(
-                              label: 'ডিলিট',
-                              isLoading: isDeleting.value,
-                              onPressed: isDeleting.value
-                                  ? null
-                                  : () {
-                                      if (!ActivationGuard.check()) return;
-                                      PanaraConfirmDialog.show(
-                                        context,
-                                        title: 'নিশ্চিত করুন',
-                                        message: 'কেস মুছে ফেলতে চান?',
-                                        confirmButtonText: 'হ্যাঁ',
-                                        cancelButtonText: 'না',
-                                        onTapCancel: () =>
-                                            Navigator.of(context).pop(),
-                                        onTapConfirm: () async {
-                                          Navigator.of(context).pop();
-                                          final id = caseItem.docId;
-                                          if (id == null) return;
-                                          isDeleting.value = true;
-                                          await Get.find<CaseController>()
-                                              .deleteCase(id);
-                                          isDeleting.value = false;
-                                          Get.back();
-                                        },
-                                        panaraDialogType:
-                                            PanaraDialogType.warning,
-                                      );
-                                    },
-                            )),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
