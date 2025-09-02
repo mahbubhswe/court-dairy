@@ -39,10 +39,12 @@ class AppInitializer {
         Get.to(() => const TomorrowCasesScreen());
       }
     });
-    await localNoti.scheduleDailyNotification(
+    await localNoti.scheduleDailyAtTime(
       id: 1,
       title: 'Update hearing dates',
       body: 'Tap to update past hearing dates',
+      hour: 23,
+      minute: 0,
       payload: 'overdue_cases',
     );
 
