@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -25,6 +27,29 @@ class LocalNotificationService {
         onDidReceiveNotificationResponse: (details) {
       onTap?.call(details.payload);
     });
+
+    // Android 13+ needs runtime notification permission
+    // Android 12+ may require special exact alarm permission
+    if (Platform.isAndroid) {
+      final androidPlugin = notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      // Request POST_NOTIFICATIONS (Android 13+)
+      await androidPlugin?.requestNotificationsPermission();
+
+      // Proactively request exact alarm permission on Android 12+
+      // If the method isn't supported by the current plugin version, it is a no-op.
+      try {
+        final canScheduleExact =
+            await androidPlugin?.canScheduleExactNotifications() ?? true;
+        if (!canScheduleExact) {
+          await androidPlugin?.requestExactAlarmsPermission();
+        }
+      } catch (_) {
+        // Silently ignore if API isn't available; we'll handle at schedule time.
+      }
+    }
     isInit = true;
   }
 
@@ -53,13 +78,14 @@ class LocalNotificationService {
     String? payload,
   }) async {
     await notificationsPlugin.cancel(id);
+    // Prefer inexact periodic to avoid requiring exact alarm permission
     notificationsPlugin.periodicallyShow(
       id,
       title,
       body,
       RepeatInterval.daily,
       notificationDetails(),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       payload: payload,
     );
   }
@@ -79,17 +105,46 @@ class LocalNotificationService {
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    await notificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledDate,
-      notificationDetails(),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      payload: payload,
-    );
+    try {
+      await notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
+        notificationDetails(),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payload,
+      );
+    } on PlatformException catch (e) {
+      // Handle Android 12+ exact alarm restriction gracefully
+      if (e.code == 'exact_alarms_not_permitted' && Platform.isAndroid) {
+        final androidPlugin = notificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>();
+        try {
+          await androidPlugin?.requestExactAlarmsPermission();
+        } catch (_) {
+          // Ignore if not supported
+        }
+        // Fallback to inexact schedule at roughly the same time
+        await notificationsPlugin.zonedSchedule(
+          id,
+          title,
+          body,
+          scheduledDate,
+          notificationDetails(),
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          matchDateTimeComponents: DateTimeComponents.time,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          payload: payload,
+        );
+      } else {
+        rethrow;
+      }
+    }
   }
 }
