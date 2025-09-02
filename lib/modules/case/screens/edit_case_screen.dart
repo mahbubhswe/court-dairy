@@ -1,5 +1,6 @@
 import '../../../widgets/dynamic_multi_step_form.dart';
 import '../../../widgets/app_type_ahead_field.dart';
+import '../../../widgets/app_text_from_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
@@ -64,9 +65,11 @@ class EditCaseScreen extends StatelessWidget {
             content: Column(
               children: [
                 caseTypeChips(),
-                TextField(
+                AppTextFromField(
                   controller: controller.caseTitle,
-                  decoration: const InputDecoration(labelText: 'Case Title'),
+                  label: 'Case Title',
+                  hintText: 'Enter case title',
+                  prefixIcon: Icons.title,
                 ),
                 AppTypeAheadField(
                   controller: controller.courtName,
@@ -75,17 +78,24 @@ class EditCaseScreen extends StatelessWidget {
                   prefixIcon: Icons.account_balance,
                   suggestions: controller.allCourtNames,
                 ),
-                TextField(
+                AppTextFromField(
                   controller: controller.caseNumber,
-                  decoration: const InputDecoration(labelText: 'Case Number'),
+                  label: 'Case Number',
+                  hintText: 'Enter case number',
+                  prefixIcon: Icons.numbers,
                 ),
-                TextField(
+                AppTextFromField(
                   controller: controller.caseStatus,
-                  decoration: const InputDecoration(labelText: 'Case Status'),
+                  label: 'Case Status',
+                  hintText: 'Enter case status',
+                  prefixIcon: Icons.flag_outlined,
                 ),
-                TextField(
+                AppTextFromField(
                   controller: controller.caseSummary,
-                  decoration: const InputDecoration(labelText: 'Summary'),
+                  label: 'Summary',
+                  hintText: 'Enter summary',
+                  prefixIcon: Icons.description_outlined,
+                  isMaxLines: 3,
                 ),
                 Obx(() => ListTile(
                       title: Text(controller.filedDate.value == null
