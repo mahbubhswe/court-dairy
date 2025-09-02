@@ -3,6 +3,11 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class LocalNotificationService {
+  LocalNotificationService._internal();
+  static final LocalNotificationService _instance =
+      LocalNotificationService._internal();
+  factory LocalNotificationService() => _instance;
+
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
   bool isInit = false;
   bool get isInited => isInit;
