@@ -21,7 +21,6 @@ class EditCaseController extends GetxController {
   late final TextEditingController caseSummary;
   late final TextEditingController judgeName;
   late final TextEditingController courtOrder;
-  late final TextEditingController document;
 
   final RxnString selectedCaseType = RxnString();
   final Rx<DateTime?> filedDate = Rx<DateTime?>(null);
@@ -49,10 +48,6 @@ class EditCaseController extends GetxController {
     judgeName = TextEditingController(text: caseModel.judgeName);
     courtOrder = TextEditingController(
         text: caseModel.courtOrders.isNotEmpty ? caseModel.courtOrders.first : '');
-    document = TextEditingController(
-        text: caseModel.documentsAttached.isNotEmpty
-            ? caseModel.documentsAttached.first
-            : '');
     selectedCaseType.value = caseModel.caseType;
     filedDate.value = caseModel.filedDate.toDate();
     if (caseModel.hearingDates.isNotEmpty) {
@@ -121,8 +116,6 @@ class EditCaseController extends GetxController {
             ? [Timestamp.fromDate(hearingDate.value!)]
             : <Timestamp>[]
         ..judgeName = judgeName.text.trim()
-        ..documentsAttached =
-            document.text.isNotEmpty ? [document.text.trim()] : <String>[]
         ..courtOrders =
             courtOrder.text.isNotEmpty ? [courtOrder.text.trim()] : <String>[]
         ..caseSummary = caseSummary.text.trim();

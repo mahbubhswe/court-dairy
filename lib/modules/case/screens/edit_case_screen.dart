@@ -152,10 +152,6 @@ class EditCaseScreen extends StatelessWidget {
                   controller: controller.courtOrder,
                   decoration: const InputDecoration(labelText: 'Court Order'),
                 ),
-                TextField(
-                  controller: controller.document,
-                  decoration: const InputDecoration(labelText: 'Document'),
-                ),
               ],
             ),
           ),
