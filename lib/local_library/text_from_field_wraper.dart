@@ -29,7 +29,7 @@ class TextFormFieldWrapper extends StatefulWidget {
     this.borderFocusedColor,
   });
 
-  final FormField formField;
+  final Widget formField;
   final TextFormFieldPosition position;
   final Widget? prefix;
   final Widget? suffix;

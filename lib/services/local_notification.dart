@@ -48,9 +48,15 @@ class LocalNotificationService {
     String? payload,
   }) async {
     await notificationsPlugin.cancel(id);
-    notificationsPlugin.periodicallyShow(id, title, body, RepeatInterval.daily,
-        notificationDetails(),
-        androidAllowWhileIdle: true, payload: payload);
+    notificationsPlugin.periodicallyShow(
+      id,
+      title,
+      body,
+      RepeatInterval.daily,
+      notificationDetails(),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: payload,
+    );
   }
 
   Future<void> scheduleDailyAtTime({
@@ -74,7 +80,7 @@ class LocalNotificationService {
       body,
       scheduledDate,
       notificationDetails(),
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,

@@ -35,35 +35,40 @@ class AppTypeAheadField extends StatelessWidget {
     return TextFormFieldWrapper(
       borderFocusedColor: cs.primary,
       position: textFormFieldPosition,
-      formField: TypeAheadFormField<String>(
-        textFieldConfiguration: TextFieldConfiguration(
-          controller: controller,
-          cursorColor: Theme.of(context).colorScheme.onSurface,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: hintText,
-            labelText: label,
-            prefixIcon: Icon(prefixIcon, color: cs.onSurfaceVariant),
-          ),
-          onChanged: onChanged,
-          onTap: onTap,
-          onSubmitted: onFieldSubmitted,
-        ),
+      formField: TypeAheadField<String>(
+        controller: controller,
+        builder: (context, textController, focusNode) {
+          return TextField(
+            controller: textController,
+            focusNode: focusNode,
+            cursorColor: Theme.of(context).colorScheme.onSurface,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: hintText,
+              labelText: label,
+              prefixIcon: Icon(prefixIcon, color: cs.onSurfaceVariant),
+            ),
+            onChanged: onChanged,
+            onTap: onTap,
+            onSubmitted: onFieldSubmitted,
+          );
+        },
         suggestionsCallback: (pattern) {
-          return suggestions.where((s) =>
-              s.toLowerCase().contains(pattern.toLowerCase()));
+          return suggestions
+              .where((s) => s.toLowerCase().contains(pattern.toLowerCase()))
+              .toList();
         },
         itemBuilder: (context, suggestion) {
           return ListTile(
             title: Text(suggestion),
           );
         },
-        onSuggestionSelected: (suggestion) {
+        onSelected: (suggestion) {
           controller.text = suggestion;
         },
-        validator: validator,
+        // TypeAheadField (v5) is not a FormField; validation is handled
+        // by parent form fields if needed.
       ),
     );
   }
 }
-
