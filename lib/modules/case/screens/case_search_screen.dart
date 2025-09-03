@@ -33,10 +33,14 @@ class CaseSearchScreen extends StatelessWidget {
           final number = c.caseNumber.toLowerCase();
           final plaintiff = c.plaintiff.name.toLowerCase();
           final defendant = c.defendant.name.toLowerCase();
+          final pPhone = c.plaintiff.phone.toLowerCase();
+          final dPhone = c.defendant.phone.toLowerCase();
           return title.contains(q) ||
               number.contains(q) ||
               plaintiff.contains(q) ||
-              defendant.contains(q);
+              defendant.contains(q) ||
+              pPhone.contains(q) ||
+              dPhone.contains(q);
         }).toList();
         return ListView.builder(
           itemCount: results.length,

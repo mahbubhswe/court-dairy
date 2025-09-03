@@ -29,7 +29,7 @@ class AddCaseScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Obx(() {
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -37,7 +37,7 @@ class AddCaseScreen extends StatelessWidget {
                 children: options.map((t) {
                   final isSelected = selected.value == t;
                   return Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: 08),
                     child: ChoiceChip(
                       label: Text(t),
                       selected: isSelected,
@@ -71,7 +71,7 @@ class AddCaseScreen extends StatelessWidget {
               filled: true,
               fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.7),
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -115,7 +115,7 @@ class AddCaseScreen extends StatelessWidget {
               filled: true,
               fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.7),
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -150,7 +150,7 @@ class AddCaseScreen extends StatelessWidget {
               FormStep(
                 title: const Text('Case Info'),
                 content: Column(
-                  spacing: 10,
+                  spacing: 6,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -193,6 +193,10 @@ class AddCaseScreen extends StatelessWidget {
                       isMaxLines: 3,
                     ),
                     Obx(() => ListTile(
+                          dense: true,
+                          visualDensity: VisualDensity.compact,
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 12),
                           title: Text(controller.filedDate.value == null
                               ? 'Filed Date'
                               : controller.filedDate.value
@@ -218,6 +222,7 @@ class AddCaseScreen extends StatelessWidget {
               FormStep(
                 title: const Text('Parties'),
                 content: Column(
+                  spacing: 6,
                   children: [
                     partyDropdown(
                       selected: controller.selectedPlaintiff,
@@ -225,7 +230,6 @@ class AddCaseScreen extends StatelessWidget {
                       hint: 'Select plaintiff',
                       icon: Icons.person_outline,
                     ),
-                    const SizedBox(height: 16),
                     partyDropdown(
                       selected: controller.selectedDefendant,
                       label: 'Defendant',
@@ -238,9 +242,13 @@ class AddCaseScreen extends StatelessWidget {
               FormStep(
                 title: const Text('More'),
                 content: Column(
-                  spacing: 10,
+                  spacing: 6,
                   children: [
                     Obx(() => ListTile(
+                          dense: true,
+                          visualDensity: VisualDensity.compact,
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 12),
                           title: Text(controller.hearingDate.value == null
                               ? 'Hearing Date'
                               : controller.hearingDate.value
@@ -256,8 +264,9 @@ class AddCaseScreen extends StatelessWidget {
                                     DateTime.now(),
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2100));
-                            if (picked != null)
+                            if (picked != null) {
                               controller.hearingDate.value = picked;
+                            }
                           },
                         )),
                     AppTypeAheadField(
@@ -272,7 +281,6 @@ class AddCaseScreen extends StatelessWidget {
                       label: 'Court Order',
                       hintText: 'Enter court order',
                       prefixIcon: Icons.article_outlined,
-                      isMaxLines: 3,
                     ),
                   ],
                 ),
@@ -280,6 +288,8 @@ class AddCaseScreen extends StatelessWidget {
             ],
             isLoading: controller.isLoading.value,
             controlsInBottom: true,
+            controlsPadding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             stepIconColor: AppColors.fixedPrimary,
             onSubmit: () {
               PanaraConfirmDialog.show(

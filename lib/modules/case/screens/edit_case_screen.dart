@@ -1,3 +1,5 @@
+import 'package:hugeicons/hugeicons.dart';
+
 import '../../../widgets/dynamic_multi_step_form.dart';
 import '../../../widgets/app_type_ahead_field.dart';
 import '../../../widgets/app_text_from_field.dart';
@@ -32,8 +34,7 @@ class EditCaseScreen extends StatelessWidget {
               onSelected: (_) => controller.selectedCaseType.value = type,
               shape: StadiumBorder(
                 side: BorderSide(
-                  color:
-                      isSelected ? Colors.transparent : appBarColor,
+                  color: isSelected ? Colors.transparent : appBarColor,
                 ),
               ),
             );
@@ -42,10 +43,43 @@ class EditCaseScreen extends StatelessWidget {
       );
     }
 
-    Widget partyDropdown(Rx<Party?> selected) {
-      return Obx(() => DropdownButton<Party>(
+    Widget partyDropdown({
+      required Rx<Party?> selected,
+      required String label,
+      required String hint,
+      required IconData icon,
+    }) {
+      return Obx(() => DropdownButtonFormField<Party>(
             value: selected.value,
-            hint: const Text('Select'),
+            isExpanded: true,
+            borderRadius: BorderRadius.circular(12),
+            menuMaxHeight: 320,
+            icon: const Icon(Icons.keyboard_arrow_down_rounded),
+            decoration: InputDecoration(
+              labelText: label,
+              hintText: hint,
+              prefixIcon: Icon(icon),
+              filled: true,
+              fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.7),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 1.4,
+                ),
+              ),
+            ),
             items: controller.parties
                 .map((p) => DropdownMenuItem(
                       value: p,
@@ -60,113 +94,131 @@ class EditCaseScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Edit Case')),
       body: Obx(() => DynamicMultiStepForm(
             steps: [
-          FormStep(
-            title: const Text('Case Info'),
-            content: Column(
-              children: [
-                caseTypeChips(),
-                AppTextFromField(
-                  controller: controller.caseTitle,
-                  label: 'Case Title',
-                  hintText: 'Enter case title',
-                  prefixIcon: Icons.title,
+              FormStep(
+                title: const Text('Case Info'),
+                content: Column(
+                  spacing: 10,
+                  children: [
+                    caseTypeChips(),
+                    AppTextFromField(
+                      controller: controller.caseTitle,
+                      label: 'Case Title',
+                      hintText: 'Enter case title',
+                      prefixIcon: Icons.title,
+                    ),
+                    AppTypeAheadField(
+                      controller: controller.courtName,
+                      label: 'Court Name',
+                      hintText: 'Enter court name',
+                      prefixIcon: Icons.account_balance,
+                      suggestions: controller.allCourtNames,
+                    ),
+                    AppTextFromField(
+                      controller: controller.caseNumber,
+                      label: 'Case Number',
+                      hintText: 'Enter case number',
+                      prefixIcon: Icons.numbers,
+                    ),
+                    AppTextFromField(
+                      controller: controller.caseStatus,
+                      label: 'Case Status',
+                      hintText: 'Enter case status',
+                      prefixIcon: Icons.flag_outlined,
+                    ),
+                    AppTextFromField(
+                      controller: controller.caseSummary,
+                      label: 'Summary',
+                      hintText: 'Enter summary',
+                      prefixIcon: Icons.description_outlined,
+                      isMaxLines: 3,
+                    ),
+                    Obx(() => ListTile(
+                          title: Text(controller.filedDate.value == null
+                              ? 'Filed Date'
+                              : controller.filedDate.value
+                                  .toString()
+                                  .split(' ')
+                                  .first),
+                          trailing:
+                              const Icon(HugeIcons.strokeRoundedCalendar01),
+                          onTap: () async {
+                            final picked = await showDatePicker(
+                                context: context,
+                                initialDate: controller.filedDate.value ??
+                                    DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100));
+                            if (picked != null)
+                              controller.filedDate.value = picked;
+                          },
+                        )),
+                  ],
                 ),
-                AppTypeAheadField(
-                  controller: controller.courtName,
-                  label: 'Court Name',
-                  hintText: 'Enter court name',
-                  prefixIcon: Icons.account_balance,
-                  suggestions: controller.allCourtNames,
+              ),
+              FormStep(
+                title: const Text('Parties'),
+                content: Column(
+                  children: [
+                    partyDropdown(
+                      selected: controller.selectedPlaintiff,
+                      label: 'Plaintiff',
+                      hint: 'Select plaintiff',
+                      icon: Icons.person_outline,
+                    ),
+                    const SizedBox(height: 16),
+                    partyDropdown(
+                      selected: controller.selectedDefendant,
+                      label: 'Defendant',
+                      hint: 'Select defendant',
+                      icon: Icons.person_outline,
+                    ),
+                  ],
                 ),
-                AppTextFromField(
-                  controller: controller.caseNumber,
-                  label: 'Case Number',
-                  hintText: 'Enter case number',
-                  prefixIcon: Icons.numbers,
+              ),
+              FormStep(
+                title: const Text('More'),
+                content: Column(
+                  spacing: 10,
+                  children: [
+                    Obx(() => ListTile(
+                          title: Text(controller.hearingDate.value == null
+                              ? 'Hearing Date'
+                              : controller.hearingDate.value
+                                  .toString()
+                                  .split(' ')
+                                  .first),
+                          trailing:
+                              const Icon(HugeIcons.strokeRoundedCalendar01),
+                          onTap: () async {
+                            final picked = await showDatePicker(
+                                context: context,
+                                initialDate: controller.hearingDate.value ??
+                                    DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100));
+                            if (picked != null)
+                              controller.hearingDate.value = picked;
+                          },
+                        )),
+                    AppTypeAheadField(
+                      controller: controller.judgeName,
+                      label: 'Judge Name',
+                      hintText: 'Enter judge name',
+                      prefixIcon: Icons.gavel,
+                      suggestions: controller.allJudgeNames,
+                    ),
+                    AppTextFromField(
+                      controller: controller.courtOrder,
+                      label: 'Court Order',
+                      hintText: 'Enter court order',
+                      prefixIcon: Icons.article_outlined,
+                    ),
+                  ],
                 ),
-                AppTextFromField(
-                  controller: controller.caseStatus,
-                  label: 'Case Status',
-                  hintText: 'Enter case status',
-                  prefixIcon: Icons.flag_outlined,
-                ),
-                AppTextFromField(
-                  controller: controller.caseSummary,
-                  label: 'Summary',
-                  hintText: 'Enter summary',
-                  prefixIcon: Icons.description_outlined,
-                  isMaxLines: 3,
-                ),
-                Obx(() => ListTile(
-                      title: Text(controller.filedDate.value == null
-                          ? 'Filed Date'
-                          : controller.filedDate.value
-                              .toString()
-                              .split(' ')
-                              .first),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: () async {
-                        final picked = await showDatePicker(
-                            context: context,
-                            initialDate: controller.filedDate.value ?? DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        if (picked != null) controller.filedDate.value = picked;
-                      },
-                    )),
-              ],
-            ),
-          ),
-          FormStep(
-            title: const Text('Parties'),
-            content: Column(
-              children: [
-                const Text('Plaintiff'),
-                partyDropdown(controller.selectedPlaintiff),
-                const SizedBox(height: 16),
-                const Text('Defendant'),
-                partyDropdown(controller.selectedDefendant),
-              ],
-            ),
-          ),
-          FormStep(
-            title: const Text('More'),
-            content: Column(
-              children: [
-                Obx(() => ListTile(
-                      title: Text(controller.hearingDate.value == null
-                          ? 'Hearing Date'
-                          : controller.hearingDate.value
-                              .toString()
-                              .split(' ')
-                              .first),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: () async {
-                        final picked = await showDatePicker(
-                            context: context,
-                            initialDate:
-                                controller.hearingDate.value ?? DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        if (picked != null) controller.hearingDate.value = picked;
-                      },
-                    )),
-                AppTypeAheadField(
-                  controller: controller.judgeName,
-                  label: 'Judge Name',
-                  hintText: 'Enter judge name',
-                  prefixIcon: Icons.gavel,
-                  suggestions: controller.allJudgeNames,
-                ),
-                TextField(
-                  controller: controller.courtOrder,
-                  decoration: const InputDecoration(labelText: 'Court Order'),
-                ),
-              ],
-            ),
-          ),
+              ),
             ],
             isLoading: controller.isLoading.value,
+            controlsInBottom: true,
             onSubmit: () {
               PanaraConfirmDialog.show(
                 context,
@@ -183,7 +235,8 @@ class EditCaseScreen extends StatelessWidget {
                   if (success) {
                     PanaraInfoDialog.show(
                       context,
-                      title: 'সফল হয়েছে', buttonText: 'Okey',
+                      title: 'সফল হয়েছে',
+                      buttonText: 'Okey',
                       message: 'কেস আপডেট করা হয়েছে',
                       panaraDialogType: PanaraDialogType.success,
                       barrierDismissible: false,
@@ -195,7 +248,8 @@ class EditCaseScreen extends StatelessWidget {
                   } else {
                     PanaraInfoDialog.show(
                       context,
-                      title: 'ত্রুটি', buttonText: 'Okey',
+                      title: 'ত্রুটি',
+                      buttonText: 'Okey',
                       message: 'কেস আপডেট করতে ব্যর্থ হয়েছে',
                       panaraDialogType: PanaraDialogType.error,
                       barrierDismissible: false,

@@ -60,8 +60,28 @@ class EditCaseController extends GetxController {
     if (user != null) {
       PartyService.getParties(user.uid).listen((list) {
         parties.value = list;
+        _syncSelectedPartiesWithList();
       });
       _loadSuggestions(user.uid);
+    }
+  }
+
+  void _syncSelectedPartiesWithList() {
+    Party? _matchFromList(Party target) {
+      try {
+        return parties.firstWhere(
+            (p) => p.name == target.name && p.phone == target.phone);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    // Ensure Dropdown `value` matches one of the `items` references
+    if (caseModel.plaintiff != null) {
+      selectedPlaintiff.value = _matchFromList(caseModel.plaintiff) ?? null;
+    }
+    if (caseModel.defendant != null) {
+      selectedDefendant.value = _matchFromList(caseModel.defendant) ?? null;
     }
   }
 

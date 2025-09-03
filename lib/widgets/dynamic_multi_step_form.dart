@@ -25,6 +25,7 @@ class DynamicMultiStepForm extends StatefulWidget {
     this.stepperType = StepperType.horizontal,
     this.controlsInBottom = false,
     this.stepIconColor,
+    this.controlsPadding = const EdgeInsets.all(16),
   });
 
   /// Ordered list of form steps.
@@ -45,6 +46,9 @@ class DynamicMultiStepForm extends StatefulWidget {
 
   /// Custom color for the step index icons and connectors.
   final Color? stepIconColor;
+
+  /// Padding for the fixed bottom controls area when [controlsInBottom] is true.
+  final EdgeInsetsGeometry controlsPadding;
 
   @override
   State<DynamicMultiStepForm> createState() => _DynamicMultiStepFormState();
@@ -132,7 +136,7 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
         SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: widget.controlsPadding,
             child: Row(
               children: [
                 if (_currentStep > 0)
@@ -140,12 +144,20 @@ class _DynamicMultiStepFormState extends State<DynamicMultiStepForm> {
                     onPressed: _back,
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.onSurface,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      minimumSize: const Size(0, 36),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: const Text('Back'),
                   ),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: widget.isLoading ? null : _next,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    minimumSize: const Size(0, 36),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   child: widget.isLoading && isLast
                       ? const CupertinoActivityIndicator()
                       : Text(isLast ? 'Submit' : 'Next'),

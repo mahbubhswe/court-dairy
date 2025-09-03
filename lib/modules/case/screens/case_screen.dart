@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/case_controller.dart';
 import '../widgets/case_tile.dart';
 import 'all_case_screen.dart';
+ 
 
 class CaseScreen extends StatelessWidget {
   final bool showHeader;
@@ -89,8 +90,8 @@ class CaseScreen extends StatelessWidget {
 
 Widget filterChip(
     BuildContext context, String key, String label, CaseController controller) {
-  final appBarColor =
-      Theme.of(context).appBarTheme.backgroundColor ?? Theme.of(context).colorScheme.primary;
+  final appBarColor = Theme.of(context).appBarTheme.backgroundColor ??
+      Theme.of(context).colorScheme.primary;
   final selected = controller.selectedFilter.value == key;
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 4),
