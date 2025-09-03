@@ -26,7 +26,8 @@ class CaseDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<CaseController>();
     final theme = Theme.of(context);
-    final appBarColor = theme.appBarTheme.backgroundColor ?? theme.colorScheme.primary;
+    final appBarColor =
+        theme.appBarTheme.backgroundColor ?? theme.colorScheme.primary;
     final statuses = const ['Ongoing', 'Disposed', 'Completed'];
 
     Widget chip(String text, {Color? color, IconData? icon}) {
@@ -45,7 +46,7 @@ class CaseDetailScreen extends StatelessWidget {
         width: double.infinity,
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -137,7 +138,7 @@ class CaseDetailScreen extends StatelessWidget {
         child: Stack(
           children: [
             SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(3),
               child: Column(
                 spacing: 5,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +158,7 @@ class CaseDetailScreen extends StatelessWidget {
                           end: Alignment.bottomRight,
                         ),
                       ),
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -176,7 +177,6 @@ class CaseDetailScreen extends StatelessWidget {
                                   ?.withOpacity(0.9),
                             ),
                           ),
-                          const SizedBox(height: 12),
                         ],
                       ),
                     ),
@@ -209,8 +209,7 @@ class CaseDetailScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 14,
-                                  color:
-                                      _statusTextColor(caseItem.caseStatus),
+                                  color: _statusTextColor(caseItem.caseStatus),
                                 ),
                               ),
                             ),
@@ -522,9 +521,8 @@ class CaseDetailScreen extends StatelessWidget {
                                           onPressed: () => Navigator.pop(ctx),
                                           child: const Text('Cancel')),
                                       TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(ctx,
-                                                  controllerText.text.trim()),
+                                          onPressed: () => Navigator.pop(
+                                              ctx, controllerText.text.trim()),
                                           child: const Text('Add')),
                                     ],
                                   );
@@ -538,8 +536,7 @@ class CaseDetailScreen extends StatelessWidget {
                                 message: 'কোর্ট অর্ডার যুক্ত করবেন?',
                                 confirmButtonText: 'হ্যাঁ',
                                 cancelButtonText: 'না',
-                                onTapCancel: () =>
-                                    Navigator.of(context).pop(),
+                                onTapCancel: () => Navigator.of(context).pop(),
                                 onTapConfirm: () async {
                                   Navigator.of(context).pop();
                                   bool ok = false;
@@ -678,7 +675,6 @@ class CaseDetailScreen extends StatelessWidget {
                                 );
                               },
                             )),
-
                 ],
               ),
             ),

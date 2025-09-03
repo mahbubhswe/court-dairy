@@ -75,6 +75,12 @@ class Themes {
         foregroundColor: Colors.white,
       ),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        // Make dialog/action buttons clearly visible on light background
+        foregroundColor: _waLightTertiary,
+      ),
+    ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: _waLightSecondary,
       foregroundColor: Colors.white,
@@ -153,6 +159,12 @@ class Themes {
       style: ElevatedButton.styleFrom(
         backgroundColor: _waDarkSecondary,
         foregroundColor: Colors.white,
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        // Ensure Cancel/OK in dialogs & pickers are readable on dark surface
+        foregroundColor: _waDarkTertiary,
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(

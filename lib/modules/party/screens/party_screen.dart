@@ -3,8 +3,10 @@ import '../widgets/party_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../layout/controllers/layout_controller.dart';
 import '../controllers/party_controller.dart';
 import 'party_profile_screen.dart';
+import 'all_party_screen.dart';
 
 class PartyScreen extends StatelessWidget {
   const PartyScreen({super.key});
@@ -12,24 +14,55 @@ class PartyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(PartyController());
+    final layoutController = Get.put(LayoutController());
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
-      if (controller.parties.isEmpty) {
-        return const DataNotFound(title: "Sorry", subtitle: 'No Party Found');
-      }
-      return ListView.builder(
-        itemCount: controller.parties.length,
-        itemBuilder: (context, index) {
-          final party = controller.parties[index];
-          return PartyTile(
-            party: party,
-            onTap: () {
-              Get.to(() => PartyProfileScreen(party: party));
-            },
-          );
-        },
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Your Parties',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Get.to(() => AllPartyScreen());
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  child: const Text('See All'),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: controller.parties.isEmpty
+                ? const DataNotFound(
+                    title: "Sorry", subtitle: 'No Party Found')
+                : ListView.builder(
+                    controller: layoutController.scrollController,
+                    itemCount: controller.parties.length > 10
+                        ? 10
+                        : controller.parties.length,
+                    itemBuilder: (context, index) {
+                      final party = controller.parties[index];
+                      return PartyTile(
+                        party: party,
+                        onTap: () {
+                          Get.to(() => PartyProfileScreen(party: party));
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ],
       );
     });
   }
