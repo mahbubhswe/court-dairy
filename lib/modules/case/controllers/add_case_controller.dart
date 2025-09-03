@@ -120,13 +120,12 @@ class AddCaseController extends GetxController {
         caseStatus: selectedCaseStatus.value ?? '',
         plaintiff: selectedPlaintiff.value!,
         defendant: selectedDefendant.value!,
-        hearingDates: hearingDate.value != null
-            ? [Timestamp.fromDate(hearingDate.value!)]
-            : <Timestamp>[],
+        nextHearingDate:
+            hearingDate.value != null ? Timestamp.fromDate(hearingDate.value!) : null,
         judgeName: judgeName.text.trim(),
         documentsAttached: documents.toList(),
-        courtOrders:
-            courtOrder.text.isNotEmpty ? [courtOrder.text.trim()] : <String>[],
+        courtNextOrder:
+            courtOrder.text.isNotEmpty ? courtOrder.text.trim() : null,
         caseSummary: caseSummary.text.trim(),
       );
 

@@ -13,8 +13,7 @@ class CaseController extends GetxController {
   final _localNoti = LocalNotificationService();
 
   DateTime? _nextDate(CourtCase c) {
-    if (c.hearingDates.isEmpty) return null;
-    return c.hearingDates.first.toDate();
+    return c.nextHearingDate?.toDate();
   }
 
   bool _isSameDay(DateTime a, DateTime b) =>
@@ -126,13 +125,11 @@ class CaseController extends GetxController {
     await CaseService.updateNextHearingDate(c.docId!, user.uid, ts);
     final idx = cases.indexWhere((e) => e.docId == c.docId);
     if (idx != -1) {
-      final updated = List<Timestamp>.from(cases[idx].hearingDates);
-      if (updated.isNotEmpty) {
-        updated[0] = ts;
-      } else {
-        updated.add(ts);
+      final prevNext = cases[idx].nextHearingDate;
+      if (prevNext != null) {
+        cases[idx].lastHearingDate = prevNext;
       }
-      cases[idx].hearingDates = updated;
+      cases[idx].nextHearingDate = ts;
       cases.refresh();
     }
   }

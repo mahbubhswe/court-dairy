@@ -51,49 +51,49 @@ class CaseService {
 
   static Future<void> addHearingDate(
       String docId, String userId, Timestamp date) async {
-    await _firestore
-        .collection(AppCollections.lawyers)
-        .doc(userId)
-        .collection(AppCollections.cases)
-        .doc(docId)
-        .update({
-      'hearingDates': FieldValue.arrayUnion([date])
-    });
+    // Backward-compat shim: treat as setting next hearing date
+    await setNextHearingDate(docId, userId, date);
   }
 
   static Future<void> removeHearingDate(
       String docId, String userId, Timestamp date) async {
-    await _firestore
+    // Backward-compat shim: clear next hearing date if matches
+    final docRef = _firestore
         .collection(AppCollections.lawyers)
         .doc(userId)
         .collection(AppCollections.cases)
-        .doc(docId)
-        .update({
-      'hearingDates': FieldValue.arrayRemove([date])
+        .doc(docId);
+    await _firestore.runTransaction((tx) async {
+      final snap = await tx.get(docRef);
+      final data = snap.data() as Map<String, dynamic>?;
+      final next = data?['nextHearingDate'];
+      if (next == date) {
+        tx.update(docRef, {'nextHearingDate': null});
+      }
     });
   }
 
   static Future<void> addCourtOrder(
       String docId, String userId, String order) async {
-    await _firestore
-        .collection(AppCollections.lawyers)
-        .doc(userId)
-        .collection(AppCollections.cases)
-        .doc(docId)
-        .update({
-      'courtOrders': FieldValue.arrayUnion([order])
-    });
+    // Backward-compat shim: set next court order
+    await setCourtNextOrder(docId, userId, order);
   }
 
   static Future<void> removeCourtOrder(
       String docId, String userId, String order) async {
-    await _firestore
+    // Backward-compat shim: clear next order if matches
+    final docRef = _firestore
         .collection(AppCollections.lawyers)
         .doc(userId)
         .collection(AppCollections.cases)
-        .doc(docId)
-        .update({
-      'courtOrders': FieldValue.arrayRemove([order])
+        .doc(docId);
+    await _firestore.runTransaction((tx) async {
+      final snap = await tx.get(docRef);
+      final data = snap.data() as Map<String, dynamic>?;
+      final next = data?['courtNextOrder'];
+      if (next == order) {
+        tx.update(docRef, {'courtNextOrder': null});
+      }
     });
   }
 
@@ -109,22 +109,48 @@ class CaseService {
 
   static Future<void> updateNextHearingDate(
       String docId, String userId, Timestamp newDate) async {
+    await setNextHearingDate(docId, userId, newDate);
+  }
+
+  static Future<void> setNextHearingDate(
+      String docId, String userId, Timestamp newDate) async {
     final docRef = _firestore
         .collection(AppCollections.lawyers)
         .doc(userId)
         .collection(AppCollections.cases)
         .doc(docId);
-
     await _firestore.runTransaction((tx) async {
       final snap = await tx.get(docRef);
       final data = snap.data() as Map<String, dynamic>?;
-      final dates = List<Timestamp>.from(data?['hearingDates'] ?? []);
-      if (dates.isNotEmpty) {
-        dates[0] = newDate;
-      } else {
-        dates.add(newDate);
+      final currentNext = data?['nextHearingDate'];
+      final updates = <String, dynamic>{
+        'nextHearingDate': newDate,
+      };
+      if (currentNext != null) {
+        updates['lastHearingDate'] = currentNext;
       }
-      tx.update(docRef, {'hearingDates': dates});
+      tx.update(docRef, updates);
+    });
+  }
+
+  static Future<void> setCourtNextOrder(
+      String docId, String userId, String order) async {
+    final docRef = _firestore
+        .collection(AppCollections.lawyers)
+        .doc(userId)
+        .collection(AppCollections.cases)
+        .doc(docId);
+    await _firestore.runTransaction((tx) async {
+      final snap = await tx.get(docRef);
+      final data = snap.data() as Map<String, dynamic>?;
+      final currentNext = data?['courtNextOrder'];
+      final updates = <String, dynamic>{
+        'courtNextOrder': order,
+      };
+      if (currentNext != null && (currentNext as String).isNotEmpty) {
+        updates['courtLastOrder'] = currentNext;
+      }
+      tx.update(docRef, updates);
     });
   }
 }

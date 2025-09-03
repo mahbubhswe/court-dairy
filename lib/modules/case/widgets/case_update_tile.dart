@@ -15,13 +15,12 @@ class CaseUpdateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CaseController>();
-    final lastDate =
-        caseItem.hearingDates.isNotEmpty ? caseItem.hearingDates.first.toDate() : null;
+    final lastDate = caseItem.nextHearingDate?.toDate();
     return Card(
       child: ListTile(
         title: Text(caseItem.caseTitle),
         subtitle: Text(
-          'Case No: ${caseItem.caseNumber}\nLast date: ${lastDate != null ? _format(lastDate) : 'N/A'}',
+          'Case No: ${caseItem.caseNumber}\nNext date: ${lastDate != null ? _format(lastDate) : 'N/A'}',
         ),
         isThreeLine: true,
         trailing: IconButton(
@@ -42,4 +41,3 @@ class CaseUpdateTile extends StatelessWidget {
     );
   }
 }
-

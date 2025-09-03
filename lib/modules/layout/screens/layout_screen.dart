@@ -35,6 +35,7 @@ class _LayoutScreenState extends State<LayoutScreen>
   final _caseController = Get.put(CaseController());
 
   bool _isShowingOverdueSheet = false;
+  bool _hasShownOverdueSheetOnce = false;
   Worker? _casesWorker;
 
   @override
@@ -62,12 +63,15 @@ class _LayoutScreenState extends State<LayoutScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       // Slight delay to allow data to refresh
-      Future.delayed(const Duration(milliseconds: 150), _maybeShowOverdueSheet);
+      if (!_hasShownOverdueSheetOnce) {
+        Future.delayed(
+            const Duration(milliseconds: 150), _maybeShowOverdueSheet);
+      }
     }
   }
 
   Future<void> _maybeShowOverdueSheet() async {
-    if (!mounted || _isShowingOverdueSheet) return;
+    if (!mounted || _isShowingOverdueSheet || _hasShownOverdueSheetOnce) return;
 
     // If still loading, skip this attempt.
     if (_caseController.isLoading.value) return;
@@ -75,6 +79,8 @@ class _LayoutScreenState extends State<LayoutScreen>
     final overdue = _caseController.overdueCases;
     if (overdue.isEmpty) return;
 
+    // Mark as shown for this session and guard re-entry while visible
+    _hasShownOverdueSheetOnce = true;
     _isShowingOverdueSheet = true;
     await showModalBottomSheet(
       context: context,

@@ -46,13 +46,11 @@ class EditCaseController extends GetxController {
     caseStatus = TextEditingController(text: caseModel.caseStatus);
     caseSummary = TextEditingController(text: caseModel.caseSummary);
     judgeName = TextEditingController(text: caseModel.judgeName);
-    courtOrder = TextEditingController(
-        text: caseModel.courtOrders.isNotEmpty ? caseModel.courtOrders.first : '');
+    courtOrder =
+        TextEditingController(text: caseModel.courtNextOrder ?? '');
     selectedCaseType.value = caseModel.caseType;
     filedDate.value = caseModel.filedDate.toDate();
-    if (caseModel.hearingDates.isNotEmpty) {
-      hearingDate.value = caseModel.hearingDates.first.toDate();
-    }
+    hearingDate.value = caseModel.nextHearingDate?.toDate();
     selectedPlaintiff.value = caseModel.plaintiff;
     selectedDefendant.value = caseModel.defendant;
 
@@ -132,12 +130,12 @@ class EditCaseController extends GetxController {
         ..caseStatus = caseStatus.text.trim()
         ..plaintiff = selectedPlaintiff.value!
         ..defendant = selectedDefendant.value!
-        ..hearingDates = hearingDate.value != null
-            ? [Timestamp.fromDate(hearingDate.value!)]
-            : <Timestamp>[]
+        ..nextHearingDate = hearingDate.value != null
+            ? Timestamp.fromDate(hearingDate.value!)
+            : null
         ..judgeName = judgeName.text.trim()
-        ..courtOrders =
-            courtOrder.text.isNotEmpty ? [courtOrder.text.trim()] : <String>[]
+        ..courtNextOrder =
+            courtOrder.text.isNotEmpty ? courtOrder.text.trim() : null
         ..caseSummary = caseSummary.text.trim();
 
       await CaseService.updateCase(caseModel, user.uid);

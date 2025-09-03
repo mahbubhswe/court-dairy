@@ -31,7 +31,7 @@ class AuthService {
             phone: "01623131102",
             smsBalance: 0,
             balance: 0,
-            subFor: 0,
+            subFor: 30,
             subStartsAt: DateTime.now(),
             isActive: true,
             courts: [],

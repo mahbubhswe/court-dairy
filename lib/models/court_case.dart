@@ -19,7 +19,8 @@ class CourtCase {
   Party defendant;
 
   // Hearing Dates
-  List<Timestamp> hearingDates; // Use Timestamp instead of DateTime
+  Timestamp? lastHearingDate; // Firestore Timestamp
+  Timestamp? nextHearingDate; // Firestore Timestamp
 
   // Judge Information
   String judgeName;
@@ -28,7 +29,8 @@ class CourtCase {
   List<String> documentsAttached;
 
   // Court Orders
-  List<String> courtOrders;
+  String? courtLastOrder;
+  String? courtNextOrder;
 
   // Case Summary
   String caseSummary;
@@ -45,10 +47,12 @@ class CourtCase {
     required this.caseStatus,
     required this.plaintiff,
     required this.defendant,
-    required this.hearingDates,
+    this.lastHearingDate,
+    this.nextHearingDate,
     required this.judgeName,
     required this.documentsAttached,
-    required this.courtOrders,
+    this.courtLastOrder,
+    this.courtNextOrder,
     required this.caseSummary,
   });
 
@@ -64,10 +68,12 @@ class CourtCase {
       'caseStatus': caseStatus,
       'plaintiff': plaintiff.toMap(),
       'defendant': defendant.toMap(),
-      'hearingDates': hearingDates.map((e) => e).toList(), // Firestore Timestamp will be directly saved
+      'lastHearingDate': lastHearingDate,
+      'nextHearingDate': nextHearingDate,
       'judgeName': judgeName,
       'documentsAttached': documentsAttached,
-      'courtOrders': courtOrders,
+      'courtLastOrder': courtLastOrder,
+      'courtNextOrder': courtNextOrder,
       'caseSummary': caseSummary,
     };
   }
@@ -85,10 +91,12 @@ class CourtCase {
       caseStatus: map['caseStatus'],
       plaintiff: Party.fromMap(map['plaintiff']),
       defendant: Party.fromMap(map['defendant']),
-      hearingDates: List<Timestamp>.from(map['hearingDates'] ?? []), // Convert to List of Timestamps
+      lastHearingDate: map['lastHearingDate'],
+      nextHearingDate: map['nextHearingDate'],
       judgeName: map['judgeName'],
       documentsAttached: List<String>.from(map['documentsAttached']),
-      courtOrders: List<String>.from(map['courtOrders']),
+      courtLastOrder: map['courtLastOrder'],
+      courtNextOrder: map['courtNextOrder'],
       caseSummary: map['caseSummary'],
     );
   }

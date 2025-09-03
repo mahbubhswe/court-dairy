@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 
 import '../controllers/case_controller.dart';
+import 'cases_on_date_screen.dart';
 
 class CaseCalendarScreen extends StatelessWidget {
   CaseCalendarScreen({super.key});
@@ -126,14 +127,21 @@ class CaseCalendarScreen extends StatelessWidget {
                           ? Theme.of(context).colorScheme.primary
                           : baseBorder);
 
-                  return Container(
-                    decoration: BoxDecoration(
+                  return InkWell(
+                    onTap: hasCase
+                        ? () {
+                            final selected = DateTime(now.year, now.month, day);
+                            Get.to(() => CasesOnDateScreen(date: selected));
+                          }
+                        : null,
+                    child: Container(
+                      decoration: BoxDecoration(
                       color: bgColor,
                       border: Border.all(
                           color: borderColor, width: isToday ? 1.5 : 1),
                       borderRadius: BorderRadius.circular(isCompact ? 6 : 8),
-                    ),
-                    child: Padding(
+                      ),
+                      child: Padding(
                       padding: EdgeInsets.all(cellPad),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,6 +200,7 @@ class CaseCalendarScreen extends StatelessWidget {
                             ),
                           ],
                         ],
+                      ),
                       ),
                     ),
                   );

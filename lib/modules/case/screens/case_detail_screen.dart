@@ -258,7 +258,8 @@ class CaseDetailScreen extends StatelessWidget {
                                     PanaraConfirmDialog.show(
                                       context,
                                       title: 'নিশ্চিত করুন',
-                                      message: 'নতুন হিয়ারিং ডেট যুক্ত করবেন?',
+                                      message:
+                                          'নেক্সট হিয়ারিং ডেট আপডেট করবেন?',
                                       confirmButtonText: 'হ্যাঁ',
                                       cancelButtonText: 'না',
                                       onTapCancel: () =>
@@ -271,7 +272,8 @@ class CaseDetailScreen extends StatelessWidget {
                                               AppFirebase().currentUser;
                                           final id = caseItem.docId;
                                           if (user != null && id != null) {
-                                            await CaseService.addHearingDate(
+                                            await CaseService
+                                                .updateNextHearingDate(
                                               id,
                                               user.uid,
                                               Timestamp.fromDate(picked),
@@ -283,8 +285,8 @@ class CaseDetailScreen extends StatelessWidget {
                                           context,
                                           title: ok ? 'সফল হয়েছে' : 'ত্রুটি',
                                           message: ok
-                                              ? 'হিয়ারিং ডেট যুক্ত করা হয়েছে'
-                                              : 'হিয়ারিং ডেট যুক্ত করতে ব্যর্থ',
+                                              ? 'নেক্সট হিয়ারিং ডেট আপডেট হয়েছে'
+                                              : 'আপডেট করতে ব্যর্থ',
                                           buttonText: 'Okey',
                                           panaraDialogType: ok
                                               ? PanaraDialogType.success
@@ -298,79 +300,151 @@ class CaseDetailScreen extends StatelessWidget {
                                     );
                                   }
                                 },
-                                icon: const Icon(Icons.add),
-                                label: const Text('Add Hearing Date'),
+                                icon: const Icon(Icons.edit_calendar_outlined),
+                                label: const Text('Update Next Hearing'),
                               ),
                             ],
                           ),
                           const SizedBox(height: 8),
-                          Text('Hearing Dates',
-                              style: theme.textTheme.labelLarge),
+                          Text('Hearings', style: theme.textTheme.labelLarge),
                           const SizedBox(height: 8),
                           Obx(() {
                             final current = controller.cases.firstWhere(
                               (c) => c.docId == caseItem.docId,
                               orElse: () => caseItem,
                             );
-                            if (current.hearingDates.isEmpty)
-                              return const Text('-');
-                            return Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: current.hearingDates.map((ts) {
-                                return InputChip(
-                                  label: Text(_fmtDate(ts)),
-                                  shape: StadiumBorder(
-                                    side: BorderSide(color: appBarColor),
-                                  ),
-                                  onDeleted: () async {
-                                    PanaraConfirmDialog.show(
-                                      context,
-                                      title: 'নিশ্চিত করুন',
-                                      message: 'এই হিয়ারিং ডেটটি মুছে ফেলবেন?',
-                                      confirmButtonText: 'হ্যাঁ',
-                                      cancelButtonText: 'না',
-                                      onTapCancel: () =>
-                                          Navigator.of(context).pop(),
-                                      onTapConfirm: () async {
-                                        Navigator.of(context).pop();
-                                        bool ok = false;
-                                        try {
-                                          final user =
-                                              AppFirebase().currentUser;
-                                          final id = caseItem.docId;
-                                          if (user != null && id != null) {
-                                            await CaseService.removeHearingDate(
-                                              id,
-                                              user.uid,
-                                              ts,
-                                            );
-                                            ok = true;
-                                          }
-                                        } catch (_) {}
-                                        PanaraInfoDialog.show(
-                                          context,
-                                          title: ok ? 'সফল হয়েছে' : 'ত্রুটি',
-                                          message: ok
-                                              ? 'হিয়ারিং ডেট মুছে ফেলা হয়েছে'
-                                              : 'মুছে ফেলতে ব্যর্থ',
-                                          buttonText: 'Okey',
-                                          panaraDialogType: ok
-                                              ? PanaraDialogType.success
-                                              : PanaraDialogType.error,
-                                          barrierDismissible: false,
-                                          onTapDismiss: () =>
-                                              Navigator.of(context).pop(),
-                                        );
-                                      },
-                                      panaraDialogType:
-                                          PanaraDialogType.warning,
-                                    );
-                                  },
-                                );
-                              }).toList(),
+                            final last = current.lastHearingDate;
+                            final next = current.nextHearingDate;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Last: '
+                                    '${last != null ? _fmtDate(last) : '-'}'),
+                                const SizedBox(height: 6),
+                                Text('Next: '
+                                    '${next != null ? _fmtDate(next) : '-'}'),
+                              ],
                             );
                           }),
+                        ],
+                      )),
+                  // Court Orders
+                  section(
+                      'Court Orders',
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () async {
+                              final controllerText = TextEditingController();
+                              final result = await showDialog<String>(
+                                context: context,
+                                builder: (ctx) {
+                                  return AlertDialog(
+                                    title: const Text('Update Next Order'),
+                                    content: TextField(
+                                      controller: controllerText,
+                                      decoration: const InputDecoration(
+                                          hintText: 'Enter next order'),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(ctx),
+                                          child: const Text('Cancel')),
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(
+                                              ctx, controllerText.text.trim()),
+                                          child: const Text('Update')),
+                                    ],
+                                  );
+                                },
+                              );
+                              final text = result?.trim();
+                              if (text == null || text.isEmpty) return;
+                              PanaraConfirmDialog.show(
+                                context,
+                                title: 'নিশ্চিত করুন',
+                                message: 'নেক্সট অর্ডার আপডেট করবেন?',
+                                confirmButtonText: 'হ্যাঁ',
+                                cancelButtonText: 'না',
+                                onTapCancel: () => Navigator.of(context).pop(),
+                                onTapConfirm: () async {
+                                  Navigator.of(context).pop();
+                                  bool ok = false;
+                                  try {
+                                    final user = AppFirebase().currentUser;
+                                    final id = caseItem.docId;
+                                    if (user != null && id != null) {
+                                      await CaseService.setCourtNextOrder(
+                                          id, user.uid, text);
+                                      ok = true;
+                                    }
+                                  } catch (_) {}
+                                  PanaraInfoDialog.show(
+                                    context,
+                                    title: ok ? 'সফল হয়েছে' : 'ত্রুটি',
+                                    message: ok
+                                        ? 'নেক্সট অর্ডার আপডেট হয়েছে'
+                                        : 'আপডেট করতে ব্যর্থ',
+                                    buttonText: 'Okey',
+                                    panaraDialogType: ok
+                                        ? PanaraDialogType.success
+                                        : PanaraDialogType.error,
+                                    barrierDismissible: false,
+                                    onTapDismiss: () =>
+                                        Navigator.of(context).pop(),
+                                  );
+                                },
+                                panaraDialogType: PanaraDialogType.normal,
+                              );
+                            },
+                            icon: const Icon(Icons.edit_note_outlined),
+                            label: const Text('Update Next Order'),
+                          ),
+                          const SizedBox(height: 12),
+                          Obx(() {
+                            final current = controller.cases.firstWhere(
+                              (c) => c.docId == caseItem.docId,
+                              orElse: () => caseItem,
+                            );
+                            final last = current.courtLastOrder;
+                            final next = current.courtNextOrder;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Last Order: ${last ?? '-'}'),
+                                const SizedBox(height: 6),
+                                Text('Next Order: ${next ?? '-'}'),
+                              ],
+                            );
+                          }),
+                        ],
+                      )),
+
+                  // Summary
+                  section(
+                      'Summary',
+                      Text(caseItem.caseSummary.isEmpty
+                          ? '-'
+                          : caseItem.caseSummary)),
+                  // Parties
+                  section(
+                      'Parties',
+                      Column(
+                        children: [
+                          ListTile(
+                            title: Text(caseItem.plaintiff.name),
+                            subtitle: Text(
+                                'Plaintiff\n${caseItem.plaintiff.phone}\n${caseItem.plaintiff.address}'),
+                            isThreeLine: true,
+                          ),
+                          const Divider(height: 0),
+                          ListTile(
+                            title: Text(caseItem.defendant.name),
+                            subtitle: Text(
+                                'Defendant\n${caseItem.defendant.phone}\n${caseItem.defendant.address}'),
+                            isThreeLine: true,
+                          ),
                         ],
                       )),
 
@@ -468,189 +542,6 @@ class CaseDetailScreen extends StatelessWidget {
                       );
                     }),
                   ),
-
-                  // Parties
-                  section(
-                      'Parties',
-                      Column(
-                        children: [
-                          ListTile(
-                            title: Text(caseItem.plaintiff.name),
-                            subtitle: Text(
-                                'Plaintiff\n${caseItem.plaintiff.phone}\n${caseItem.plaintiff.address}'),
-                            isThreeLine: true,
-                          ),
-                          const Divider(height: 0),
-                          ListTile(
-                            title: Text(caseItem.defendant.name),
-                            subtitle: Text(
-                                'Defendant\n${caseItem.defendant.phone}\n${caseItem.defendant.address}'),
-                            isThreeLine: true,
-                          ),
-                        ],
-                      )),
-
-                  // Summary
-                  section(
-                      'Summary',
-                      Text(caseItem.caseSummary.isEmpty
-                          ? '-'
-                          : caseItem.caseSummary)),
-
-                  // Court Orders
-                  section(
-                      'Court Orders',
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: () async {
-                              final controllerText = TextEditingController();
-                              final result = await showDialog<String>(
-                                context: context,
-                                builder: (ctx) {
-                                  return AlertDialog(
-                                    title: const Text('Add Court Order'),
-                                    content: TextField(
-                                      controller: controllerText,
-                                      decoration: const InputDecoration(
-                                          hintText: 'Enter order'),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () => Navigator.pop(ctx),
-                                          child: const Text('Cancel')),
-                                      TextButton(
-                                          onPressed: () => Navigator.pop(
-                                              ctx, controllerText.text.trim()),
-                                          child: const Text('Add')),
-                                    ],
-                                  );
-                                },
-                              );
-                              final text = result?.trim();
-                              if (text == null || text.isEmpty) return;
-                              PanaraConfirmDialog.show(
-                                context,
-                                title: 'নিশ্চিত করুন',
-                                message: 'কোর্ট অর্ডার যুক্ত করবেন?',
-                                confirmButtonText: 'হ্যাঁ',
-                                cancelButtonText: 'না',
-                                onTapCancel: () => Navigator.of(context).pop(),
-                                onTapConfirm: () async {
-                                  Navigator.of(context).pop();
-                                  bool ok = false;
-                                  try {
-                                    final user = AppFirebase().currentUser;
-                                    final id = caseItem.docId;
-                                    if (user != null && id != null) {
-                                      await CaseService.addCourtOrder(
-                                          id, user.uid, text);
-                                      ok = true;
-                                    }
-                                  } catch (_) {}
-                                  PanaraInfoDialog.show(
-                                    context,
-                                    title: ok ? 'সফল হয়েছে' : 'ত্রুটি',
-                                    message: ok
-                                        ? 'কোর্ট অর্ডার যুক্ত করা হয়েছে'
-                                        : 'যুক্ত করতে ব্যর্থ',
-                                    buttonText: 'Okey',
-                                    panaraDialogType: ok
-                                        ? PanaraDialogType.success
-                                        : PanaraDialogType.error,
-                                    barrierDismissible: false,
-                                    onTapDismiss: () =>
-                                        Navigator.of(context).pop(),
-                                  );
-                                },
-                                panaraDialogType: PanaraDialogType.normal,
-                              );
-                            },
-                            icon: const Icon(Icons.add),
-                            label: const Text('Add'),
-                          ),
-                          const SizedBox(height: 12),
-                          Obx(() {
-                            final current = controller.cases.firstWhere(
-                              (c) => c.docId == caseItem.docId,
-                              orElse: () => caseItem,
-                            );
-                            if (current.courtOrders.isEmpty)
-                              return const Text('-');
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                for (final o in current.courtOrders)
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Icon(Icons.check_circle_outline,
-                                            size: 18),
-                                        const SizedBox(width: 8),
-                                        Expanded(child: Text(o)),
-                                        IconButton(
-                                          icon:
-                                              const Icon(Icons.delete_outline),
-                                          onPressed: () async {
-                                            PanaraConfirmDialog.show(
-                                              context,
-                                              title: 'নিশ্চিত করুন',
-                                              message:
-                                                  'এই অর্ডারটি মুছে ফেলবেন?',
-                                              confirmButtonText: 'হ্যাঁ',
-                                              cancelButtonText: 'না',
-                                              onTapCancel: () =>
-                                                  Navigator.of(context).pop(),
-                                              onTapConfirm: () async {
-                                                Navigator.of(context).pop();
-                                                bool ok = false;
-                                                try {
-                                                  final user =
-                                                      AppFirebase().currentUser;
-                                                  final id = caseItem.docId;
-                                                  if (user != null &&
-                                                      id != null) {
-                                                    await CaseService
-                                                        .removeCourtOrder(
-                                                            id, user.uid, o);
-                                                    ok = true;
-                                                  }
-                                                } catch (_) {}
-                                                PanaraInfoDialog.show(
-                                                  context,
-                                                  title: ok
-                                                      ? 'সফল হয়েছে'
-                                                      : 'ত্রুটি',
-                                                  message: ok
-                                                      ? 'অর্ডার মুছে ফেলা হয়েছে'
-                                                      : 'মুছে ফেলতে ব্যর্থ',
-                                                  buttonText: 'Okey',
-                                                  panaraDialogType: ok
-                                                      ? PanaraDialogType.success
-                                                      : PanaraDialogType.error,
-                                                  barrierDismissible: false,
-                                                  onTapDismiss: () =>
-                                                      Navigator.of(context)
-                                                          .pop(),
-                                                );
-                                              },
-                                              panaraDialogType:
-                                                  PanaraDialogType.warning,
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            );
-                          }),
-                        ],
-                      )),
 
                   // Documents
                   section(
