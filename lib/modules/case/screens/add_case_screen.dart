@@ -7,6 +7,7 @@ import '../../../constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
+import '../../../utils/app_date_formatter.dart';
 
 import '../controllers/add_case_controller.dart';
 import '../../../models/party.dart';
@@ -197,12 +198,8 @@ class AddCaseScreen extends StatelessWidget {
                           visualDensity: VisualDensity.compact,
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 12),
-                          title: Text(controller.filedDate.value == null
-                              ? 'Filed Date'
-                              : controller.filedDate.value
-                                  .toString()
-                                  .split(' ')
-                                  .first),
+                          title: Text(controller.filedDate.value?.formattedDate ??
+                              'Filed Date'),
                           trailing:
                               const Icon(HugeIcons.strokeRoundedCalendar01),
                           onTap: () async {
@@ -249,12 +246,8 @@ class AddCaseScreen extends StatelessWidget {
                           visualDensity: VisualDensity.compact,
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 12),
-                          title: Text(controller.hearingDate.value == null
-                              ? 'Hearing Date'
-                              : controller.hearingDate.value
-                                  .toString()
-                                  .split(' ')
-                                  .first),
+                          title: Text(controller.hearingDate.value?.formattedDate ??
+                              'Hearing Date'),
                           trailing:
                               const Icon(HugeIcons.strokeRoundedCalendar01),
                           onTap: () async {

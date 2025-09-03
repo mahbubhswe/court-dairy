@@ -6,6 +6,7 @@ import 'package:panara_dialogs/panara_dialogs.dart';
 import '../../../models/court_case.dart';
 import '../../../widgets/app_info_row.dart';
 import '../../../utils/activation_guard.dart';
+import '../../../utils/app_date_formatter.dart';
 import '../../../services/app_firebase.dart';
 import '../services/case_service.dart';
 import '../controllers/case_controller.dart';
@@ -16,11 +17,6 @@ class CaseDetailScreen extends StatelessWidget {
 
   final CourtCase caseItem;
   final RxBool isDeleting = false.obs;
-
-  String _fmtDate(Timestamp ts) {
-    final d = ts.toDate();
-    return '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +238,8 @@ class CaseDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           appInfoRow(
-                              'Filed Date', _fmtDate(caseItem.filedDate)),
+                              'Filed Date',
+                              caseItem.filedDate.toDate().formattedDate),
                           const SizedBox(height: 12),
                           Row(
                             children: [
@@ -319,10 +316,10 @@ class CaseDetailScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Last: '
-                                    '${last != null ? _fmtDate(last) : '-'}'),
+                                    '${last != null ? last.toDate().formattedDate : '-'}'),
                                 const SizedBox(height: 6),
                                 Text('Next: '
-                                    '${next != null ? _fmtDate(next) : '-'}'),
+                                    '${next != null ? next.toDate().formattedDate : '-'}'),
                               ],
                             );
                           }),

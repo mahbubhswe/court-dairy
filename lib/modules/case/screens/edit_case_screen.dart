@@ -6,6 +6,7 @@ import '../../../widgets/app_text_from_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
+import '../../../utils/app_date_formatter.dart';
 
 import '../../../models/court_case.dart';
 import '../../../models/party.dart';
@@ -133,12 +134,8 @@ class EditCaseScreen extends StatelessWidget {
                       isMaxLines: 3,
                     ),
                     Obx(() => ListTile(
-                          title: Text(controller.filedDate.value == null
-                              ? 'Filed Date'
-                              : controller.filedDate.value
-                                  .toString()
-                                  .split(' ')
-                                  .first),
+                          title: Text(controller.filedDate.value?.formattedDate ??
+                              'Filed Date'),
                           trailing:
                               const Icon(HugeIcons.strokeRoundedCalendar01),
                           onTap: () async {
@@ -181,12 +178,8 @@ class EditCaseScreen extends StatelessWidget {
                   spacing: 10,
                   children: [
                     Obx(() => ListTile(
-                          title: Text(controller.hearingDate.value == null
-                              ? 'Hearing Date'
-                              : controller.hearingDate.value
-                                  .toString()
-                                  .split(' ')
-                                  .first),
+                          title: Text(controller.hearingDate.value?.formattedDate ??
+                              'Hearing Date'),
                           trailing:
                               const Icon(HugeIcons.strokeRoundedCalendar01),
                           onTap: () async {
