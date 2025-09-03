@@ -41,6 +41,8 @@ android {
         versionName = flutter.versionName
     }
 
+    // Packaging defaults
+
  signingConfigs {
         release {
             keyAlias = keystoreProperties['keyAlias']
