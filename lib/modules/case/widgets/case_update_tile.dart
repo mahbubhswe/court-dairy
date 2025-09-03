@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../../../models/court_case.dart';
+import '../../../utils/app_date_formatter.dart';
 import '../controllers/case_controller.dart';
 
 class CaseUpdateTile extends StatelessWidget {
@@ -10,7 +10,7 @@ class CaseUpdateTile extends StatelessWidget {
 
   final CourtCase caseItem;
 
-  String _format(DateTime date) => DateFormat('dd MMM yyyy').format(date);
+  String _format(DateTime date) => date.formattedDate;
 
   @override
   Widget build(BuildContext context) {

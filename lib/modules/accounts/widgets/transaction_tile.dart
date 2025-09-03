@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/transaction.dart';
+import '../../../utils/app_date_formatter.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction transaction;
@@ -55,7 +56,7 @@ class TransactionTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              DateFormat('dd MMM yyyy').format(transaction.createdAt),
+              transaction.createdAt.formattedDate,
               style: const TextStyle(
                 fontSize: 12,
                 color: Colors.grey,
