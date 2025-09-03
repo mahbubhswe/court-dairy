@@ -1,11 +1,11 @@
 import 'package:courtdiary/screens/account_reset_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import '../../auth/controllers/auth_controller.dart';
+import '../../../utils/app_date_formatter.dart';
 import '../controllers/layout_controller.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -48,9 +48,8 @@ class AppDrawer extends StatelessWidget {
           final daysLeft = subscriptionEnd.difference(now).inDays;
 
           final lastSignIn = user.metadata.lastSignInTime;
-          final formattedSignIn = lastSignIn != null
-              ? DateFormat('dd MMM yyyy, hh:mm a').format(lastSignIn)
-              : 'অজানা';
+          final formattedSignIn =
+              lastSignIn != null ? lastSignIn.formattedDateTime : 'অজানা';
 
           return SafeArea(
             child: SingleChildScrollView(
@@ -165,14 +164,13 @@ class AppDrawer extends StatelessWidget {
                     context,
                     icon: CupertinoIcons.clock_fill,
                     title: 'শুরু তারিখ',
-                    subtitle:
-                        DateFormat('dd MMM yyyy').format(shop.subStartsAt),
+                    subtitle: shop.subStartsAt.formattedDate,
                   ),
                   _infoTile(
                     context,
                     icon: CupertinoIcons.timer,
                     title: 'শেষ তারিখ',
-                    subtitle: DateFormat('dd MMM yyyy').format(subscriptionEnd),
+                    subtitle: subscriptionEnd.formattedDate,
                   ),
                   _infoTile(
                     context,
