@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../themes/theme_controller.dart';
-import '../../case/controllers/case_controller.dart';
-import '../../party/controllers/party_controller.dart';
+
 import '../../accounts/controllers/transaction_controller.dart';
+import '../../party/controllers/party_controller.dart';
 import 'accounts_card.dart';
 
 class AccountsSecondCard extends StatelessWidget {
   AccountsSecondCard({super.key});
-  final themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    // Use same dynamic metrics for now
-    final caseController = Get.find<CaseController>();
     final partyController = Get.isRegistered<PartyController>()
         ? Get.find<PartyController>()
         : Get.put(PartyController());
@@ -28,14 +24,21 @@ class AccountsSecondCard extends StatelessWidget {
           .fold<double>(0, (p, e) => p + e.amount);
     }
 
+    double sumWhereMonth(String type) {
+      final now = DateTime.now();
+      return transactionController.transactions
+          .where((t) =>
+              t.type == type &&
+              t.createdAt.year == now.year &&
+              t.createdAt.month == now.month)
+          .fold<double>(0, (p, e) => p + e.amount);
+    }
+
     return Obx(() {
       final totalParties = partyController.parties.length.toDouble();
-      final totalCases = caseController.cases.length.toDouble();
-      final totalCourts = caseController.cases
-          .map((c) => c.courtName)
-          .toSet()
-          .length
-          .toDouble();
+      final depositThisMonth = sumWhereMonth('Deposit');
+      final expenseThisMonth =
+          sumWhereMonth('Expense') + sumWhereMonth('Withdrawal');
       final totalDeposit = sumWhere('Deposit');
       final totalExpense = sumWhere('Expense') + sumWhere('Withdrawal');
       final balance = totalDeposit - totalExpense;
@@ -51,8 +54,8 @@ class AccountsSecondCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AccountsCard(title: 'মোট পার্টি', amount: totalParties),
-                  AccountsCard(title: 'মোট কেস', amount: totalCases),
-                  AccountsCard(title: 'মোট কোর্ট', amount: totalCourts),
+                  AccountsCard(title: 'এই মাসে জমা', amount: depositThisMonth),
+                  AccountsCard(title: 'এই মাসে খরচ', amount: expenseThisMonth),
                 ],
               ),
               Row(
