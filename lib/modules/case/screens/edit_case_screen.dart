@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import '../../../utils/app_date_formatter.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import '../../../local_library/text_from_field_wraper.dart';
 
 import '../../../models/court_case.dart';
 import '../../../models/party.dart';
@@ -50,45 +52,51 @@ class EditCaseScreen extends StatelessWidget {
       required String hint,
       required IconData icon,
     }) {
-      return Obx(() => DropdownButtonFormField<Party>(
-            value: selected.value,
-            isExpanded: true,
-            borderRadius: BorderRadius.circular(12),
-            menuMaxHeight: 320,
-            icon: const Icon(Icons.keyboard_arrow_down_rounded),
-            decoration: InputDecoration(
-              labelText: label,
-              hintText: hint,
-              prefixIcon: Icon(icon),
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.7),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.outlineVariant,
+      final textController = TextEditingController();
+      return Obx(() {
+        final cs = Theme.of(context).colorScheme;
+        if (selected.value != null &&
+            textController.text != selected.value!.name) {
+          textController.text = selected.value!.name;
+        }
+        return TextFormFieldWrapper(
+          borderFocusedColor: cs.primary,
+          formField: TypeAheadField<Party>(
+            controller: textController,
+            builder: (context, textEditingController, focusNode) {
+              return TextField(
+                controller: textEditingController,
+                focusNode: focusNode,
+                cursorColor: cs.onSurface,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: label,
+                  hintText: hint,
+                  prefixIcon: Icon(icon, color: cs.onSurfaceVariant),
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 1.4,
-                ),
-              ),
-            ),
-            items: controller.parties
-                .map((p) => DropdownMenuItem(
-                      value: p,
-                      child: Text(p.name),
-                    ))
-                .toList(),
-            onChanged: (v) => selected.value = v,
-          ));
+                onChanged: (_) => selected.value = null,
+              );
+            },
+            suggestionsCallback: (pattern) {
+              final query = pattern.toLowerCase();
+              return controller.parties.where((p) {
+                return p.name.toLowerCase().contains(query) ||
+                    p.phone.contains(pattern);
+              }).toList();
+            },
+            itemBuilder: (context, Party party) {
+              return ListTile(
+                title: Text(party.name),
+                subtitle: Text(party.phone),
+              );
+            },
+            onSelected: (Party party) {
+              selected.value = party;
+              textController.text = party.name;
+            },
+          ),
+        );
+      });
     }
 
     return Scaffold(
