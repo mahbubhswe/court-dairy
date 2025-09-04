@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:flutter/services.dart';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -13,6 +14,18 @@ class LocalNotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
   bool isInit = false;
   bool get isInited => isInit;
+
+  Future<void> _openExactAlarmSettings() async {
+    const intent = AndroidIntent(
+      action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
+      data: 'package:com.appseba.courtdiary',
+    );
+    try {
+      await intent.launch();
+    } catch (_) {
+      // Ignore if the settings screen can't be opened
+    }
+  }
 
   Future<void> initialize({Function(String?)? onTap}) async {
     if (isInit) return;
@@ -44,10 +57,14 @@ class LocalNotificationService {
         final canScheduleExact =
             await androidPlugin?.canScheduleExactNotifications() ?? true;
         if (!canScheduleExact) {
-          await androidPlugin?.requestExactAlarmsPermission();
+          try {
+            await androidPlugin?.requestExactAlarmsPermission();
+          } catch (_) {
+            await _openExactAlarmSettings();
+          }
         }
       } catch (_) {
-        // Silently ignore if API isn't available; we'll handle at schedule time.
+        await _openExactAlarmSettings();
       }
     }
     isInit = true;
@@ -127,7 +144,7 @@ class LocalNotificationService {
         try {
           await androidPlugin?.requestExactAlarmsPermission();
         } catch (_) {
-          // Ignore if not supported
+          await _openExactAlarmSettings();
         }
         // Fallback to inexact schedule at roughly the same time
         await notificationsPlugin.zonedSchedule(
