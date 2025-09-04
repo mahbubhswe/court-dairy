@@ -1,43 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../themes/theme_controller.dart';
+
 import '../../case/controllers/case_controller.dart';
-import '../../party/controllers/party_controller.dart';
-import '../../accounts/controllers/transaction_controller.dart';
 import 'accounts_card.dart';
 
 class AccountsFirstCard extends StatelessWidget {
   AccountsFirstCard({super.key});
-  final themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    // Ensure controllers are available
     final caseController = Get.find<CaseController>();
-    final partyController =
-        Get.isRegistered<PartyController>() ? Get.find<PartyController>() : Get.put(PartyController());
-    final transactionController = Get.isRegistered<TransactionController>()
-        ? Get.find<TransactionController>()
-        : Get.put(TransactionController());
-
-    double sumWhere(String type) {
-      return transactionController.transactions
-          .where((t) => t.type == type)
-          .fold<double>(0, (p, e) => p + e.amount);
-    }
 
     return Obx(() {
-      final totalParties = partyController.parties.length.toDouble();
-      final totalCases = caseController.cases.length.toDouble();
-      final totalCourts = caseController.cases
-          .map((c) => c.courtName)
-          .toSet()
+      final cases = caseController.cases;
+      final running =
+          cases.where((c) => c.caseStatus.toLowerCase() == 'ongoing').length.toDouble();
+      final closed =
+          cases.where((c) => c.caseStatus.toLowerCase() == 'disposed').length.toDouble();
+      final complicated =
+          cases.where((c) => c.caseStatus.toLowerCase() == 'completed').length.toDouble();
+      final totalCases = cases.length.toDouble();
+      final threeMonthsAgo = DateTime.now().subtract(const Duration(days: 90));
+      final newCases = cases
+          .where((c) => c.filedDate.toDate().isAfter(threeMonthsAgo))
           .length
           .toDouble();
-      final totalDeposit = sumWhere('Deposit');
-      final totalExpense = sumWhere('Expense') + sumWhere('Withdrawal');
-      final balance = totalDeposit - totalExpense;
+      final totalCourts =
+          cases.map((c) => c.courtName).toSet().length.toDouble();
 
       return Material(
         color: cs.surface,
@@ -49,17 +39,17 @@ class AccountsFirstCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AccountsCard(title: 'মোট পার্টি', amount: totalParties),
-                  AccountsCard(title: 'মোট কেস', amount: totalCases),
-                  AccountsCard(title: 'মোট কোর্ট', amount: totalCourts),
+                  AccountsCard(title: 'চলমান কেস', amount: running),
+                  AccountsCard(title: 'বন্ধ কেস', amount: closed),
+                  AccountsCard(title: 'কম্পলিকেট কেস', amount: complicated),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AccountsCard(title: 'মোট জমা', amount: totalDeposit),
-                  AccountsCard(title: 'মোট খরচ', amount: totalExpense),
-                  AccountsCard(title: 'বর্তমান ব্যালেন্স', amount: balance),
+                  AccountsCard(title: 'মোট কেস', amount: totalCases),
+                  AccountsCard(title: 'নতুন কেস', amount: newCases),
+                  AccountsCard(title: 'মোট কোর্ট', amount: totalCourts),
                 ],
               ),
             ],
