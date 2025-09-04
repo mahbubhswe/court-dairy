@@ -44,7 +44,7 @@ class LayoutController extends GetxController {
 
   void fetchShopInfo() {
     layoutService.getShopInfo().listen((shopData) {
-      lawyer.value = shopData as Lawyer?;
+      lawyer.value = shopData;
     });
   }
 

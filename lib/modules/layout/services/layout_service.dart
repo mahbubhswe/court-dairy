@@ -29,30 +29,5 @@ class LayoutService {
     });
   }
 
-  /// Update shop profile fields (name, address, phone)
-  Future<bool> updateShopProfile({
-    required String shopName,
-    required String address,
-    required String phone,
-  }) async {
-    final user = Get.find<AuthController>().user.value;
-    if (user == null) return false;
 
-    try {
-      final shopDocRef =
-          _firestore.collection(AppCollections.lawyers).doc(user.uid);
-      await shopDocRef.update({
-        'shopName': shopName,
-        'address': address,
-        'phone': phone,
-        'lastUpdate': DateTime.now(),
-      });
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Failed to update shop profile: $e');
-      }
-      return false;
-    }
-  }
 }

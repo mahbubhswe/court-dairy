@@ -24,7 +24,10 @@ class AppInitializer {
     await LocalStorageService.init();
 
     // 4) App config
-    const docId = String.fromEnvironment('APP_CONFIG_ID', defaultValue: 'default');
+    const docId = String.fromEnvironment(
+      'APP_CONFIG_ID',
+      defaultValue: 'XCUdkvlttJT2Mw2OEsl3',
+    );
     await AppConfigService.load(docId: docId);
 
     // 5) FCM token initialization and refresh listener
