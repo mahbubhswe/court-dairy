@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 // import '../../../screens/calculator_screen.dart';
-import '../../../screens/customer_service_screen.dart';
+import '../../court_dairy/screens/customer_service_screen.dart';
 import '../../../constants/app_texts.dart';
 import '../../accounts/screens/add_transaction_screen.dart';
 import '../../case/screens/case_fullscreen_screen.dart';
@@ -76,7 +76,7 @@ class LayoutScreen extends GetView<LayoutController> {
                   curve: Curves.easeInOut,
                   child: FloatingActionButton(
                     onPressed: () {
-                      if (!ActivationGuard.check()) return;
+                      if (ActivationGuard.check()) return;
                       final index = DefaultTabController.of(context).index;
                       if (index == 0) {
                         Get.to(() => const AddCaseScreen(),
@@ -109,8 +109,7 @@ class LayoutScreen extends GetView<LayoutController> {
                   child: Column(
                     children: [
                       TabBar(
-                        dividerColor:
-                            Theme.of(context).colorScheme.outline,
+                        dividerColor: Theme.of(context).colorScheme.outline,
                         tabs: const [
                           Tab(text: AppTexts.tabParty),
                           Tab(text: AppTexts.tabCase),
@@ -137,4 +136,3 @@ class LayoutScreen extends GetView<LayoutController> {
     );
   }
 }
-

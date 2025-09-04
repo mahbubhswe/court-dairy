@@ -5,7 +5,7 @@ import 'package:courtdiary/themes/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'screens/splash_screen.dart';
+import 'modules/court_dairy/screens/splash_screen.dart';
 import 'navigation/app_transitions.dart';
 import 'services/app_initializer.dart';
 

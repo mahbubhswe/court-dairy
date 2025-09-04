@@ -5,7 +5,7 @@ import '../../case/controllers/case_controller.dart';
 import 'accounts_card.dart';
 
 class AccountsFirstCard extends StatelessWidget {
-  AccountsFirstCard({super.key});
+  const AccountsFirstCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class AccountsFirstCard extends StatelessWidget {
                 children: [
                   AccountsCard(title: 'চলমান কেস', amount: running),
                   AccountsCard(title: 'বন্ধ কেস', amount: closed),
-                  AccountsCard(title: 'কম্পলিকেট কেস', amount: complicated),
+                  AccountsCard(title: 'কমপ্লিট কেস', amount: complicated),
                 ],
               ),
               Row(

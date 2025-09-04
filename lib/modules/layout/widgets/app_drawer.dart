@@ -1,4 +1,4 @@
-import 'package:courtdiary/screens/account_reset_screen.dart';
+import 'package:courtdiary/modules/court_dairy/screens/account_reset_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';

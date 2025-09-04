@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../constants/app_collections.dart';
-import '../services/app_firebase.dart';
+import '../../../constants/app_collections.dart';
+import '../../../services/app_firebase.dart';
 
 class AccountResetController extends GetxController {
   final isResetting = false.obs;
@@ -258,3 +258,4 @@ class _DangerChip extends StatelessWidget {
     );
   }
 }
+
